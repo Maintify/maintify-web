@@ -81,6 +81,30 @@
             @enderror
         </div>
 
+        <!-- Role -->
+        <div>
+            <label class="label">Daftar Sebagai</label>
+            <div class="grid grid-cols-2 gap-3 mt-1">
+                <label class="role-card {{ old('role', 'vehicle_owner') === 'vehicle_owner' ? 'role-card-active' : '' }}" for="role_owner">
+                    <input type="radio" id="role_owner" name="role" value="vehicle_owner" class="sr-only" {{ old('role', 'vehicle_owner') === 'vehicle_owner' ? 'checked' : '' }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                    </svg>
+                    <span class="text-sm font-medium">Pemilik Kendaraan</span>
+                </label>
+                <label class="role-card {{ old('role') === 'workshop' ? 'role-card-active' : '' }}" for="role_workshop">
+                    <input type="radio" id="role_workshop" name="role" value="workshop" class="sr-only" {{ old('role') === 'workshop' ? 'checked' : '' }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mb-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                    </svg>
+                    <span class="text-sm font-medium">Bengkel Mitra</span>
+                </label>
+            </div>
+            @error('role')
+                <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+            @enderror
+        </div>
+
         <!-- Submit Button -->
         <button type="submit" class="btn-primary w-full mt-2" id="btn-register">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -100,4 +124,39 @@
             </a>
         </p>
     </form>
+
+    <style>
+        .role-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #6B7280;
+        }
+        .role-card:hover {
+            border-color: #410008;
+            color: #410008;
+        }
+        .role-card-active {
+            border-color: #410008;
+            background-color: #F5E8EB;
+            color: #410008;
+        }
+    </style>
+
+    <script>
+        document.querySelectorAll('input[name="role"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                document.querySelectorAll('.role-card').forEach(card => {
+                    card.classList.remove('role-card-active');
+                });
+                this.closest('.role-card').classList.add('role-card-active');
+            });
+        });
+    </script>
 </x-guest-layout>
