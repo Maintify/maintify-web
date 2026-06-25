@@ -1,90 +1,65 @@
-# Maintify - Product Requirements Document (PRD)
+# Maintify Product Requirements Document (PRD)
+
+Status: Development
+
+Product Name: Maintify
+
+---
 
 # 1. Technical Specification
 
 ## Technology Stack
 
-### Frontend
+### Backend
 
 * Laravel 12
-* Blade Template Engine
-* TailwindCSS
-* Alpine.js
+* PHP 8.3+
 
-### UI Framework
-
-* TailwindCSS
-
-### Component Library
-
-* shadcn/ui style components
-* Headless UI
-* Lucide Icons
-
-### Backend & Database
+### Database
 
 * Supabase PostgreSQL
 
+### Frontend
+
+* Blade
+* TailwindCSS
+
+### UI Components
+
+* shadcn/ui inspired components
+
 ### Authentication
 
-* Supabase Auth
-* Email & Password Login
-* Password Reset
-* Session Management
-* Role-Based Access Control (RBAC)
+* Laravel Authentication
+* Role Based Access Control
+
+### QR Code
+
+* Simple QrCode Package
 
 ### Storage
 
 * Supabase Storage
 
-### Analytics
-
-* ApexCharts / Chart.js
-
-### QR Code
-
-* Unique QR Code per kendaraan
-* QR Code generation
-* QR Code download & print
+---
 
 ## Architecture
 
-User Browser
+### Application Pattern
 
-↓
+Component Based Architecture
 
-Laravel Application
+### Data Fetching
 
-↓
+API Based Data Fetching
 
-Supabase API
+### Layout Structure
 
-↓
+Sidebar + Topbar Dashboard Layout (Desktop)
 
-PostgreSQL Database
+Bottom Navigation (Mobile)
 
-## Dashboard Layout
-
-Sidebar + Topbar Layout
-
-### Sidebar Menu
-
-* Dashboard
-* Kendaraan
-* QR Code
-* Histori Service
-* Bengkel
-* Analytics
-* Pengaturan
-
-### Topbar
-
-* Search
-* Notification
-* User Profile
-* Dark Mode Toggle
-
-## Responsive Breakpoints
+### Responsive Breakpoints
 
 * sm: 640px
 * md: 768px
@@ -92,157 +67,183 @@ Sidebar + Topbar Layout
 * xl: 1280px
 * 2xl: 1536px
 
+### Dark Mode
+
+Supported by default.
+
 ---
 
 # 2. Product Overview
 
-## Product Name
+## Product Description
 
-Maintify
+Maintify adalah platform digital berbasis QR Code yang digunakan untuk menyimpan dan mengelola histori service kendaraan motor secara terpusat.
 
-## Product Type
+Setiap kendaraan memiliki QR Code unik yang berfungsi sebagai identitas digital kendaraan. QR Code tersebut dapat dipindai oleh bengkel mitra untuk mencatat histori service langsung ke dalam sistem.
 
-Vehicle Service History Management Platform
+Data service tersimpan secara digital sehingga pemilik kendaraan dapat memantau kondisi kendaraan kapan saja tanpa bergantung pada buku service fisik.
 
-## Industry
-
-Automotive Technology
-
-## Target Users
-
-### Pemilik Kendaraan
-
-Pemilik kendaraan motor yang ingin menyimpan histori service secara digital.
-
-### Bengkel Mitra
-
-Bengkel yang melakukan pencatatan service kendaraan secara digital.
-
-### Administrator
-
-Pengelola sistem Maintify.
+---
 
 ## Mission
 
-Menyediakan platform digital berbasis QR Code untuk pencatatan dan monitoring histori service kendaraan motor secara terpusat.
+Membantu pemilik kendaraan dan bengkel melakukan pencatatan serta monitoring histori service kendaraan secara digital, praktis, dan terintegrasi.
+
+---
 
 ## Problem Statement
 
-Sebagian besar histori service kendaraan masih dicatat secara manual sehingga:
+Permasalahan utama yang ingin diselesaikan:
 
-* Data mudah hilang
-* Sulit dipantau
-* Tidak terintegrasi antar bengkel
-* Sulit mengetahui kondisi kendaraan
+* Buku service mudah hilang
+* Riwayat service tidak terdokumentasi dengan baik
+* Sulit mengetahui jadwal service berikutnya
+* Sulit memantau kesehatan kendaraan
+* Tidak ada sistem histori service terpusat
+
+---
 
 ## Value Proposition
 
-Setiap kendaraan memiliki QR Code unik yang dapat dipindai oleh bengkel untuk mencatat histori service secara langsung ke dalam sistem.
+Maintify menyediakan identitas digital kendaraan berbasis QR Code yang memungkinkan histori service tersimpan secara aman, terpusat, dan mudah diakses.
 
 ---
 
-# 3. Core Features
-
-## Dashboard
-
-Menampilkan ringkasan kendaraan dan aktivitas service.
-
-## Vehicle Management
-
-Mengelola data kendaraan.
-
-## QR Code Management
-
-Pembuatan dan pengelolaan QR Code kendaraan.
-
-## Service History
-
-Pencatatan dan monitoring histori service.
-
-## Vehicle Health Monitoring
-
-Monitoring kesehatan kendaraan berdasarkan histori service.
-
-## Workshop Management
-
-Pengelolaan bengkel mitra.
-
-## Notifications
-
-Pengingat service berkala.
-
-## Reports & Analytics
-
-Visualisasi data service.
-
-## Settings
-
-Pengaturan akun dan sistem.
-
----
-
-# 4. Navigation Structure
-
-Dashboard
-
-├── Kendaraan
-
-│ ├── Daftar Kendaraan
-
-│ ├── Tambah Kendaraan
-
-│ └── Detail Kendaraan
-
-├── QR Code
-
-│ └── Detail QR Code
-
-├── Histori Service
-
-│ ├── Daftar Service
-
-│ └── Detail Service
-
-├── Bengkel
-
-│ ├── Daftar Bengkel
-
-│ └── Detail Bengkel
-
-├── Analytics
-
-└── Pengaturan
-
----
-
-# 5. User Roles & Permissions
-
-## Super Admin
-
-Dapat:
-
-* Mengelola seluruh data
-* Mengelola bengkel
-* Mengelola pengguna
-* Mengakses laporan
-
-## Bengkel Mitra
-
-Dapat:
-
-* Scan QR kendaraan
-* Menambah histori service
-* Mengedit histori service miliknya
-* Melihat kendaraan yang pernah diservice
+# 3. User Roles
 
 ## Pemilik Kendaraan
 
-Dapat:
+Hak akses:
 
-* Mengelola kendaraan sendiri
-* Melihat QR Code
+* Mengelola kendaraan
+* Melihat QR kendaraan
 * Melihat histori service
-* Melihat status kesehatan kendaraan
+* Transfer kepemilikan kendaraan
+* Melihat bengkel mitra
+
+---
+
+## Admin Bengkel
+
+Hak akses:
+
+* Scan QR kendaraan
+* Input histori service
+* Mengelola data service
+* Mengelola data bengkel
+
+---
+
+## Super Admin
+
+Hak akses:
+
+* Mengelola pengguna
+* Mengelola bengkel
+* Mengelola kendaraan
+* Monitoring seluruh aktivitas sistem
+
+---
+
+# 4. Core Features
+
+## Authentication
+
+* Login Pengguna
+* Login Admin Bengkel
+* Login Super Admin
+* Registrasi Pengguna
+* Registrasi Mitra Bengkel
+* Forgot Password
+
+---
+
+## Dashboard
+
+* Ringkasan kendaraan
+* Health Score
+* Jadwal service berikutnya
+* Aktivitas service terbaru
+
+---
+
+## Vehicle Management
+
+* Daftar kendaraan
+* Tambah kendaraan
+* Edit kendaraan
+* Hapus kendaraan
+* Detail kendaraan
+
+---
+
+## QR Vehicle Identity
+
+* Generate QR Code
+* Download QR
+* Print QR
+* QR Validation
+
+---
+
+## Service History
+
+* Histori service
+* Timeline service
+* Filter service
+* Detail service
+
+---
+
+## Workshop Directory
+
+* Bengkel terdekat
+* Detail bengkel
+* Kontak bengkel
+
+---
+
+## Ownership Transfer
+
+* Transfer kendaraan
+* Approval transfer
+* Riwayat tetap tersimpan
+
+---
+
+## Notifications
+
+* Reminder service
+* Reminder ganti oli
+* Transfer notification
+
+---
+
+## Settings
+
+* Profile
+* Password
+* Preferences
+
+---
+
+# 5. Navigation Structure
+
+Beranda
+
+My Vehicle
+
+QR Code
+
+Riwayat Service
+
+Bengkel Terdekat
+
+Settings
+
+Profile
+
+Logout
 
 ---
 
@@ -250,211 +251,262 @@ Dapat:
 
 ## Login
 
-### Purpose
+Purpose:
 
 Autentikasi pengguna.
 
-### Components
+Components:
 
-* Email Input
-* Password Input
+* Email
+* Password
 * Login Button
 * Forgot Password
 
-### Actions
+Actions:
 
 * Login
 * Reset Password
 
 ---
 
-## Dashboard
+## Register
 
-### Purpose
+Purpose:
 
-Ringkasan informasi kendaraan.
+Registrasi pengguna baru.
 
-### Components
+Components:
 
-* KPI Cards
-* Vehicle Status
-* Upcoming Service
-* Recent Activities
-* Charts
+* Nama Lengkap
+* Email
+* Nomor HP
+* Password
+* Konfirmasi Password
+* Domisili
 
-### Actions
+Actions:
 
-* Lihat Detail
-* Filter Data
+* Registrasi
 
 ---
 
-## Vehicle List
+## Dashboard
 
-### Purpose
+Purpose:
 
-Menampilkan daftar kendaraan.
+Menampilkan ringkasan kendaraan.
 
-### Components
+Components:
 
-* Search Bar
-* Filter
-* Vehicle Table
+* Health Score Card
+* Upcoming Service Card
+* Vehicle Summary
+* Recent Activity
+
+Actions:
+
+* View Vehicle
+* View Service
+
+---
+
+## My Vehicle
+
+Purpose:
+
+Mengelola kendaraan pengguna.
+
+Components:
+
+* Search
+* Vehicle Card
 * Add Vehicle Button
 
-### Actions
+Actions:
 
 * Create
 * Edit
 * Delete
-* View Detail
+* Detail
 
 ---
 
-## Vehicle Detail
+## Detail Kendaraan
 
-### Purpose
+Purpose:
 
-Informasi lengkap kendaraan.
+Menampilkan informasi kendaraan.
 
-### Components
+Components:
 
 * Vehicle Information
 * QR Code
 * Service History
-* Health Score
+* Transfer Ownership
 
-### Actions
+Actions:
 
-* View History
-* Download QR
+* Edit Vehicle
+* Transfer Ownership
 
 ---
 
-## QR Code Detail
+## Barcode
 
-### Purpose
+Purpose:
 
 Menampilkan QR kendaraan.
 
-### Components
+Components:
 
 * QR Preview
 * Download Button
 * Print Button
 
-### Actions
+Actions:
 
-* Download
-* Print
+* Download QR
+* Print QR
 
 ---
 
-## Service History
+## Riwayat Service
 
-### Purpose
+Purpose:
 
-Menampilkan histori service.
+Menampilkan histori service kendaraan.
 
-### Components
+Components:
 
-* Service Table
-* Filter
+* Service Timeline
+* Filters
 * Search
 * Pagination
 
-### Actions
+Actions:
 
 * View Detail
-* Filter Data
 
 ---
 
-## Add Service
+## Bengkel Terdekat
 
-### Purpose
+Purpose:
 
-Menambahkan histori service.
+Menampilkan daftar bengkel mitra.
 
-### Components
+Components:
 
-* Scan QR
-* Service Form
-* Odometer Input
-* Notes
-* Cost
+* Search
+* Workshop Cards
+* Contact Button
 
-### Actions
+Actions:
 
-* Save Service
-* Edit Service
+* View Detail
+* Contact Workshop
 
 ---
 
-## Analytics
+## Transfer Kepemilikan
 
-### Purpose
+Purpose:
 
-Visualisasi data kendaraan dan service.
+Memindahkan kepemilikan kendaraan.
 
-### Components
+Components:
 
-* KPI Cards
-* Line Chart
-* Bar Chart
-* Donut Chart
+* Vehicle Info
+* New Owner Email
+* Confirmation
 
-### Actions
+Actions:
 
-* Filter Period
-* Export Report
+* Send Request
 
 ---
 
-# 7. Features Per Screen
+# 7. User Workflows
 
-## Vehicle Management
+## Tambah Kendaraan
 
-### Create Vehicle
+User Login
 
-1. Klik Tambah Kendaraan
-2. Isi data kendaraan
-3. Simpan
-4. Sistem membuat QR Code otomatis
+↓
 
-### Edit Vehicle
+My Vehicle
 
-1. Buka Detail Kendaraan
-2. Edit Data
-3. Simpan
+↓
 
-### Delete Vehicle
+Tambah Kendaraan
 
-1. Klik Hapus
-2. Konfirmasi
-3. Data dihapus
+↓
+
+Isi Form
+
+↓
+
+Simpan
+
+↓
+
+Generate QR
+
+↓
+
+Kendaraan Berhasil Ditambahkan
 
 ---
 
-## Service History
+## Scan Service
 
-### Create Service
+Admin Bengkel Login
 
-1. Bengkel scan QR
-2. Sistem menampilkan kendaraan
-3. Isi data service
-4. Simpan histori
+↓
 
-### Edit Service
+Scan QR
 
-1. Buka detail service
-2. Edit data
-3. Simpan
+↓
 
-### View Detail
+Detail Kendaraan
 
-1. Pilih service
-2. Tampilkan detail
+↓
+
+Input Service
+
+↓
+
+Simpan
+
+↓
+
+Histori Service Tersimpan
+
+---
+
+## Transfer Kendaraan
+
+Pemilik Lama
+
+↓
+
+Transfer Kepemilikan
+
+↓
+
+Masukkan Email Pemilik Baru
+
+↓
+
+Kirim Permintaan
+
+↓
+
+Pemilik Baru Menyetujui
+
+↓
+
+Transfer Berhasil
 
 ---
 
@@ -462,265 +514,215 @@ Visualisasi data kendaraan dan service.
 
 ## Search
 
-Pencarian berdasarkan:
+Mendukung pencarian berdasarkan:
 
-* Nomor Polisi
-* Nama Pemilik
+* Nama kendaraan
+* Plat nomor
 * Bengkel
-* Jenis Service
+* Jenis service
+
+---
 
 ## Filters
 
-### Kendaraan
+* Status kendaraan
+* Bengkel
+* Jenis service
+* Tanggal service
 
-* Semua
-* Aktif
-* Perlu Service
-
-### Service
-
-* Ganti Oli
-* Tune Up
-* Servis Berkala
-* Perbaikan
+---
 
 ## Sorting
 
 * Terbaru
 * Terlama
-* Kilometer Tertinggi
-* Kilometer Terendah
+* Kilometer tertinggi
+* Kilometer terendah
 
-## Date Range
-
-* Hari Ini
-* 7 Hari
-* 30 Hari
-* 90 Hari
-* Custom
+---
 
 ## Pagination
 
-* 10
-* 25
-* 50
-* 100
+Default:
 
-## Summary Text Logic
-
-Menampilkan histori service kendaraan berdasarkan filter yang dipilih pengguna.
+10 item per halaman
 
 ---
 
 # 9. UI Design System
 
-## Visual Style
+## Design Style
 
-Modern SaaS Dashboard
+Modern Automotive Platform
 
-## Spacing
+Dark Theme
 
-* 4px
-* 8px
-* 12px
-* 16px
-* 24px
-* 32px
+Mobile First
 
-## Border Radius
-
-* Card: 16px
-* Input: 12px
-* Button: 12px
-
-## Card Style
-
-* White background
-* Soft shadow
-* Rounded corners
-
-## Table Style
-
-* Sticky header
-* Zebra hover
-* Responsive scroll
-
-## Form Style
-
-* Single column mobile
-* Two columns desktop
-
-## Typography
-
-* Inter Font
-* Clear hierarchy
+Premium Dashboard
 
 ---
 
-# 10. Color System
-
-## Primary
+## Primary Color
 
 #410008
 
-Digunakan untuk:
+---
 
-* Sidebar
-* Primary Button
-* Active Menu
+## Secondary Color
 
-## Secondary
-
-#6D0013
-
-## Light Accent
-
-#F5E8EB
-
-## Neutral
-
-* #FFFFFF
-* #F8F9FA
-* #E5E7EB
-* #6B7280
-* #111827
-
-## Status Colors
-
-Success: #10B981
-
-Warning: #F59E0B
-
-Error: #EF4444
-
-Info: #3B82F6
+#5E0B15
 
 ---
 
-# 11. Layout Architecture
+## Background
 
-## Sidebar
-
-Navigasi utama sistem.
-
-## Topbar
-
-Search, Notification, Profile.
-
-## Content Area
-
-Responsive grid layout.
-
-### Max Width
-
-1440px
-
-### Spacing
-
-24px
+#121414
 
 ---
 
-# 12. Component System
+## Surface
 
-* Table
-* Card
-* Modal
-* Drawer
+#1E2020
+
+---
+
+## Border Radius
+
+12px
+
+---
+
+## Shadow
+
+Soft Shadow
+
+---
+
+## Typography
+
+Inter
+
+Modern
+
+Readable
+
+---
+
+# 10. Layout Architecture
+
+## Desktop
+
+Sidebar
+
+Topbar
+
+Content Area
+
+---
+
+## Mobile
+
+Top Navigation
+
+Scrollable Content
+
+Bottom Navigation
+
+---
+
+# 11. Component System
+
 * Button
+* Card
 * Input
 * Select
+* Table
+* Modal
 * Tabs
-* Badge
 * Tooltip
+* Badge
 * Pagination
 * Filter Bar
 * Date Picker
-* Charts
+* QR Viewer
 
 ---
 
-# 13. Chart & Analytics Guidelines
+# 12. Analytics Guidelines
 
 ## KPI Cards
 
 * Total Kendaraan
 * Total Service
 * Total Bengkel
-* Kendaraan Perlu Service
+* Health Score
 
 ## Charts
 
-### Line Chart
-
-Tren service bulanan.
-
-### Bar Chart
-
-Jumlah service per bengkel.
-
-### Donut Chart
-
-Distribusi jenis service.
+* Service Growth
+* Vehicle Growth
+* Workshop Growth
 
 ---
 
-# 14. Responsive Behavior
-
-## Desktop
-
-Sidebar expanded.
-
-## Tablet
-
-Sidebar collapsed.
+# 13. Responsive Behavior
 
 ## Mobile
 
-Hamburger menu.
+390px
 
-Table menjadi horizontal scroll.
+Primary Target
 
----
+## Tablet
 
-# 15. Dark Mode
+768px
 
-## Background
+Adaptive Layout
 
-Dark gray.
+## Desktop
 
-## Text
+1440px
 
-Light gray.
-
-## Cards
-
-Dark surface.
-
-## Charts
-
-Adaptive color palette.
+Sidebar Layout
 
 ---
 
-# 16. Analytics Metrics
+# 14. Dark Mode
 
-## Admin
+Default Theme
 
-* Total User
-* Total Kendaraan
-* Total Bengkel
-* Total Service
+Background:
 
-## Bengkel
+#121414
 
-* Kendaraan Dilayani
-* Service Bulanan
-* Pelanggan Aktif
+Cards:
 
-## Pemilik Kendaraan
+#1E2020
+
+Primary:
+
+#410008
+
+---
+
+# 15. Analytics Metrics
+
+## User
 
 * Total Kendaraan
 * Total Service
 * Upcoming Service
 * Health Score
+
+## Workshop
+
+* Total Service
+* Active Customers
+
+## Super Admin
+
+* Total Users
+* Total Vehicles
+* Total Workshops
+* Total Service Records
