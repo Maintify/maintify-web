@@ -24,11 +24,20 @@ class Workshop extends Model
         'description',
         'logo_url',
         'is_active',
+        'status',
+        'rejection_reason',
+        'approved_at',
+        'approved_by',
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
+        'is_active'   => 'boolean',
+        'approved_at' => 'datetime',
     ];
+
+    const STATUS_PENDING  = 'pending';
+    const STATUS_APPROVED = 'approved';
+    const STATUS_REJECTED = 'rejected';
 
     // =========================================================
     // Relationships

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\WorkshopRegistrationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -9,7 +10,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-// Root redirect: jika sudah login ke dashboard, jika belum ke login
+// Root redirect
 Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('dashboard');
@@ -17,16 +18,26 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// Dashboard
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Authenticated & Workshop Approved Routes
+Route::middleware(['auth', 'verified', 'workshop.approved'])->group(function () {
+    // Dashboard
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
-// Profile Routes
-Route::middleware('auth')->group(function () {
+    // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+// Workshop Registration (guest)
+Route::get('/register/workshop', [WorkshopRegistrationController::class, 'create'])->name('register.workshop');
+Route::post('/register/workshop', [WorkshopRegistrationController::class, 'store']);
+
+// Workshop Pending Approval (authenticated)
+Route::get('/workshop/pending', function () {
+    return view('workshop.pending');
+})->middleware('auth')->name('workshop.pending');
+
+require __DIR__ . '/auth.php';
