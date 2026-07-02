@@ -5,27 +5,30 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ServiceHistory extends Model
+class ServiceRecord extends Model
 {
     use HasFactory, SoftDeletes;
+
+    protected $table = 'service_records';
+
+    /**
+     * Service status constants.
+     */
+    const STATUS_COMPLETED = 'completed';
+    const STATUS_IN_PROGRESS = 'in_progress';
 
     /**
      * Service type constants.
      */
     const TYPE_OIL_CHANGE = 'oil_change';
-
     const TYPE_TUNE_UP = 'tune_up';
-
     const TYPE_PERIODIC_SERVICE = 'periodic_service';
-
     const TYPE_REPAIR = 'repair';
-
     const TYPE_TIRE_CHANGE = 'tire_change';
-
     const TYPE_BRAKE_SERVICE = 'brake_service';
-
     const TYPE_OTHER = 'other';
 
     const SERVICE_TYPES = [
@@ -41,27 +44,19 @@ class ServiceHistory extends Model
     protected $fillable = [
         'vehicle_id',
         'workshop_id',
-        'technician_id',
+        'performed_by',
         'service_type',
-        'service_type_label',
+        'odometer_at_service',
+        'mechanic_notes',
+        'status',
+        'total_cost',
         'service_date',
-        'odometer_in',
-        'odometer_out',
-        'next_service_odometer',
-        'next_service_date',
-        'cost',
-        'notes',
-        'parts_replaced',
-        'invoice_number',
     ];
 
     protected $casts = [
-        'service_date' => 'date',
-        'next_service_date' => 'date',
-        'cost' => 'decimal:2',
-        'odometer_in' => 'integer',
-        'odometer_out' => 'integer',
-        'next_service_odometer' => 'integer',
+        'service_date' => 'datetime',
+        'total_cost' => 'decimal:2',
+        'odometer_at_service' => 'integer',
     ];
 
     // =========================================================
@@ -78,9 +73,14 @@ class ServiceHistory extends Model
         return $this->belongsTo(Workshop::class);
     }
 
-    public function technician(): BelongsTo
+    public function performedBy(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'technician_id');
+        return $this->belongsTo(User::class, 'performed_by');
+    }
+
+    public function parts(): HasMany
+    {
+        return $this->hasMany(ServicePart::class);
     }
 
     // =========================================================
@@ -106,10 +106,6 @@ class ServiceHistory extends Model
      */
     public function getServiceTypeLabelReadableAttribute(): string
     {
-        if ($this->service_type === self::TYPE_OTHER && $this->service_type_label) {
-            return $this->service_type_label;
-        }
-
         return self::SERVICE_TYPES[$this->service_type] ?? $this->service_type;
     }
 
@@ -118,6 +114,6 @@ class ServiceHistory extends Model
      */
     public function getFormattedCostAttribute(): string
     {
-        return 'Rp '.number_format($this->cost, 0, ',', '.');
+        return 'Rp '.number_format($this->total_cost, 0, ',', '.');
     }
 }

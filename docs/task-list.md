@@ -167,7 +167,7 @@
   - `app/Models/QrScanLog.php`
 - **Suggested Commit Message:** `feat(db): create qr_scan_logs table for audit trail`
 
-**Status:** `[ ]` To Do
+**Status:** `[x] Done`
 
 ---
 
@@ -191,7 +191,7 @@
   - `app/Models/ServicePart.php`
 - **Suggested Commit Message:** `feat(db): create service_records and service_parts tables`
 
-**Status:** `[x]` Done (as `service_histories` — needs alignment with ERD naming)
+**Status:** `[x] Done`
 
 ---
 
@@ -211,7 +211,7 @@
   - `app/Models/WorkshopStaff.php`
 - **Suggested Commit Message:** `feat(db): create workshop_staff junction table`
 
-**Status:** `[ ]` To Do
+**Status:** `[x] Done`
 
 ---
 
@@ -231,7 +231,7 @@
   - `app/Models/WorkshopVerification.php`
 - **Suggested Commit Message:** `feat(db): create workshop_verification table`
 
-**Status:** `[ ]` To Do
+**Status:** `[x] Done`
 
 ---
 
@@ -251,7 +251,7 @@
   - `app/Models/OwnershipTransfer.php`
 - **Suggested Commit Message:** `feat(db): create ownership_transfers table with status workflow`
 
-**Status:** `[ ]` To Do
+**Status:** `[x] Done`
 
 ---
 
@@ -271,7 +271,7 @@
   - `app/Models/Notification.php`
 - **Suggested Commit Message:** `feat(db): create notifications table`
 
-**Status:** `[ ]` To Do
+**Status:** `[x] Done`
 
 ---
 
@@ -292,7 +292,7 @@
   - `app/Models/AuditLog.php`
 - **Suggested Commit Message:** `feat(db): create immutable audit_logs table`
 
-**Status:** `[x]` Done (as `activity_logs` — needs alignment with ERD naming)
+**Status:** `[x] Done`
 
 ---
 
