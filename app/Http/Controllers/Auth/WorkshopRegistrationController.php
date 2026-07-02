@@ -30,41 +30,41 @@ class WorkshopRegistrationController extends Controller
     {
         $request->validate([
             // Akun
-            'name'          => ['required', 'string', 'max:255'],
-            'email'         => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
-            'password'      => ['required', 'confirmed', Rules\Password::defaults()],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
             // Info Bengkel
             'workshop_name' => ['required', 'string', 'max:255'],
-            'phone'         => ['required', 'string', 'max:20'],
-            'address'       => ['required', 'string', 'max:500'],
-            'city'          => ['required', 'string', 'max:100'],
-            'province'      => ['required', 'string', 'max:100'],
+            'phone' => ['required', 'string', 'max:20'],
+            'address' => ['required', 'string', 'max:500'],
+            'city' => ['required', 'string', 'max:100'],
+            'province' => ['required', 'string', 'max:100'],
         ]);
 
         // Buat user dengan role workshop
         $user = User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
+            'name' => $request->name,
+            'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role'     => User::ROLE_WORKSHOP,
+            'role' => User::ROLE_WORKSHOP,
         ]);
 
         // Buat data bengkel dengan status pending
         Workshop::create([
-            'user_id'     => $user->id,
-            'name'        => $request->workshop_name,
-            'phone'       => $request->phone,
-            'address'     => $request->address,
-            'city'        => $request->city,
-            'province'    => $request->province,
-            'is_active'   => false, // Tidak aktif sampai diapprove
-            'status'      => 'pending',
+            'user_id' => $user->id,
+            'name' => $request->workshop_name,
+            'phone' => $request->phone,
+            'address' => $request->address,
+            'city' => $request->city,
+            'province' => $request->province,
+            'is_active' => false, // Tidak aktif sampai diapprove
+            'status' => 'pending',
         ]);
 
         // Login otomatis
         Auth::login($user);
 
         return redirect()->route('workshop.pending')
-               ->with('success', 'Pendaftaran berhasil! Akun Anda sedang menunggu verifikasi dari admin.');
+            ->with('success', 'Pendaftaran berhasil! Akun Anda sedang menunggu verifikasi dari admin.');
     }
 }

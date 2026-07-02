@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\RoleMiddleware;
+use App\Http\Middleware\WorkshopApprovedMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -12,8 +14,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'role'              => \App\Http\Middleware\RoleMiddleware::class,
-            'workshop.approved' => \App\Http\Middleware\WorkshopApprovedMiddleware::class,
+            'role' => RoleMiddleware::class,
+            'workshop.approved' => WorkshopApprovedMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

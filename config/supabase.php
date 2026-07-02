@@ -39,10 +39,10 @@ return [
     */
 
     'endpoints' => [
-        'auth'     => env('SUPABASE_URL') . '/auth/v1',
-        'rest'     => env('SUPABASE_URL') . '/rest/v1',
-        'storage'  => env('SUPABASE_URL') . '/storage/v1',
-        'realtime' => env('SUPABASE_URL') . '/realtime/v1',
+        'auth' => env('SUPABASE_URL').'/auth/v1',
+        'rest' => env('SUPABASE_URL').'/rest/v1',
+        'storage' => env('SUPABASE_URL').'/storage/v1',
+        'realtime' => env('SUPABASE_URL').'/realtime/v1',
     ],
 
 ];

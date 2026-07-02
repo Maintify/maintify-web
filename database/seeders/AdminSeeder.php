@@ -20,10 +20,10 @@ class AdminSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'admin@maintify.app'],
             [
-                'name'     => 'Super Admin',
-                'email'    => 'admin@maintify.app',
+                'name' => 'Super Admin',
+                'email' => 'admin@maintify.app',
                 'password' => Hash::make('password'),
-                'role'     => User::ROLE_SUPER_ADMIN,
+                'role' => User::ROLE_SUPER_ADMIN,
             ]
         );
 

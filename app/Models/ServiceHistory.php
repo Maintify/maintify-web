@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ServiceHistory extends Model
 {
@@ -14,22 +14,28 @@ class ServiceHistory extends Model
     /**
      * Service type constants.
      */
-    const TYPE_OIL_CHANGE       = 'oil_change';
-    const TYPE_TUNE_UP          = 'tune_up';
+    const TYPE_OIL_CHANGE = 'oil_change';
+
+    const TYPE_TUNE_UP = 'tune_up';
+
     const TYPE_PERIODIC_SERVICE = 'periodic_service';
-    const TYPE_REPAIR           = 'repair';
-    const TYPE_TIRE_CHANGE      = 'tire_change';
-    const TYPE_BRAKE_SERVICE    = 'brake_service';
-    const TYPE_OTHER            = 'other';
+
+    const TYPE_REPAIR = 'repair';
+
+    const TYPE_TIRE_CHANGE = 'tire_change';
+
+    const TYPE_BRAKE_SERVICE = 'brake_service';
+
+    const TYPE_OTHER = 'other';
 
     const SERVICE_TYPES = [
-        self::TYPE_OIL_CHANGE       => 'Ganti Oli',
-        self::TYPE_TUNE_UP          => 'Tune Up',
+        self::TYPE_OIL_CHANGE => 'Ganti Oli',
+        self::TYPE_TUNE_UP => 'Tune Up',
         self::TYPE_PERIODIC_SERVICE => 'Servis Berkala',
-        self::TYPE_REPAIR           => 'Perbaikan',
-        self::TYPE_TIRE_CHANGE      => 'Ganti Ban',
-        self::TYPE_BRAKE_SERVICE    => 'Servis Rem',
-        self::TYPE_OTHER            => 'Lainnya',
+        self::TYPE_REPAIR => 'Perbaikan',
+        self::TYPE_TIRE_CHANGE => 'Ganti Ban',
+        self::TYPE_BRAKE_SERVICE => 'Servis Rem',
+        self::TYPE_OTHER => 'Lainnya',
     ];
 
     protected $fillable = [
@@ -50,11 +56,11 @@ class ServiceHistory extends Model
     ];
 
     protected $casts = [
-        'service_date'          => 'date',
-        'next_service_date'     => 'date',
-        'cost'                  => 'decimal:2',
-        'odometer_in'           => 'integer',
-        'odometer_out'          => 'integer',
+        'service_date' => 'date',
+        'next_service_date' => 'date',
+        'cost' => 'decimal:2',
+        'odometer_in' => 'integer',
+        'odometer_out' => 'integer',
         'next_service_odometer' => 'integer',
     ];
 
@@ -103,6 +109,7 @@ class ServiceHistory extends Model
         if ($this->service_type === self::TYPE_OTHER && $this->service_type_label) {
             return $this->service_type_label;
         }
+
         return self::SERVICE_TYPES[$this->service_type] ?? $this->service_type;
     }
 
@@ -111,6 +118,6 @@ class ServiceHistory extends Model
      */
     public function getFormattedCostAttribute(): string
     {
-        return 'Rp ' . number_format($this->cost, 0, ',', '.');
+        return 'Rp '.number_format($this->cost, 0, ',', '.');
     }
 }

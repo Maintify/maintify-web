@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\WorkshopRegistrationController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,15 +16,14 @@ Route::get('/', function () {
     if (auth()->check()) {
         return redirect()->route('dashboard');
     }
+
     return redirect()->route('login');
 });
 
 // Authenticated & Workshop Approved Routes
 Route::middleware(['auth', 'verified', 'workshop.approved'])->group(function () {
     // Dashboard
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -40,4 +40,4 @@ Route::get('/workshop/pending', function () {
     return view('workshop.pending');
 })->middleware('auth')->name('workshop.pending');
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';

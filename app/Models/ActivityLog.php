@@ -51,15 +51,15 @@ class ActivityLog extends Model
         array $newValues = []
     ): self {
         return self::create([
-            'user_id'     => auth()->id(),
-            'action'      => $action,
-            'model_type'  => $model ? class_basename($model) : null,
-            'model_id'    => $model?->getKey(),
+            'user_id' => auth()->id(),
+            'action' => $action,
+            'model_type' => $model ? class_basename($model) : null,
+            'model_id' => $model?->getKey(),
             'description' => $description,
-            'old_values'  => $oldValues ?: null,
-            'new_values'  => $newValues ?: null,
-            'ip_address'  => request()->ip(),
-            'user_agent'  => request()->userAgent(),
+            'old_values' => $oldValues ?: null,
+            'new_values' => $newValues ?: null,
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
         ]);
     }
 }

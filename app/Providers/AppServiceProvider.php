@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Daftarkan SupabaseService sebagai singleton
         $this->app->singleton(SupabaseService::class, function ($app) {
-            return new SupabaseService();
+            return new SupabaseService;
         });
     }
 

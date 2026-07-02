@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
 class Vehicle extends Model
@@ -36,9 +36,9 @@ class Vehicle extends Model
 
     protected $casts = [
         'next_service_date' => 'date',
-        'is_active'         => 'boolean',
-        'health_score'      => 'integer',
-        'current_odometer'  => 'integer',
+        'is_active' => 'boolean',
+        'health_score' => 'integer',
+        'current_odometer' => 'integer',
     ];
 
     // =========================================================
@@ -80,6 +80,22 @@ class Vehicle extends Model
     public function latestService()
     {
         return $this->hasOne(ServiceHistory::class)->latestOfMany('service_date');
+    }
+
+    /**
+     * Semua QR Code kendaraan ini.
+     */
+    public function qrCodes(): HasMany
+    {
+        return $this->hasMany(QrCode::class);
+    }
+
+    /**
+     * QR Code aktif kendaraan ini.
+     */
+    public function activeQrCode()
+    {
+        return $this->hasOne(QrCode::class)->where('status', QrCode::STATUS_ACTIVE);
     }
 
     // =========================================================
@@ -124,6 +140,7 @@ class Vehicle extends Model
         if ($this->next_service_date && $this->next_service_date->isPast()) {
             return true;
         }
+
         return false;
     }
 
@@ -132,11 +149,11 @@ class Vehicle extends Model
      */
     public function getHealthBadgeColorAttribute(): string
     {
-        return match($this->health_status) {
-            'good'     => 'green',
-            'warning'  => 'yellow',
+        return match ($this->health_status) {
+            'good' => 'green',
+            'warning' => 'yellow',
             'critical' => 'red',
-            default    => 'gray',
+            default => 'gray',
         };
     }
 }

@@ -19,16 +19,18 @@ class User extends Authenticatable
     // Role Constants
     // =========================================================
 
-    const ROLE_SUPER_ADMIN    = 'super_admin';
-    const ROLE_WORKSHOP       = 'workshop';
-    const ROLE_VEHICLE_OWNER  = 'vehicle_owner';
+    const ROLE_SUPER_ADMIN = 'super_admin';
+
+    const ROLE_WORKSHOP = 'workshop';
+
+    const ROLE_VEHICLE_OWNER = 'vehicle_owner';
 
     /**
      * All available roles.
      */
     const ROLES = [
-        self::ROLE_SUPER_ADMIN   => 'Super Admin',
-        self::ROLE_WORKSHOP      => 'Bengkel Mitra',
+        self::ROLE_SUPER_ADMIN => 'Super Admin',
+        self::ROLE_WORKSHOP => 'Bengkel Mitra',
         self::ROLE_VEHICLE_OWNER => 'Pemilik Kendaraan',
     ];
 
@@ -67,7 +69,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
+            'password' => 'hashed',
         ];
     }
 
@@ -130,8 +132,10 @@ class User extends Authenticatable
     // =========================================================
 
     /**
-     * Kendaraan milik user (role: vehicle_owner).
-     */
+    * Kendaraan milik user (role: vehicle_owner).
+    *
+    * @return HasMany<Vehicle, $this>
+    */
     public function vehicles(): HasMany
     {
         return $this->hasMany(Vehicle::class);

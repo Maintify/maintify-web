@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use Illuminate\Http\Client\Response;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -21,13 +21,15 @@ use Illuminate\Support\Facades\Log;
 class SupabaseService
 {
     protected string $url;
+
     protected string $anonKey;
+
     protected string $serviceKey;
 
     public function __construct()
     {
-        $this->url        = config('supabase.url', '');
-        $this->anonKey    = config('supabase.anon_key', '');
+        $this->url = config('supabase.url', '');
+        $this->anonKey = config('supabase.anon_key', '');
         $this->serviceKey = config('supabase.service_key', '');
     }
 
@@ -38,24 +40,24 @@ class SupabaseService
     /**
      * Get HTTP client with anon key (public operations).
      */
-    protected function publicClient(): \Illuminate\Http\Client\PendingRequest
+    protected function publicClient(): PendingRequest
     {
         return Http::withHeaders([
-            'apikey'        => $this->anonKey,
-            'Authorization' => 'Bearer ' . $this->anonKey,
-            'Content-Type'  => 'application/json',
+            'apikey' => $this->anonKey,
+            'Authorization' => 'Bearer '.$this->anonKey,
+            'Content-Type' => 'application/json',
         ]);
     }
 
     /**
      * Get HTTP client with service key (admin operations).
      */
-    protected function adminClient(): \Illuminate\Http\Client\PendingRequest
+    protected function adminClient(): PendingRequest
     {
         return Http::withHeaders([
-            'apikey'        => $this->serviceKey,
-            'Authorization' => 'Bearer ' . $this->serviceKey,
-            'Content-Type'  => 'application/json',
+            'apikey' => $this->serviceKey,
+            'Authorization' => 'Bearer '.$this->serviceKey,
+            'Content-Type' => 'application/json',
         ]);
     }
 
@@ -70,14 +72,17 @@ class SupabaseService
     {
         if (empty($this->url) || empty($this->anonKey)) {
             Log::warning('Supabase: URL or Anon Key not configured.');
+
             return false;
         }
 
         try {
-            $response = $this->publicClient()->get($this->url . '/rest/v1/');
+            $response = $this->publicClient()->get($this->url.'/rest/v1/');
+
             return $response->successful() || $response->status() === 200;
         } catch (\Exception $e) {
-            Log::error('Supabase connection error: ' . $e->getMessage());
+            Log::error('Supabase connection error: '.$e->getMessage());
+
             return false;
         }
     }
@@ -90,23 +95,24 @@ class SupabaseService
      * Upload a file to Supabase Storage.
      *
      * @param  string  $bucket  Storage bucket name
-     * @param  string  $path    Path within the bucket
+     * @param  string  $path  Path within the bucket
      * @param  string  $contents  File contents
      * @param  string  $mimeType  MIME type of the file
      */
     public function uploadFile(string $bucket, string $path, string $contents, string $mimeType = 'application/octet-stream'): ?string
     {
-        $endpoint = $this->url . "/storage/v1/object/{$bucket}/{$path}";
+        $endpoint = $this->url."/storage/v1/object/{$bucket}/{$path}";
 
         $response = $this->adminClient()
             ->withHeaders(['Content-Type' => $mimeType])
             ->post($endpoint, $contents);
 
         if ($response->successful()) {
-            return $this->url . "/storage/v1/object/public/{$bucket}/{$path}";
+            return $this->url."/storage/v1/object/public/{$bucket}/{$path}";
         }
 
-        Log::error('Supabase Storage upload failed: ' . $response->body());
+        Log::error('Supabase Storage upload failed: '.$response->body());
+
         return null;
     }
 
@@ -115,7 +121,7 @@ class SupabaseService
      */
     public function getPublicUrl(string $bucket, string $path): string
     {
-        return $this->url . "/storage/v1/object/public/{$bucket}/{$path}";
+        return $this->url."/storage/v1/object/public/{$bucket}/{$path}";
     }
 
     /**
@@ -123,7 +129,7 @@ class SupabaseService
      */
     public function deleteFile(string $bucket, string $path): bool
     {
-        $endpoint = $this->url . "/storage/v1/object/{$bucket}";
+        $endpoint = $this->url."/storage/v1/object/{$bucket}";
 
         $response = $this->adminClient()
             ->delete($endpoint, ['prefixes' => [$path]]);
@@ -151,10 +157,10 @@ class SupabaseService
     public function getConfigSummary(): array
     {
         return [
-            'url'         => $this->url ?: '(not set)',
-            'anon_key'    => $this->anonKey    ? substr($this->anonKey, 0, 10) . '...' : '(not set)',
-            'service_key' => $this->serviceKey ? substr($this->serviceKey, 0, 10) . '...' : '(not set)',
-            'configured'  => $this->isConfigured(),
+            'url' => $this->url ?: '(not set)',
+            'anon_key' => $this->anonKey ? substr($this->anonKey, 0, 10).'...' : '(not set)',
+            'service_key' => $this->serviceKey ? substr($this->serviceKey, 0, 10).'...' : '(not set)',
+            'configured' => $this->isConfigured(),
         ];
     }
 }
