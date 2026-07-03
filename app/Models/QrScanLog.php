@@ -5,20 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class QrCode extends Model
+class QrScanLog extends Model
 {
     use HasFactory;
-
-    /**
-     * Status constants.
-     */
-    const STATUS_ACTIVE = 'active';
-
-    const STATUS_INACTIVE = 'inactive';
-
-    const STATUS_REVOKED = 'revoked';
 
     /**
      * The attributes that are mass assignable.
@@ -26,11 +16,12 @@ class QrCode extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'qr_code_id',
         'vehicle_id',
-        'qr_token',
-        'status',
-        'issued_at',
-        'revoked_at',
+        'workshop_id',
+        'scanned_by_staff_id',
+        'is_valid_scan',
+        'scanned_at',
     ];
 
     /**
@@ -39,8 +30,8 @@ class QrCode extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'issued_at' => 'datetime',
-        'revoked_at' => 'datetime',
+        'is_valid_scan' => 'boolean',
+        'scanned_at' => 'datetime',
     ];
 
     // =========================================================
@@ -48,7 +39,15 @@ class QrCode extends Model
     // =========================================================
 
     /**
-     * Get the vehicle that owns this QR code.
+     * Get the QR code associated with this scan log.
+     */
+    public function qrCode(): BelongsTo
+    {
+        return $this->belongsTo(QrCode::class);
+    }
+
+    /**
+     * Get the vehicle associated with this scan log.
      */
     public function vehicle(): BelongsTo
     {
@@ -56,10 +55,18 @@ class QrCode extends Model
     }
 
     /**
-     * Get all scan logs for this QR code.
+     * Get the workshop where the scan occurred.
      */
-    public function scanLogs(): HasMany
+    public function workshop(): BelongsTo
     {
-        return $this->hasMany(QrScanLog::class);
+        return $this->belongsTo(Workshop::class);
+    }
+
+    /**
+     * Get the staff member who performed the scan.
+     */
+    public function scannedByStaff(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'scanned_by_staff_id');
     }
 }

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Workshop extends Model
@@ -54,11 +55,35 @@ class Workshop extends Model
     }
 
     /**
-     * Semua histori service yang dikerjakan bengkel ini.
+     * Semua record service yang dikerjakan bengkel ini.
      */
-    public function serviceHistories(): HasMany
+    public function serviceRecords(): HasMany
     {
-        return $this->hasMany(ServiceHistory::class);
+        return $this->hasMany(ServiceRecord::class);
+    }
+
+    /**
+     * Semua log scan QR Code di bengkel ini.
+     */
+    public function scanLogs(): HasMany
+    {
+        return $this->hasMany(QrScanLog::class);
+    }
+
+    /**
+     * Semua staf yang bekerja di bengkel ini.
+     */
+    public function staff(): HasMany
+    {
+        return $this->hasMany(WorkshopStaff::class);
+    }
+
+    /**
+     * Data verifikasi untuk bengkel ini.
+     */
+    public function verification(): HasOne
+    {
+        return $this->hasOne(WorkshopVerification::class);
     }
 
     // =========================================================

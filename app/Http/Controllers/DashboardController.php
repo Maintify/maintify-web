@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ServiceHistory;
+use App\Models\ServiceRecord;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Models\Workshop;
@@ -49,7 +49,7 @@ class DashboardController extends Controller
             ->orderBy('next_service_date')
             ->first();
 
-        $recentActivities = ServiceHistory::whereIn('vehicle_id', $vehicleIds)
+        $recentActivities = ServiceRecord::whereIn('vehicle_id', $vehicleIds)
             ->with(['vehicle', 'workshop'])
             ->orderByDesc('service_date')
             ->limit(5)
@@ -57,7 +57,7 @@ class DashboardController extends Controller
 
         $recentVehicles = $user->vehicles()->latest()->limit(3)->get();
 
-        $totalServices = ServiceHistory::whereIn('vehicle_id', $vehicleIds)->count();
+        $totalServices = ServiceRecord::whereIn('vehicle_id', $vehicleIds)->count();
 
         return view('dashboard', compact(
             'totalVehicles',
@@ -78,21 +78,21 @@ class DashboardController extends Controller
         /** @var Workshop $workshop */
         $workshop = $user->workshop;
 
-        $totalServices = $workshop->serviceHistories()->count();
+        $totalServices = $workshop->serviceRecords()->count();
 
-        $thisMonthServices = $workshop->serviceHistories()
+        $thisMonthServices = $workshop->serviceRecords()
             ->whereMonth('service_date', now()->month)
             ->whereYear('service_date', now()->year)
             ->count();
 
-        $recentServices = $workshop->serviceHistories()
+        $recentServices = $workshop->serviceRecords()
             ->with(['vehicle', 'vehicle.owner'])
             ->orderByDesc('service_date')
             ->limit(5)
             ->get();
 
-        $activeCustomers = $workshop->serviceHistories()
-            ->join('vehicles', 'service_histories.vehicle_id', '=', 'vehicles.id')
+        $activeCustomers = $workshop->serviceRecords()
+            ->join('vehicles', 'service_records.vehicle_id', '=', 'vehicles.id')
             ->distinct('vehicles.user_id')
             ->count('vehicles.user_id');
 
@@ -123,7 +123,7 @@ class DashboardController extends Controller
 
         $pendingWorkshops = Workshop::where('status', Workshop::STATUS_PENDING)->count();
 
-        $totalServiceRecords = ServiceHistory::count();
+        $totalServiceRecords = ServiceRecord::count();
 
         return view('dashboard', compact(
             'totalUsers',

@@ -69,9 +69,9 @@ class Vehicle extends Model
     /**
      * Semua histori service kendaraan ini.
      */
-    public function serviceHistories(): HasMany
+    public function serviceRecords(): HasMany
     {
-        return $this->hasMany(ServiceHistory::class);
+        return $this->hasMany(ServiceRecord::class);
     }
 
     /**
@@ -79,7 +79,7 @@ class Vehicle extends Model
      */
     public function latestService()
     {
-        return $this->hasOne(ServiceHistory::class)->latestOfMany('service_date');
+        return $this->hasOne(ServiceRecord::class)->latestOfMany('service_date');
     }
 
     /**
@@ -96,6 +96,22 @@ class Vehicle extends Model
     public function activeQrCode()
     {
         return $this->hasOne(QrCode::class)->where('status', QrCode::STATUS_ACTIVE);
+    }
+
+    /**
+     * Semua log scan QR Code untuk kendaraan ini.
+     */
+    public function scanLogs(): HasMany
+    {
+        return $this->hasMany(QrScanLog::class);
+    }
+
+    /**
+     * Semua transfer kepemilikan untuk kendaraan ini.
+     */
+    public function ownershipTransfers(): HasMany
+    {
+        return $this->hasMany(OwnershipTransfer::class);
     }
 
     // =========================================================

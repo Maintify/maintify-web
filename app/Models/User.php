@@ -150,10 +150,58 @@ class User extends Authenticatable
     }
 
     /**
-     * Log aktivitas user.
+     * Audit log dari aksi yang dilakukan user ini.
      */
-    public function activityLogs(): HasMany
+    public function auditLogs(): HasMany
     {
-        return $this->hasMany(ActivityLog::class);
+        return $this->hasMany(AuditLog::class, 'actor_user_id');
+    }
+
+    /**
+     * Semua log scan QR Code yang dilakukan oleh staff/user ini.
+     */
+    public function scanLogs(): HasMany
+    {
+        return $this->hasMany(QrScanLog::class, 'scanned_by_staff_id');
+    }
+
+    /**
+     * Data keanggotaan staff bengkel untuk user ini.
+     */
+    public function workshopStaff(): HasOne
+    {
+        return $this->hasOne(WorkshopStaff::class);
+    }
+
+    /**
+     * Semua review/verifikasi bengkel yang dilakukan oleh super admin (user ini).
+     */
+    public function workshopReviews(): HasMany
+    {
+        return $this->hasMany(WorkshopVerification::class, 'reviewed_by');
+    }
+
+    /**
+     * Transfer kepemilikan yang dikirim oleh user ini (sebagai pengirim).
+     */
+    public function outgoingTransfers(): HasMany
+    {
+        return $this->hasMany(OwnershipTransfer::class, 'from_user_id');
+    }
+
+    /**
+     * Transfer kepemilikan yang diterima oleh user ini (sebagai penerima).
+     */
+    public function incomingTransfers(): HasMany
+    {
+        return $this->hasMany(OwnershipTransfer::class, 'to_user_id');
+    }
+
+    /**
+     * Semua notifikasi in-app untuk user ini.
+     */
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class);
     }
 }
