@@ -4,6 +4,8 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 class RegistrationTest extends TestCase
@@ -92,7 +94,7 @@ class RegistrationTest extends TestCase
 
         // Workshop users are redirected to register.workshop if route exists,
         // otherwise fall back to dashboard.
-        if (\Illuminate\Support\Facades\Route::has('register.workshop')) {
+        if (Route::has('register.workshop')) {
             $response->assertRedirect(route('register.workshop'));
         } else {
             $response->assertRedirect(route('dashboard'));
@@ -192,7 +194,7 @@ class RegistrationTest extends TestCase
 
         $this->assertNotNull($user);
         $this->assertNotEquals('password', $user->password);
-        $this->assertTrue(\Illuminate\Support\Facades\Hash::check('password', $user->password));
+        $this->assertTrue(Hash::check('password', $user->password));
     }
 
     // =========================================================
