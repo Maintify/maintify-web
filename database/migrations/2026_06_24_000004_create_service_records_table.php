@@ -16,14 +16,14 @@ return new class extends Migration
             $table->foreignId('vehicle_id')->constrained('vehicles')->onDelete('cascade');
             $table->foreignId('workshop_id')->constrained('workshops')->onDelete('cascade');
             $table->foreignId('performed_by')->nullable()->constrained('users')->onDelete('set null');
-            
+
             $table->string('service_type');
             $table->unsignedInteger('odometer_at_service');
             $table->text('mechanic_notes')->nullable();
             $table->enum('status', ['completed', 'in_progress'])->default('completed');
             $table->decimal('total_cost', 12, 2)->default(0);
             $table->timestamp('service_date');
-            
+
             $table->timestamps();
             $table->softDeletes();
 

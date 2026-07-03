@@ -16,6 +16,7 @@ class WorkshopStaff extends Model
      * Position constants.
      */
     const POSITION_MECHANIC = 'mechanic';
+
     const POSITION_ADMIN = 'admin';
 
     protected $fillable = [

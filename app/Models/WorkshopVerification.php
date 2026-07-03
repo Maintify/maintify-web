@@ -16,8 +16,11 @@ class WorkshopVerification extends Model
      * Status constants.
      */
     const STATUS_PENDING = 'pending';
+
     const STATUS_APPROVED = 'approved';
+
     const STATUS_REJECTED = 'rejected';
+
     const STATUS_REVISION_NEEDED = 'revision_needed';
 
     protected $fillable = [

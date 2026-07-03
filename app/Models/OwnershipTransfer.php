@@ -16,9 +16,13 @@ class OwnershipTransfer extends Model
      * Status constants matching the workflow stages.
      */
     const STATUS_PENDING_RECIPIENT = 'pending_recipient';
+
     const STATUS_APPROVED = 'approved';
+
     const STATUS_CONFIRMED = 'confirmed';
+
     const STATUS_REJECTED = 'rejected';
+
     const STATUS_EXPIRED = 'expired';
 
     protected $fillable = [

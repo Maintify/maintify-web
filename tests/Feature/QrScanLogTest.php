@@ -20,7 +20,7 @@ class QrScanLogTest extends TestCase
         // 1. Create dependencies
         $owner = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
         $staff = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
-        
+
         $workshop = Workshop::create([
             'user_id' => $staff->id,
             'name' => 'Bengkel Test',
