@@ -1,13 +1,14 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><a href="https://maintify.app" target="_blank"><strong>Maintify</strong></a></p>
 
 <p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+<a href="https://github.com/Maintify/maintify-web/actions/workflows/ci.yml"><img src="https://github.com/Maintify/maintify-web/actions/workflows/ci.yml/badge.svg" alt="CI Pipeline"></a>
+<a href="https://github.com/Maintify/maintify-web"><img src="https://img.shields.io/badge/PHP-8.2-blue" alt="PHP 8.2"></a>
+<a href="https://laravel.com"><img src="https://img.shields.io/badge/Laravel-12.x-red" alt="Laravel 12"></a>
 </p>
 
-## About Laravel
+## About Maintify
+
+**Maintify** adalah platform digital berbasis QR Code untuk menyimpan dan mengelola histori service kendaraan bermotor secara terpusat.
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 

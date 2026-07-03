@@ -1,0 +1,129 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: ["main", "develop"]
+  pull_request:
+    branches: ["main", "develop"]
+
+jobs:
+  tests:
+    name: Tests (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: true
+      matrix:
+        php: ["8.2"]
+
+    steps:
+      # ─────────────────────────────────────────────────────────
+      # 1. Checkout
+      # ─────────────────────────────────────────────────────────
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ─────────────────────────────────────────────────────────
+      # 2. Setup PHP
+      # ─────────────────────────────────────────────────────────
+      - name: Setup PHP ${{ matrix.php }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, bcmath, pdo, pdo_sqlite, sqlite3
+          coverage: none
+
+      # ─────────────────────────────────────────────────────────
+      # 3. Cache Composer dependencies
+      # ─────────────────────────────────────────────────────────
+      - name: Get Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      # ─────────────────────────────────────────────────────────
+      # 4. Install PHP dependencies
+      # ─────────────────────────────────────────────────────────
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist --optimize-autoloader
+
+      # ─────────────────────────────────────────────────────────
+      # 5. Prepare Laravel environment
+      # ─────────────────────────────────────────────────────────
+      - name: Copy .env.testing
+        run: cp .env.example .env
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      # ─────────────────────────────────────────────────────────
+      # 6. Run PHPUnit tests (SQLite in-memory — no DB needed)
+      # ─────────────────────────────────────────────────────────
+      - name: Run PHPUnit Tests
+        run: php artisan test --parallel
+
+  lint:
+    name: Code Style (Pint)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-lint-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-lint-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Run Pint (check mode — no auto-fix)
+        run: ./vendor/bin/pint --test
+
+  static-analysis:
+    name: Static Analysis (PHPStan)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.2"
+          coverage: none
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.composer/cache
+          key: ${{ runner.os }}-composer-phpstan-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-phpstan-
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Copy .env
+        run: cp .env.example .env
+
+      - name: Generate application key
+        run: php artisan key:generate
+
+      - name: Run PHPStan
+        run: ./vendor/bin/phpstan analyse --memory-limit=512M --no-progress

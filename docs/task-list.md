@@ -5,7 +5,7 @@
 **Version:** 2.0 | **Date:** 02 July 2026
 **References:** PRD.md, erd.md, plan.md
 **Tech Stack (Actual):** Laravel (PHP), Blade, TailwindCSS, Supabase
-**Status Legend:** `[ ]` To Do · `[/]` In Progress · `[x]` Done
+**Status Legend:** `[ ]` To Do · `[/]` In Progress · `[x]` Done · `[~]` Skipped / Deferred
 
 ---
 
@@ -333,7 +333,7 @@
   - `.github/workflows/ci.yml`
 - **Suggested Commit Message:** `ci: add github actions pipeline for tests and lint`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -353,7 +353,7 @@
   - `.github/workflows/deploy.yml`, deployment configuration files
 - **Suggested Commit Message:** `ci: add staging and production deployment pipeline`
 
-**Status:** `[ ]` To Do
+**Status:** `[~]` Skipped — Pending hosting decision (VPS / PaaS / Cloud). Revisit when infrastructure is confirmed.
 
 ---
 
@@ -386,7 +386,7 @@
   - `tests/Feature/Auth/RegistrationTest.php`
 - **Suggested Commit Message:** `feat(auth): implement customer registration with role selection`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 

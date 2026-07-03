@@ -30,6 +30,7 @@ class UserFactory extends Factory
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'role' => User::ROLE_VEHICLE_OWNER,
         ];
     }
 
@@ -40,6 +41,36 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the user has the vehicle_owner role.
+     */
+    public function vehicleOwner(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => User::ROLE_VEHICLE_OWNER,
+        ]);
+    }
+
+    /**
+     * Indicate that the user has the workshop role.
+     */
+    public function workshop(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => User::ROLE_WORKSHOP,
+        ]);
+    }
+
+    /**
+     * Indicate that the user has the super_admin role.
+     */
+    public function superAdmin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => User::ROLE_SUPER_ADMIN,
         ]);
     }
 }
