@@ -26,8 +26,8 @@ class UserSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'admin@maintify.app'],
             [
-                'name'     => 'Super Admin',
-                'role'     => User::ROLE_SUPER_ADMIN,
+                'name' => 'Super Admin',
+                'role' => User::ROLE_SUPER_ADMIN,
                 'password' => Hash::make('password'),
             ]
         );
@@ -38,8 +38,8 @@ class UserSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'bengkel.majujaya@maintify.app'],
             [
-                'name'     => 'Hendra Wijaya',
-                'role'     => User::ROLE_WORKSHOP,
+                'name' => 'Hendra Wijaya',
+                'role' => User::ROLE_WORKSHOP,
                 'password' => Hash::make('password'),
             ]
         );
@@ -50,8 +50,8 @@ class UserSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'bengkel.sentosa@maintify.app'],
             [
-                'name'     => 'Budi Santoso',
-                'role'     => User::ROLE_WORKSHOP,
+                'name' => 'Budi Santoso',
+                'role' => User::ROLE_WORKSHOP,
                 'password' => Hash::make('password'),
             ]
         );
@@ -62,8 +62,8 @@ class UserSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'rian@maintify.app'],
             [
-                'name'     => 'Rian Pratama',
-                'role'     => User::ROLE_VEHICLE_OWNER,
+                'name' => 'Rian Pratama',
+                'role' => User::ROLE_VEHICLE_OWNER,
                 'password' => Hash::make('password'),
             ]
         );
@@ -74,8 +74,8 @@ class UserSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'dewi@maintify.app'],
             [
-                'name'     => 'Dewi Anggraini',
-                'role'     => User::ROLE_VEHICLE_OWNER,
+                'name' => 'Dewi Anggraini',
+                'role' => User::ROLE_VEHICLE_OWNER,
                 'password' => Hash::make('password'),
             ]
         );
@@ -86,8 +86,8 @@ class UserSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'agus@maintify.app'],
             [
-                'name'     => 'Agus Setiawan',
-                'role'     => User::ROLE_VEHICLE_OWNER,
+                'name' => 'Agus Setiawan',
+                'role' => User::ROLE_VEHICLE_OWNER,
                 'password' => Hash::make('password'),
             ]
         );

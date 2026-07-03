@@ -26,6 +26,7 @@ class WorkshopSeeder extends Seeder
 
         if (! $workshopUser1 || ! $workshopUser2) {
             $this->command->warn('⚠️  Workshop users not found. Run UserSeeder first.');
+
             return;
         }
 
@@ -35,16 +36,16 @@ class WorkshopSeeder extends Seeder
         $workshop1 = Workshop::firstOrCreate(
             ['user_id' => $workshopUser1->id],
             [
-                'name'        => 'Bengkel Maju Jaya',
-                'phone'       => '08123456789',
-                'email'       => 'info@bengkelmajujaya.com',
-                'address'     => 'Jl. Raya Kebon Jeruk No. 45',
-                'city'        => 'Jakarta Barat',
-                'province'    => 'DKI Jakarta',
+                'name' => 'Bengkel Maju Jaya',
+                'phone' => '08123456789',
+                'email' => 'info@bengkelmajujaya.com',
+                'address' => 'Jl. Raya Kebon Jeruk No. 45',
+                'city' => 'Jakarta Barat',
+                'province' => 'DKI Jakarta',
                 'postal_code' => '11530',
                 'description' => 'Bengkel resmi kendaraan bermotor roda dua dan empat dengan pengalaman lebih dari 10 tahun.',
-                'is_active'   => true,
-                'status'      => Workshop::STATUS_APPROVED,
+                'is_active' => true,
+                'status' => Workshop::STATUS_APPROVED,
                 'approved_at' => now()->subDays(30),
                 'approved_by' => $superAdmin?->id,
             ]
@@ -54,10 +55,10 @@ class WorkshopSeeder extends Seeder
         WorkshopVerification::firstOrCreate(
             ['workshop_id' => $workshop1->id],
             [
-                'reviewed_by'      => $superAdmin?->id,
-                'status'           => 'approved',
+                'reviewed_by' => $superAdmin?->id,
+                'status' => 'approved',
                 'rejection_reason' => null,
-                'reviewed_at'      => now()->subDays(30),
+                'reviewed_at' => now()->subDays(30),
             ]
         );
 
@@ -67,16 +68,16 @@ class WorkshopSeeder extends Seeder
         $workshop2 = Workshop::firstOrCreate(
             ['user_id' => $workshopUser2->id],
             [
-                'name'        => 'Bengkel Sentosa Motor',
-                'phone'       => '08567891234',
-                'email'       => 'sentosamotor@gmail.com',
-                'address'     => 'Jl. Pemuda No. 12, RT 03/RW 05',
-                'city'        => 'Surabaya',
-                'province'    => 'Jawa Timur',
+                'name' => 'Bengkel Sentosa Motor',
+                'phone' => '08567891234',
+                'email' => 'sentosamotor@gmail.com',
+                'address' => 'Jl. Pemuda No. 12, RT 03/RW 05',
+                'city' => 'Surabaya',
+                'province' => 'Jawa Timur',
                 'postal_code' => '60271',
                 'description' => 'Spesialisasi service motor matic dan bebek.',
-                'is_active'   => false,
-                'status'      => Workshop::STATUS_PENDING,
+                'is_active' => false,
+                'status' => Workshop::STATUS_PENDING,
                 'approved_at' => null,
                 'approved_by' => null,
             ]
@@ -86,10 +87,10 @@ class WorkshopSeeder extends Seeder
         WorkshopVerification::firstOrCreate(
             ['workshop_id' => $workshop2->id],
             [
-                'reviewed_by'      => null,
-                'status'           => 'pending',
+                'reviewed_by' => null,
+                'status' => 'pending',
                 'rejection_reason' => null,
-                'reviewed_at'      => null,
+                'reviewed_at' => null,
             ]
         );
 
