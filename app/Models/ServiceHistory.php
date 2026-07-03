@@ -110,7 +110,8 @@ class ServiceHistory extends Model
             return $this->service_type_label;
         }
 
-        return self::SERVICE_TYPES[$this->service_type] ?? $this->service_type;
+        // All known service_type values are defined in SERVICE_TYPES
+        return self::SERVICE_TYPES[$this->service_type];
     }
 
     /**
@@ -118,6 +119,6 @@ class ServiceHistory extends Model
      */
     public function getFormattedCostAttribute(): string
     {
-        return 'Rp '.number_format($this->cost, 0, ',', '.');
+        return 'Rp '.number_format((float) $this->cost, 0, ',', '.');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Workshop;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +17,7 @@ class WorkshopApprovedMiddleware
         $user = $request->user();
 
         if ($user && $user->isWorkshop()) {
+            /** @var Workshop|null $workshop */
             $workshop = $user->workshop;
 
             // Jika workshop tidak ada atau belum approved, redirect ke pending

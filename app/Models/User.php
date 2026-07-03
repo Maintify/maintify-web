@@ -132,10 +132,10 @@ class User extends Authenticatable
     // =========================================================
 
     /**
-    * Kendaraan milik user (role: vehicle_owner).
-    *
-    * @return HasMany<Vehicle, $this>
-    */
+     * Kendaraan milik user (role: vehicle_owner).
+     *
+     * @return HasMany<Vehicle, $this>
+     */
     public function vehicles(): HasMany
     {
         return $this->hasMany(Vehicle::class);

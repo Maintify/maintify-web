@@ -153,7 +153,6 @@ class Vehicle extends Model
             'good' => 'green',
             'warning' => 'yellow',
             'critical' => 'red',
-            default => 'gray',
         };
     }
 }

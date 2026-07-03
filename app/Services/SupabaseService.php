@@ -105,7 +105,8 @@ class SupabaseService
 
         $response = $this->adminClient()
             ->withHeaders(['Content-Type' => $mimeType])
-            ->post($endpoint, $contents);
+            ->withBody($contents, $mimeType)
+            ->post($endpoint);
 
         if ($response->successful()) {
             return $this->url."/storage/v1/object/public/{$bucket}/{$path}";

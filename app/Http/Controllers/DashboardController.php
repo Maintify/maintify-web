@@ -75,6 +75,7 @@ class DashboardController extends Controller
      */
     private function workshopDashboard(User $user): View
     {
+        /** @var Workshop $workshop */
         $workshop = $user->workshop;
 
         $totalServices = $workshop->serviceHistories()->count();
