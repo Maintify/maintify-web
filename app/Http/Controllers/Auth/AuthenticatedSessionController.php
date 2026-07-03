@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\User;
+use App\Models\Workshop;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,14 +30,14 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         // Workshop users with pending/rejected status → go to pending page
         if ($user->isWorkshop()) {
-            /** @var \App\Models\Workshop|null $workshop */
+            /** @var Workshop|null $workshop */
             $workshop = $user->workshop;
-            if (! $workshop || $workshop->status !== \App\Models\Workshop::STATUS_APPROVED) {
+            if (! $workshop || $workshop->status !== Workshop::STATUS_APPROVED) {
                 return redirect()->route('workshop.pending');
             }
         }
