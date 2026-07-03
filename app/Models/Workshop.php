@@ -86,6 +86,14 @@ class Workshop extends Model
         return $this->hasOne(WorkshopVerification::class);
     }
 
+    /**
+     * Admin yang approve bengkel ini.
+     */
+    public function approver(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'approved_by');
+    }
+
     // =========================================================
     // Scopes
     // =========================================================

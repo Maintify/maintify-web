@@ -409,7 +409,7 @@
   - `tests/Feature/Auth/AuthenticationTest.php`
 - **Suggested Commit Message:** `feat(auth): implement login with role-based redirect`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 

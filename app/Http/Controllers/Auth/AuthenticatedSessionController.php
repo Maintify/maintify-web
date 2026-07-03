@@ -28,6 +28,18 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Workshop users with pending/rejected status → go to pending page
+        if ($user->isWorkshop()) {
+            /** @var \App\Models\Workshop|null $workshop */
+            $workshop = $user->workshop;
+            if (! $workshop || $workshop->status !== \App\Models\Workshop::STATUS_APPROVED) {
+                return redirect()->route('workshop.pending');
+            }
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 
