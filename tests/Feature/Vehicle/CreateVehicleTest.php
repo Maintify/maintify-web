@@ -11,6 +11,12 @@ class CreateVehicleTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutVite();
+    }
+
     /** @test */
     public function vehicle_owner_can_create_vehicle()
     {

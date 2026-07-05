@@ -666,7 +666,7 @@
   - `resources/views/vehicles/partials/spareparts-list.blade.php`
 - **Suggested Commit Message:** `feat(vehicle): implement vehicle detail page with timeline and stats`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -689,7 +689,7 @@
   - `app/Http/Requests/UpdateVehicleRequest.php`
 - **Suggested Commit Message:** `feat(vehicle): implement edit vehicle page`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -713,7 +713,7 @@
   - `tests/Unit/Services/QrCodeServiceTest.php`
 - **Suggested Commit Message:** `feat(qr): implement QR code generation service with encrypted tokens`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -735,7 +735,7 @@
   - `resources/views/vehicles/qr-code.blade.php`
 - **Suggested Commit Message:** `feat(qr): implement QR code display and download page`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -757,7 +757,7 @@
   - `tests/Feature/QrCode/RegenerateQrCodeTest.php`
 - **Suggested Commit Message:** `feat(qr): implement QR code regeneration with old code revocation`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 

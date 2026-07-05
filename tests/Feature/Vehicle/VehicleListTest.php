@@ -11,6 +11,12 @@ class VehicleListTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->withoutVite();
+    }
+
     /** @test */
     public function guests_are_redirected_to_login()
     {

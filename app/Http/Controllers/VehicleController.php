@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreVehicleRequest;
+use App\Http\Requests\UpdateVehicleRequest;
 use App\Models\Vehicle;
 use App\Services\FileUploadService;
 use Illuminate\Http\RedirectResponse;
@@ -74,7 +75,67 @@ class VehicleController extends Controller
             abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
         }
 
-        return view('vehicles.show', compact('vehicle'));
+        $serviceRecords = $vehicle->serviceRecords()
+            ->with(['workshop', 'parts', 'performedBy'])
+            ->orderBy('service_date', 'desc')
+            ->get();
+
+        $totalServices = $serviceRecords->count();
+        $totalCost = $serviceRecords->sum('total_cost');
+
+        $avgInterval = null;
+        if ($totalServices > 1) {
+            $recordsAsc = $serviceRecords->sortBy('service_date');
+            $firstDate = $recordsAsc->first()->service_date;
+            $lastDate = $recordsAsc->last()->service_date;
+            $diffInDays = $firstDate->diffInDays($lastDate);
+            $avgInterval = (int) round($diffInDays / ($totalServices - 1));
+        }
+
+        return view('vehicles.show', compact(
+            'vehicle',
+            'serviceRecords',
+            'totalServices',
+            'totalCost',
+            'avgInterval'
+        ));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Vehicle $vehicle): View
+    {
+        if ($vehicle->user_id !== auth()->id()) {
+            abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
+        }
+
+        return view('vehicles.edit', compact('vehicle'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(UpdateVehicleRequest $request, Vehicle $vehicle): RedirectResponse
+    {
+        // Authorization is handled in UpdateVehicleRequest.
+        $data = $request->validated();
+
+        if ($request->hasFile('photo')) {
+            // Delete old photo if exists
+            if ($vehicle->photo_url) {
+                $this->fileUploadService->delete($vehicle->photo_url);
+            }
+
+            $data['photo_url'] = $this->fileUploadService->uploadVehiclePhoto(
+                $request->file('photo')
+            );
+        }
+
+        $vehicle->update($data);
+
+        return redirect()->route('vehicles.show', $vehicle)
+            ->with('success', 'Data kendaraan berhasil diperbarui.');
     }
 }
 
