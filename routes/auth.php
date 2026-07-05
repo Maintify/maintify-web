@@ -22,6 +22,14 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
+    Route::get('otp-verify', [\App\Http\Controllers\Auth\SuperAdminOtpController::class, 'showVerifyForm'])
+        ->name('auth.otp.verify');
+
+    Route::post('otp-verify', [\App\Http\Controllers\Auth\SuperAdminOtpController::class, 'verify']);
+
+    Route::post('otp-resend', [\App\Http\Controllers\Auth\SuperAdminOtpController::class, 'resend'])
+        ->name('auth.otp.resend');
+
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
         ->name('password.request');
 

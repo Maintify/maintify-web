@@ -26,17 +26,57 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        $request->authenticate();
+        $user = User::where('email', $request->email)->first();
+
+        try {
+            $request->authenticate();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            if ($user && $user->isSuperAdmin()) {
+                \App\Models\AuditLog::create([
+                    'actor_user_id' => $user->id,
+                    'action' => 'login_failed_invalid_password',
+                    'ip_address' => $request->ip(),
+                    'metadata' => ['email' => $request->email],
+                ]);
+            }
+            throw $e;
+        }
+
+        /** @var User $authenticatedUser */
+        $authenticatedUser = Auth::user();
+
+        if ($authenticatedUser->isSuperAdmin()) {
+            // Record OTP Sent
+            \App\Models\AuditLog::create([
+                'actor_user_id' => $authenticatedUser->id,
+                'action' => 'login_attempt_otp_sent',
+                'ip_address' => $request->ip(),
+                'metadata' => ['email' => $authenticatedUser->email],
+            ]);
+
+            // Generate and Send OTP
+            $otpService = app(\App\Services\OtpService::class);
+            $otpService->generateAndSendOtp($authenticatedUser);
+
+            $userId = $authenticatedUser->id;
+
+            // Log out immediately to prevent unauthorized access
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            // Store temporary user ID in session
+            session(['otp_user_id' => $userId]);
+
+            return redirect()->route('auth.otp.verify');
+        }
 
         $request->session()->regenerate();
 
-        /** @var User $user */
-        $user = Auth::user();
-
         // Workshop users with pending/rejected status → go to pending page
-        if ($user->isWorkshop()) {
+        if ($authenticatedUser->isWorkshop()) {
             /** @var Workshop|null $workshop */
-            $workshop = $user->workshop;
+            $workshop = $authenticatedUser->workshop;
             if (! $workshop || $workshop->status !== Workshop::STATUS_APPROVED) {
                 return redirect()->route('workshop.pending');
             }

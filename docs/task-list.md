@@ -531,7 +531,7 @@
   - `tests/Feature/Auth/SuperAdminOtpTest.php`
 - **Suggested Commit Message:** `feat(auth): add OTP two-factor auth for super admin login`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -552,7 +552,7 @@
   - `tests/Feature/Auth/RateLimitTest.php`
 - **Suggested Commit Message:** `feat(security): add rate limiting to login endpoints`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -587,7 +587,7 @@
   - `tests/Feature/Vehicle/CreateVehicleTest.php`
 - **Suggested Commit Message:** `feat(vehicle): implement add vehicle form with validation and QR generation`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ##### Subtask 3.1.1a: Create Vehicle Photo Upload Handler
 
@@ -638,7 +638,7 @@
   - `resources/views/vehicles/partials/vehicle-card.blade.php`
 - **Suggested Commit Message:** `feat(vehicle): implement my vehicles list page with search`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 

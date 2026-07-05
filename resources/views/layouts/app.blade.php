@@ -76,7 +76,7 @@
                                     <span>Beranda</span>
                                 </a>
 
-                                <a href="#"
+                                <a href="{{ route('vehicles.index') }}"
                                    id="nav-vehicles"
                                    class="sidebar-nav-item {{ request()->routeIs('vehicles*') ? 'active' : '' }}">
                                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -391,7 +391,7 @@
                             <span>Beranda</span>
                         </a>
 
-                        <a href="#"
+                        <a href="{{ route('vehicles.index') }}"
                            id="bottom-nav-vehicle"
                            class="bottom-nav-item {{ request()->routeIs('vehicles*') ? 'active' : '' }}"
                            aria-label="My Vehicle">

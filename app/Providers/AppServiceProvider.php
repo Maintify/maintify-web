@@ -23,6 +23,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        \Illuminate\Support\Facades\RateLimiter::for('login', function (\Illuminate\Http\Request $request) {
+            $email = (string) $request->input('email');
+            return \Illuminate\Cache\RateLimiting\Limit::perMinute(5)->by($email . '|' . $request->ip());
+        });
     }
 }

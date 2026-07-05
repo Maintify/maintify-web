@@ -21,6 +21,7 @@ class Vehicle extends Model
         'type',
         'year',
         'color',
+        'fuel_type',
         'engine_number',
         'chassis_number',
         'current_odometer',
@@ -31,6 +32,7 @@ class Vehicle extends Model
         'photo_url',
         'health_status',
         'health_score',
+        'oil_life_percentage',
         'is_active',
     ];
 
@@ -39,6 +41,7 @@ class Vehicle extends Model
         'is_active' => 'boolean',
         'health_score' => 'integer',
         'current_odometer' => 'integer',
+        'oil_life_percentage' => 'integer',
     ];
 
     // =========================================================
@@ -51,6 +54,14 @@ class Vehicle extends Model
             if (empty($vehicle->qr_code)) {
                 $vehicle->qr_code = strtoupper(Str::random(12));
             }
+        });
+
+        static::created(function (Vehicle $vehicle) {
+            $vehicle->qrCodes()->create([
+                'qr_token' => $vehicle->qr_code,
+                'status' => QrCode::STATUS_ACTIVE,
+                'issued_at' => now(),
+            ]);
         });
     }
 
