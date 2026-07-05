@@ -24,6 +24,13 @@ class Workshop extends Model
         'postal_code',
         'description',
         'logo_url',
+        'owner_name',
+        'owner_ktp_number',
+        'legal_document_url',
+        'latitude',
+        'longitude',
+        'rating_average',
+        'operational_hours',
         'is_active',
         'status',
         'rejection_reason',
@@ -34,6 +41,9 @@ class Workshop extends Model
     protected $casts = [
         'is_active' => 'boolean',
         'approved_at' => 'datetime',
+        'rating_average' => 'float',
+        'latitude' => 'float',
+        'longitude' => 'float',
     ];
 
     const STATUS_PENDING = 'pending';
@@ -41,6 +51,32 @@ class Workshop extends Model
     const STATUS_APPROVED = 'approved';
 
     const STATUS_REJECTED = 'rejected';
+
+    const STATUS_REVISION_NEEDED = 'revision_needed';
+
+    // =========================================================
+    // Status Helpers
+    // =========================================================
+
+    public function isPending(): bool
+    {
+        return $this->status === self::STATUS_PENDING;
+    }
+
+    public function isApproved(): bool
+    {
+        return $this->status === self::STATUS_APPROVED;
+    }
+
+    public function isRejected(): bool
+    {
+        return $this->status === self::STATUS_REJECTED;
+    }
+
+    public function isRevisionNeeded(): bool
+    {
+        return $this->status === self::STATUS_REVISION_NEEDED;
+    }
 
     // =========================================================
     // Relationships

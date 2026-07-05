@@ -23,6 +23,13 @@ return new class extends Migration
             $table->string('postal_code', 10)->nullable();   // Kode pos
             $table->text('description')->nullable();         // Deskripsi bengkel
             $table->string('logo_url')->nullable();          // Logo bengkel (Supabase Storage)
+            $table->string('owner_name')->nullable();        // Nama pemilik bengkel
+            $table->string('owner_ktp_number')->nullable(); // Nomor KTP pemilik
+            $table->string('legal_document_url')->nullable(); // URL dokumen legalitas
+            $table->decimal('latitude', 10, 8)->nullable();  // Latitude geolokasi
+            $table->decimal('longitude', 11, 8)->nullable(); // Longitude geolokasi
+            $table->decimal('rating_average', 3, 2)->default(0.00); // Rating rata-rata
+            $table->string('operational_hours')->nullable(); // Jam operasional
             $table->boolean('is_active')->default(true);     // Status aktif
             $table->timestamps();
             $table->softDeletes();

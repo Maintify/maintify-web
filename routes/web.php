@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\WorkshopRegistrationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Workshop\WorkshopPendingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -36,8 +37,9 @@ Route::get('/register/workshop', [WorkshopRegistrationController::class, 'create
 Route::post('/register/workshop', [WorkshopRegistrationController::class, 'store']);
 
 // Workshop Pending Approval (authenticated)
-Route::get('/workshop/pending', function () {
-    return view('workshop.pending');
-})->middleware('auth')->name('workshop.pending');
+Route::get('/workshop/pending', [WorkshopPendingController::class, 'show'])
+    ->middleware('auth')
+    ->name('workshop.pending');
 
 require __DIR__.'/auth.php';
+

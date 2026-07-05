@@ -434,7 +434,7 @@
   - `tests/Feature/Auth/PasswordResetTest.php`
 - **Suggested Commit Message:** `feat(auth): implement forgot/reset password flow`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -460,7 +460,7 @@
   - `tests/Feature/Auth/WorkshopRegistrationTest.php`
 - **Suggested Commit Message:** `feat(auth): implement workshop registration multi-step form`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
