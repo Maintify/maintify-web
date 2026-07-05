@@ -482,7 +482,7 @@
   - `resources/views/workshop/pending.blade.php`
 - **Suggested Commit Message:** `feat(auth): add workshop pending approval page and middleware`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -506,7 +506,7 @@
   - `tests/Feature/Middleware/RoleMiddlewareTest.php`
 - **Suggested Commit Message:** `feat(auth): implement role-based access control middleware`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
