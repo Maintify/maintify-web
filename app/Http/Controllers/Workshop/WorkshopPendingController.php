@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Workshop;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\Workshop;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,7 +17,7 @@ class WorkshopPendingController extends Controller
      */
     public function show(Request $request): View|RedirectResponse
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = $request->user();
         $workshop = $user->workshop;
 

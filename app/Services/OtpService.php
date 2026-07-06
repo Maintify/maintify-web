@@ -39,7 +39,7 @@ class OtpService
     {
         $key = $this->getCacheKey($user->id);
 
-        if (!Cache::has($key)) {
+        if (! Cache::has($key)) {
             return ['status' => 'expired'];
         }
 

@@ -26,7 +26,7 @@ class FileUploadService
 
         $path = $file->store($directory, 'public');
 
-        return '/storage/' . $path;
+        return '/storage/'.$path;
     }
 
     /**
@@ -48,7 +48,6 @@ class FileUploadService
      * - Must be an image (JPG/PNG).
      * - Max size: 5MB (5120 KB).
      *
-     * @param  UploadedFile  $file
      *
      * @throws \InvalidArgumentException
      */

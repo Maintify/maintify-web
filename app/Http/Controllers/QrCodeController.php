@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehicle;
-use Illuminate\Http\Request;
+use App\Services\QrCodeService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -26,20 +27,20 @@ class QrCodeController extends Controller
     /**
      * Download the QR Code image.
      */
-    public function download(Vehicle $vehicle): StreamedResponse|\Illuminate\Http\RedirectResponse
+    public function download(Vehicle $vehicle): StreamedResponse|RedirectResponse
     {
         // Ensure only the owner can download
         if ($vehicle->user_id !== auth()->id()) {
             abort(403, 'Anda tidak memiliki akses ke halaman QR Code ini.');
         }
 
-        if (!$vehicle->qr_code_url) {
+        if (! $vehicle->qr_code_url) {
             return redirect()->back()->with('error', 'QR Code belum tersedia.');
         }
 
         $relativePath = str_replace('/storage/', '', $vehicle->qr_code_url);
-        
-        if (!Storage::disk('public')->exists($relativePath)) {
+
+        if (! Storage::disk('public')->exists($relativePath)) {
             return redirect()->back()->with('error', 'File QR Code tidak ditemukan.');
         }
 
@@ -52,7 +53,7 @@ class QrCodeController extends Controller
     /**
      * Regenerate the QR Code for the vehicle.
      */
-    public function regenerate(Vehicle $vehicle, \App\Services\QrCodeService $qrCodeService): \Illuminate\Http\RedirectResponse
+    public function regenerate(Vehicle $vehicle, QrCodeService $qrCodeService): RedirectResponse
     {
         // Ensure only the owner can regenerate
         if ($vehicle->user_id !== auth()->id()) {

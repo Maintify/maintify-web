@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('vehicles', function (Blueprint $table) {
-            if (!Schema::hasColumn('vehicles', 'fuel_type')) {
+            if (! Schema::hasColumn('vehicles', 'fuel_type')) {
                 $table->enum('fuel_type', ['gasoline', 'diesel', 'electric', 'hybrid'])
                     ->default('gasoline')
                     ->after('color');
             }
-            if (!Schema::hasColumn('vehicles', 'oil_life_percentage')) {
+            if (! Schema::hasColumn('vehicles', 'oil_life_percentage')) {
                 $table->unsignedTinyInteger('oil_life_percentage')
                     ->default(100)
                     ->after('health_score');

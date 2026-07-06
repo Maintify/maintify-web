@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Vehicle;
 
+use App\Models\ServicePart;
+use App\Models\ServiceRecord;
 use App\Models\User;
 use App\Models\Vehicle;
-use App\Models\ServiceRecord;
-use App\Models\ServicePart;
 use App\Models\Workshop;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

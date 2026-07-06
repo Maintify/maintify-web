@@ -1,9 +1,14 @@
 <?php
+
 require 'vendor/autoload.php';
-use chillerlan\QRCode\{QRCode, QROptions};
+use chillerlan\QRCode\Common\EccLevel;
+use chillerlan\QRCode\Output\QRMarkupSVG;
+use chillerlan\QRCode\QRCode;
+use chillerlan\QRCode\QROptions;
+
 $options = new QROptions([
-    'outputType' => \chillerlan\QRCode\Output\QRMarkupSVG::class,
-    'eccLevel' => \chillerlan\QRCode\Common\EccLevel::H
+    'outputType' => QRMarkupSVG::class,
+    'eccLevel' => EccLevel::H,
 ]);
 $qrcode = new QRCode($options);
 echo $qrcode->render('test');

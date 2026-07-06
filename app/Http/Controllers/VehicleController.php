@@ -24,11 +24,11 @@ class VehicleController extends Controller
         $search = $request->input('search');
         $query = Vehicle::where('user_id', auth()->id());
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where(function ($q) use ($search) {
-                $q->where('brand', 'like', '%' . $search . '%')
-                  ->orWhere('model', 'like', '%' . $search . '%')
-                  ->orWhere('plate_number', 'like', '%' . $search . '%');
+                $q->where('brand', 'like', '%'.$search.'%')
+                    ->orWhere('model', 'like', '%'.$search.'%')
+                    ->orWhere('plate_number', 'like', '%'.$search.'%');
             });
         }
 
@@ -138,4 +138,3 @@ class VehicleController extends Controller
             ->with('success', 'Data kendaraan berhasil diperbarui.');
     }
 }
-

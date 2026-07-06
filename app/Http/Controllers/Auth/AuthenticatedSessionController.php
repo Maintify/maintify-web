@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\AuditLog;
 use App\Models\User;
 use App\Models\Workshop;
+use App\Services\OtpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
@@ -30,9 +33,9 @@ class AuthenticatedSessionController extends Controller
 
         try {
             $request->authenticate();
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             if ($user && $user->isSuperAdmin()) {
-                \App\Models\AuditLog::create([
+                AuditLog::create([
                     'actor_user_id' => $user->id,
                     'action' => 'login_failed_invalid_password',
                     'ip_address' => $request->ip(),
@@ -47,7 +50,7 @@ class AuthenticatedSessionController extends Controller
 
         if ($authenticatedUser->isSuperAdmin()) {
             // Record OTP Sent
-            \App\Models\AuditLog::create([
+            AuditLog::create([
                 'actor_user_id' => $authenticatedUser->id,
                 'action' => 'login_attempt_otp_sent',
                 'ip_address' => $request->ip(),
@@ -55,7 +58,7 @@ class AuthenticatedSessionController extends Controller
             ]);
 
             // Generate and Send OTP
-            $otpService = app(\App\Services\OtpService::class);
+            $otpService = app(OtpService::class);
             $otpService->generateAndSendOtp($authenticatedUser);
 
             $userId = $authenticatedUser->id;

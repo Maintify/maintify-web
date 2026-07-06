@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\Auth\SuperAdminOtpController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
@@ -22,12 +23,12 @@ Route::middleware('guest')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'store']);
 
-    Route::get('otp-verify', [\App\Http\Controllers\Auth\SuperAdminOtpController::class, 'showVerifyForm'])
+    Route::get('otp-verify', [SuperAdminOtpController::class, 'showVerifyForm'])
         ->name('auth.otp.verify');
 
-    Route::post('otp-verify', [\App\Http\Controllers\Auth\SuperAdminOtpController::class, 'verify']);
+    Route::post('otp-verify', [SuperAdminOtpController::class, 'verify']);
 
-    Route::post('otp-resend', [\App\Http\Controllers\Auth\SuperAdminOtpController::class, 'resend'])
+    Route::post('otp-resend', [SuperAdminOtpController::class, 'resend'])
         ->name('auth.otp.resend');
 
     Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])

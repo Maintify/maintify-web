@@ -4,9 +4,10 @@ namespace App\Services;
 
 use App\Models\QrCode as QrCodeModel;
 use App\Models\Vehicle;
-use chillerlan\QRCode\{QRCode, QROptions};
-use chillerlan\QRCode\Data\QRMatrix;
-use chillerlan\QRCode\Output\QROutputInterface;
+use chillerlan\QRCode\Common\EccLevel;
+use chillerlan\QRCode\Output\QRMarkupSVG;
+use chillerlan\QRCode\QRCode;
+use chillerlan\QRCode\QROptions;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -25,7 +26,7 @@ class QrCodeService
     public function generateToken(): string
     {
         do {
-            $token = 'MNT-' . strtoupper(bin2hex(random_bytes(8))) . '-' . strtoupper(bin2hex(random_bytes(4)));
+            $token = 'MNT-'.strtoupper(bin2hex(random_bytes(8))).'-'.strtoupper(bin2hex(random_bytes(4)));
         } while (QrCodeModel::where('qr_token', $token)->exists());
 
         return $token;
@@ -34,7 +35,7 @@ class QrCodeService
     /**
      * Build the full resolve URL that the QR Code will encode.
      *
-     * @param string $token The unique QR token.
+     * @param  string  $token  The unique QR token.
      * @return string The URL encoded in the QR Code image.
      */
     public function buildResolveUrl(string $token): string
@@ -47,21 +48,21 @@ class QrCodeService
      *
      * Returns the raw PNG binary content.
      *
-     * @param string $data The data string to encode in the QR code (typically a URL).
+     * @param  string  $data  The data string to encode in the QR code (typically a URL).
      * @return string Raw PNG image binary.
      */
     public function generateQrImage(string $data): string
     {
         $options = new QROptions([
-            'outputType'          => \chillerlan\QRCode\Output\QRMarkupSVG::class,
-            'eccLevel'            => \chillerlan\QRCode\Common\EccLevel::H,
-            'scale'               => 10,
-            'outputBase64'        => false,
-            'svgViewBoxSize'      => null,
-            'addQuietzone'        => true,
-            'quietzoneSize'       => 2,
-            'markupDark'          => '#1A1C1C',
-            'markupLight'         => '#FFFFFF',
+            'outputType' => QRMarkupSVG::class,
+            'eccLevel' => EccLevel::H,
+            'scale' => 10,
+            'outputBase64' => false,
+            'svgViewBoxSize' => null,
+            'addQuietzone' => true,
+            'quietzoneSize' => 2,
+            'markupDark' => '#1A1C1C',
+            'markupLight' => '#FFFFFF',
         ]);
 
         $qrcode = new QRCode($options);
@@ -72,8 +73,8 @@ class QrCodeService
     /**
      * Generate a QR Code image and store it to disk as PNG.
      *
-     * @param string $data  The data to encode.
-     * @param string $filename  The filename (without extension).
+     * @param  string  $data  The data to encode.
+     * @param  string  $filename  The filename (without extension).
      * @return string The publicly accessible URL path of the stored image.
      */
     public function generateAndStore(string $data, string $filename): string
@@ -83,7 +84,7 @@ class QrCodeService
         $path = "qrcodes/{$filename}.svg";
         Storage::disk('public')->put($path, $svgContent);
 
-        return '/storage/' . $path;
+        return '/storage/'.$path;
     }
 
     /**
@@ -92,7 +93,7 @@ class QrCodeService
      * Creates a unique token, stores it in the qr_codes table,
      * generates the QR Code image, and stores it.
      *
-     * @param Vehicle $vehicle The vehicle to generate a QR Code for.
+     * @param  Vehicle  $vehicle  The vehicle to generate a QR Code for.
      * @return QrCodeModel The newly created QR Code record.
      */
     public function generateForVehicle(Vehicle $vehicle): QrCodeModel
@@ -101,7 +102,7 @@ class QrCodeService
         $resolveUrl = $this->buildResolveUrl($token);
 
         // Generate and store the QR Code image
-        $filename = "vehicle-{$vehicle->id}-" . Str::lower(Str::random(8));
+        $filename = "vehicle-{$vehicle->id}-".Str::lower(Str::random(8));
         $imageUrl = $this->generateAndStore($resolveUrl, $filename);
 
         // Update vehicle's qr_code and qr_code_url fields
@@ -126,7 +127,7 @@ class QrCodeService
      * Revokes all existing active QR codes for the vehicle,
      * then generates a new one.
      *
-     * @param Vehicle $vehicle The vehicle to regenerate QR Code for.
+     * @param  Vehicle  $vehicle  The vehicle to regenerate QR Code for.
      * @return QrCodeModel The newly created QR Code record.
      */
     public function regenerateForVehicle(Vehicle $vehicle): QrCodeModel
@@ -153,7 +154,7 @@ class QrCodeService
      *
      * Finds the active QR Code record by token and returns the associated vehicle.
      *
-     * @param string $token The QR token to resolve.
+     * @param  string  $token  The QR token to resolve.
      * @return Vehicle|null The associated vehicle, or null if not found/inactive.
      */
     public function resolveToken(string $token): ?Vehicle
@@ -162,7 +163,7 @@ class QrCodeService
             ->where('status', QrCodeModel::STATUS_ACTIVE)
             ->first();
 
-        if (!$qrCode) {
+        if (! $qrCode) {
             return null;
         }
 

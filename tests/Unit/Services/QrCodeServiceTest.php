@@ -19,7 +19,7 @@ class QrCodeServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->service = new QrCodeService();
+        $this->service = new QrCodeService;
     }
 
     // =========================================================

@@ -26,7 +26,7 @@ class SuperAdminOtpController extends Controller
      */
     public function showVerifyForm(Request $request): RedirectResponse|View
     {
-        if (!$request->session()->has('otp_user_id')) {
+        if (! $request->session()->has('otp_user_id')) {
             return redirect()->route('login');
         }
 
@@ -38,7 +38,7 @@ class SuperAdminOtpController extends Controller
      */
     public function verify(Request $request): RedirectResponse
     {
-        if (!$request->session()->has('otp_user_id')) {
+        if (! $request->session()->has('otp_user_id')) {
             return redirect()->route('login');
         }
 
@@ -53,7 +53,7 @@ class SuperAdminOtpController extends Controller
         $userId = $request->session()->get('otp_user_id');
         $user = User::find($userId);
 
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('login');
         }
 
@@ -111,14 +111,14 @@ class SuperAdminOtpController extends Controller
      */
     public function resend(Request $request): RedirectResponse
     {
-        if (!$request->session()->has('otp_user_id')) {
+        if (! $request->session()->has('otp_user_id')) {
             return redirect()->route('login');
         }
 
         $userId = $request->session()->get('otp_user_id');
         $user = User::find($userId);
 
-        if (!$user) {
+        if (! $user) {
             return redirect()->route('login');
         }
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\WorkshopRegistrationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QrCodeController;
+use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\Workshop\WorkshopPendingController;
 use Illuminate\Support\Facades\Route;
 
@@ -35,8 +36,8 @@ Route::middleware(['auth', 'verified', 'workshop.approved'])->group(function () 
 
 // Vehicle Owner Routes
 Route::middleware(['auth', 'verified', 'role:vehicle_owner'])->group(function () {
-    Route::resource('vehicles', \App\Http\Controllers\VehicleController::class);
-    
+    Route::resource('vehicles', VehicleController::class);
+
     // QR Code Management
     Route::get('vehicles/{vehicle}/qr', [QrCodeController::class, 'show'])->name('vehicles.qr.show');
     Route::get('vehicles/{vehicle}/qr/download', [QrCodeController::class, 'download'])->name('vehicles.qr.download');
@@ -53,4 +54,3 @@ Route::get('/workshop/pending', [WorkshopPendingController::class, 'show'])
     ->name('workshop.pending');
 
 require __DIR__.'/auth.php';
-

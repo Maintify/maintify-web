@@ -3,6 +3,9 @@
 namespace App\Providers;
 
 use App\Services\SupabaseService;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,9 +26,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        \Illuminate\Support\Facades\RateLimiter::for('login', function (\Illuminate\Http\Request $request) {
+        RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->input('email');
-            return \Illuminate\Cache\RateLimiting\Limit::perMinute(5)->by($email . '|' . $request->ip());
+
+            return Limit::perMinute(5)->by($email.'|'.$request->ip());
         });
     }
 }

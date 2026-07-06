@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Middleware;
 
-use App\Http\Middleware\RoleMiddleware;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Route;
