@@ -56,7 +56,7 @@ class Vehicle extends Model
             if (empty($vehicle->qr_code)) {
                 do {
                     $token = 'MNT-'.strtoupper(bin2hex(random_bytes(8))).'-'.strtoupper(bin2hex(random_bytes(4)));
-                } while (\App\Models\QrCode::where('qr_token', $token)->exists());
+                } while (QrCode::where('qr_token', $token)->exists());
 
                 $vehicle->qr_code = $token;
             }
