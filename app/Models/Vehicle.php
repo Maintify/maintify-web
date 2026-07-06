@@ -71,6 +71,8 @@ class Vehicle extends Model
 
     /**
      * Pemilik kendaraan.
+     *
+     * @return BelongsTo<User, $this>
      */
     public function owner(): BelongsTo
     {
@@ -79,6 +81,8 @@ class Vehicle extends Model
 
     /**
      * Semua histori service kendaraan ini.
+     *
+     * @return HasMany<ServiceRecord, $this>
      */
     public function serviceRecords(): HasMany
     {
@@ -94,7 +98,7 @@ class Vehicle extends Model
     }
 
     /**
-     * Semua QR Code kendaraan ini.
+     * @return HasMany<QrCode, $this>
      */
     public function qrCodes(): HasMany
     {

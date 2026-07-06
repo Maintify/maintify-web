@@ -143,6 +143,8 @@ class User extends Authenticatable
 
     /**
      * Bengkel yang dikelola user (role: workshop).
+     *
+     * @return HasOne<Workshop, $this>
      */
     public function workshop(): HasOne
     {

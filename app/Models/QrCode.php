@@ -49,6 +49,8 @@ class QrCode extends Model
 
     /**
      * Get the vehicle that owns this QR code.
+     *
+     * @return BelongsTo<Vehicle, $this>
      */
     public function vehicle(): BelongsTo
     {
