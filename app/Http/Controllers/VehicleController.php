@@ -6,6 +6,7 @@ use App\Http\Requests\StoreVehicleRequest;
 use App\Http\Requests\UpdateVehicleRequest;
 use App\Models\Vehicle;
 use App\Services\FileUploadService;
+use App\Services\QrCodeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -13,7 +14,8 @@ use Illuminate\View\View;
 class VehicleController extends Controller
 {
     public function __construct(
-        protected FileUploadService $fileUploadService
+        protected FileUploadService $fileUploadService,
+        protected QrCodeService $qrCodeService,
     ) {}
 
     /**
@@ -47,23 +49,35 @@ class VehicleController extends Controller
 
     /**
      * Store a newly created resource in storage.
+     *
+     * Acceptance Criteria (Task 4.1.1):
+     * - Saves vehicle data with validation.
+     * - Generates QR Code automatically on save (FR-057).
+     * - Redirects to QR Code page on success.
      */
     public function store(StoreVehicleRequest $request): RedirectResponse
     {
         $data = $request->validated();
 
+        // Handle photo upload
         if ($request->hasFile('photo')) {
             $data['photo_url'] = $this->fileUploadService->uploadVehiclePhoto(
                 $request->file('photo')
             );
         }
 
+        // Create vehicle — booted() will create a bare QrCode DB record
         $vehicle = Vehicle::create(array_merge($data, [
             'user_id' => auth()->id(),
         ]));
 
-        return redirect()->route('vehicles.show', $vehicle)
-            ->with('success', 'Kendaraan berhasil ditambahkan.');
+        // Generate QR Code image and update qr_code_url on the vehicle
+        // This also creates/updates the qr_codes table record properly
+        $this->qrCodeService->generateForVehicle($vehicle);
+
+        return redirect()
+            ->route('vehicles.qr.show', $vehicle)
+            ->with('success', 'Kendaraan berhasil didaftarkan! QR Code Digital ID kendaraan Anda telah diterbitkan.');
     }
 
     /**
@@ -118,7 +132,6 @@ class VehicleController extends Controller
      */
     public function update(UpdateVehicleRequest $request, Vehicle $vehicle): RedirectResponse
     {
-        // Authorization is handled in UpdateVehicleRequest.
         $data = $request->validated();
 
         if ($request->hasFile('photo')) {

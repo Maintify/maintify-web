@@ -59,11 +59,11 @@
 
                     @auth
                         @php
-                            $userRole = Auth::user()->role ?? 'user';
+                            $userRole = Auth::user()->role ?? 'vehicle_owner';
                         @endphp
 
-                        @if($userRole === 'user')
-                            {{-- User Navigation --}}
+                        @if($userRole === 'vehicle_owner')
+                            {{-- Vehicle Owner Navigation --}}
                             <div class="sidebar-nav-section">
                                 <p class="sidebar-nav-label">Menu Utama</p>
 
@@ -80,16 +80,15 @@
                                    id="nav-vehicles"
                                    class="sidebar-nav-item {{ request()->routeIs('vehicles*') ? 'active' : '' }}">
                                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-                                        <rect x="3" y="11" width="18" height="10" rx="2" stroke="currentColor" stroke-width="1.8"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M7 11V7a5 5 0 0110 0v4"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2 2h8l2-2zM8 6h4l2 4H6l2-4z"/>
                                     </svg>
-                                    <span>My Vehicle</span>
+                                    <span>Kendaraan Saya</span>
                                 </a>
 
-                                <a href="#"
+                                <a href="{{ route('vehicles.index') }}"
                                    id="nav-qr"
-                                   class="sidebar-nav-item {{ request()->routeIs('qr*') ? 'active' : '' }}">
+                                   class="sidebar-nav-item {{ request()->routeIs('vehicles.qr*') ? 'active' : '' }}">
                                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M14 14h3v3m0 4h3m-3 0v-4"/>
@@ -147,7 +146,7 @@
                                 </a>
                             </div>
 
-                        @elseif($userRole === 'superadmin')
+                        @elseif($userRole === 'super_admin')
                             {{-- Super Admin Navigation --}}
                             <div class="sidebar-nav-section">
                                 <p class="sidebar-nav-label">Admin Panel</p>

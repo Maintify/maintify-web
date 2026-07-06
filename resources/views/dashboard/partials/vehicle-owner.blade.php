@@ -14,7 +14,7 @@
             </h1>
             <p style="font-size:13px;color:#A1A1AA;margin:0;">Pantau kondisi kendaraan Anda hari ini</p>
         </div>
-        <a href="#" class="btn-primary btn-sm" style="white-space:nowrap;">
+        <a href="{{ route('vehicles.create') }}" class="btn-primary btn-sm" style="white-space:nowrap;">
             <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
             </svg>
@@ -114,7 +114,7 @@
                         <p style="font-size:11px;color:#71717A;margin:2px 0 0;">{{ $totalVehicles }} kendaraan terdaftar</p>
                     @endif
                 </div>
-                <a href="#" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;color:#ff9aa4;text-decoration:none;">
+                <a href="{{ route('vehicles.index') }}" style="display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:500;color:#ff9aa4;text-decoration:none;">
                     Lihat Semua
                     <svg style="width:12px;height:12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -133,7 +133,7 @@
                     <p class="empty-state-title">Belum ada kendaraan</p>
                     <p class="empty-state-desc">Tambahkan kendaraan untuk mulai memantau histori service</p>
                     <div style="margin-top:16px;">
-                        <a href="#" class="btn-primary btn-sm">
+                        <a href="{{ route('vehicles.create') }}" class="btn-primary btn-sm">
                             <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
                             </svg>
@@ -149,7 +149,7 @@
                             $vbg = match($vehicle->health_status) { 'good' => 'rgba(74,222,128,0.08)', 'warning' => 'rgba(251,191,36,0.08)', 'critical' => 'rgba(248,113,113,0.08)', default => 'rgba(113,113,122,0.06)' };
                             $vlabel = match($vehicle->health_status) { 'good' => 'Baik', 'warning' => 'Perlu Service', 'critical' => 'Kritis', default => 'Tidak Diketahui' };
                         @endphp
-                        <a href="#" style="display:flex;align-items:center;gap:14px;padding:14px 0;text-decoration:none;{{ !$loop->last ? 'border-bottom:1px solid #252828;' : '' }};transition:opacity 150ms;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                        <a href="{{ route('vehicles.show', $vehicle) }}" style="display:flex;align-items:center;gap:14px;padding:14px 0;text-decoration:none;{{ !$loop->last ? 'border-bottom:1px solid #252828;' : '' }};transition:opacity 150ms;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
                             {{-- Vehicle Icon --}}
                             <div style="width:46px;height:46px;border-radius:14px;background:{{ $vbg }};border:1px solid {{ $vc }}33;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                 <svg style="width:22px;height:22px;color:{{ $vc }};" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -236,13 +236,16 @@
         <div class="card">
             <div class="section-title"><h3>Akses Cepat</h3></div>
             <div style="display:flex;flex-direction:column;gap:8px;">
-                @foreach([
-                    ['icon' => 'M12 4v16m8-8H4', 'label' => 'Tambah Kendaraan', 'desc' => 'Daftarkan kendaraan baru', 'color' => '#ff9aa4', 'bg' => 'rgba(65,0,8,0.15)', 'border' => 'rgba(65,0,8,0.3)'],
-                    ['icon' => 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3z', 'label' => 'Lihat QR Code', 'desc' => 'Identitas digital kendaraan', 'color' => '#4ade80', 'bg' => 'rgba(34,197,94,0.08)', 'border' => 'rgba(34,197,94,0.2)'],
-                    ['icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', 'label' => 'Riwayat Service', 'desc' => 'Lihat semua histori', 'color' => '#60a5fa', 'bg' => 'rgba(59,130,246,0.08)', 'border' => 'rgba(59,130,246,0.2)'],
-                    ['icon' => 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z', 'label' => 'Cari Bengkel', 'desc' => 'Bengkel terdekat dari Anda', 'color' => '#fbbf24', 'bg' => 'rgba(245,158,11,0.08)', 'border' => 'rgba(245,158,11,0.2)'],
-                ] as $action)
-                    <a href="#" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:{{ $action['bg'] }};border:1px solid {{ $action['border'] }};text-decoration:none;transition:filter 150ms;" onmouseover="this.style.filter='brightness(1.12)'" onmouseout="this.style.filter=''">
+                @php
+                    $quickActions = [
+                        ['icon' => 'M12 4v16m8-8H4', 'label' => 'Tambah Kendaraan', 'desc' => 'Daftarkan kendaraan baru', 'color' => '#ff9aa4', 'bg' => 'rgba(65,0,8,0.15)', 'border' => 'rgba(65,0,8,0.3)', 'route' => route('vehicles.create')],
+                        ['icon' => 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3z', 'label' => 'Lihat QR Code', 'desc' => 'Identitas digital kendaraan', 'color' => '#4ade80', 'bg' => 'rgba(34,197,94,0.08)', 'border' => 'rgba(34,197,94,0.2)', 'route' => route('vehicles.index')],
+                        ['icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', 'label' => 'Riwayat Service', 'desc' => 'Lihat semua histori', 'color' => '#60a5fa', 'bg' => 'rgba(59,130,246,0.08)', 'border' => 'rgba(59,130,246,0.2)', 'route' => route('vehicles.index')],
+                        ['icon' => 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z', 'label' => 'Cari Bengkel', 'desc' => 'Bengkel terdekat dari Anda', 'color' => '#fbbf24', 'bg' => 'rgba(245,158,11,0.08)', 'border' => 'rgba(245,158,11,0.2)', 'route' => '#'],
+                    ];
+                @endphp
+                @foreach($quickActions as $action)
+                    <a href="{{ $action['route'] }}" style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;background:{{ $action['bg'] }};border:1px solid {{ $action['border'] }};text-decoration:none;transition:filter 150ms;" onmouseover="this.style.filter='brightness(1.12)'" onmouseout="this.style.filter=''">
                         <div style="width:38px;height:38px;border-radius:10px;background:rgba(0,0,0,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:{{ $action['color'] }};">
                             <svg style="width:18px;height:18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="{{ $action['icon'] }}"/>

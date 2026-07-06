@@ -790,7 +790,7 @@
   - `resources/views/dashboard/partials/vehicle-owner.blade.php`
 - **Suggested Commit Message:** `feat(dashboard): implement vehicle owner dashboard with stats`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` To Do
 
 ---
 
