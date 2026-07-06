@@ -816,7 +816,7 @@
   - `resources/views/dashboard/partials/workshop.blade.php`
 - **Suggested Commit Message:** `feat(dashboard): implement workshop admin dashboard with charts`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -843,7 +843,7 @@
   - `resources/views/dashboard/partials/super-admin.blade.php`
 - **Suggested Commit Message:** `feat(dashboard): implement super admin dashboard with platform stats`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 

@@ -53,4 +53,17 @@ Route::get('/workshop/pending', [WorkshopPendingController::class, 'show'])
     ->middleware('auth')
     ->name('workshop.pending');
 
+// Workshop Routes
+Route::middleware(['auth', 'verified', 'role:workshop', 'workshop.approved'])->prefix('workshop')->name('workshop.')->group(function () {
+    Route::get('/reports', function () {
+        return view('workshop.reports.index');
+    })->name('reports.index');
+});
+
+// Super Admin Routes
+Route::middleware(['auth', 'verified', 'role:super_admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::post('/workshops/{workshop}/approve', [\App\Http\Controllers\SuperAdmin\DashboardController::class, 'approve'])->name('workshops.approve');
+    Route::post('/workshops/{workshop}/reject', [\App\Http\Controllers\SuperAdmin\DashboardController::class, 'reject'])->name('workshops.reject');
+});
+
 require __DIR__.'/auth.php';

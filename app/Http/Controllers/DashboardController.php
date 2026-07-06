@@ -21,8 +21,8 @@ class DashboardController extends Controller
 
         return match ($user->role) {
             User::ROLE_VEHICLE_OWNER => $this->vehicleOwnerDashboard($user),
-            User::ROLE_WORKSHOP => $this->workshopDashboard($user),
-            User::ROLE_SUPER_ADMIN => $this->superAdminDashboard(),
+            User::ROLE_WORKSHOP => app(\App\Http\Controllers\Workshop\DashboardController::class)->index(),
+            User::ROLE_SUPER_ADMIN => app(\App\Http\Controllers\SuperAdmin\DashboardController::class)->index(),
             default => $this->vehicleOwnerDashboard($user),
         };
     }

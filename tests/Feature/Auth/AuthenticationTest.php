@@ -62,11 +62,18 @@ class AuthenticationTest extends TestCase
 
     public function test_super_admin_redirects_to_dashboard_after_login(): void
     {
+        \Illuminate\Support\Facades\Mail::fake();
         $user = User::factory()->superAdmin()->create();
 
-        $response = $this->post('/login', [
+        $this->post('/login', [
             'email' => $user->email,
             'password' => 'password',
+        ]);
+
+        $otp = \Illuminate\Support\Facades\Cache::get("otp:{$user->id}");
+
+        $response = $this->post('/otp-verify', [
+            'otp' => $otp,
         ]);
 
         $this->assertAuthenticated();
