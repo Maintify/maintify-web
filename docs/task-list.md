@@ -877,7 +877,7 @@
   - `tests/Feature/Workshop/QrScanTest.php`
 - **Suggested Commit Message:** `feat(workshop): implement browser-based QR code scanner`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 

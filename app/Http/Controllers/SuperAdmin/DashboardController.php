@@ -148,7 +148,7 @@ class DashboardController extends Controller
             [
                 'name' => $workshop->name,
                 'owner' => $workshop->owner_name,
-                'reason' => $request->rejection_reason
+                'reason' => $request->rejection_reason,
             ]
         );
 

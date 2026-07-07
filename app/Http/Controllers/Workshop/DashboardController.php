@@ -7,7 +7,6 @@ use App\Models\ServicePart;
 use App\Models\User;
 use App\Models\Workshop;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -20,10 +19,11 @@ class DashboardController extends Controller
         /** @var User $user */
         $user = auth()->user();
 
-        /** @var Workshop $workshop */
-        $workshop = $user->workshop ?: ($user->workshopStaff ? $user->workshopStaff->workshop : null);
+        /** @var Workshop|null $workshop */
+        $workshop = $user->workshop
+            ?? $user->workshopStaff?->workshop;
 
-        if (!$workshop) {
+        if ($workshop === null) {
             abort(404, 'Bengkel tidak ditemukan untuk akun ini.');
         }
 

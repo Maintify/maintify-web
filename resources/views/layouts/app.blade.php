@@ -129,13 +129,13 @@
                                     <span>Dashboard</span>
                                 </a>
 
-                                <a href="#" id="nav-scan"
-                                   class="sidebar-nav-item {{ request()->routeIs('scan*') ? 'active' : '' }}">
-                                    <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8H3a2 2 0 00-2 2v6a2 2 0 002 2h2m2-12V4a2 2 0 012-2h4a2 2 0 012 2v1"/>
-                                    </svg>
-                                    <span>Scan QR</span>
-                                </a>
+                                 <a href="{{ route('workshop.scan') }}" id="nav-scan"
+                                    class="sidebar-nav-item {{ request()->routeIs('workshop.scan*') ? 'active' : '' }}">
+                                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8H3a2 2 0 00-2 2v6a2 2 0 002 2h2m2-12V4a2 2 0 012-2h4a2 2 0 012 2v1"/>
+                                     </svg>
+                                     <span>Scan QR</span>
+                                 </a>
 
                                 <a href="#" id="nav-ws-service"
                                    class="sidebar-nav-item {{ request()->routeIs('workshop.service*') ? 'active' : '' }}">
@@ -443,8 +443,8 @@
                             </svg>
                             <span>Dashboard</span>
                         </a>
-                        <a href="#" id="bottom-nav-scan"
-                           class="bottom-nav-item {{ request()->routeIs('scan*') ? 'active' : '' }}">
+                        <a href="{{ route('workshop.scan') }}" id="bottom-nav-scan"
+                           class="bottom-nav-item {{ request()->routeIs('workshop.scan*') ? 'active' : '' }}">
                             <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3z"/>
                             </svg>

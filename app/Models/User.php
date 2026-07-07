@@ -10,6 +10,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property-read Workshop|null $workshop
+ * @property-read WorkshopStaff|null $workshopStaff
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */

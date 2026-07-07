@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\ServiceRecord;
 use App\Models\User;
-use App\Models\Vehicle;
-use App\Models\Workshop;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,8 +19,8 @@ class DashboardController extends Controller
 
         return match ($user->role) {
             User::ROLE_VEHICLE_OWNER => $this->vehicleOwnerDashboard($user),
-            User::ROLE_WORKSHOP => app(\App\Http\Controllers\Workshop\DashboardController::class)->index(),
-            User::ROLE_SUPER_ADMIN => app(\App\Http\Controllers\SuperAdmin\DashboardController::class)->index(),
+            User::ROLE_WORKSHOP => app(Workshop\DashboardController::class)->index(),
+            User::ROLE_SUPER_ADMIN => app(SuperAdmin\DashboardController::class)->index(),
             default => $this->vehicleOwnerDashboard($user),
         };
     }
@@ -67,71 +65,6 @@ class DashboardController extends Controller
             'recentActivities',
             'recentVehicles',
             'totalServices',
-        ));
-    }
-
-    /**
-     * Build dashboard data for a Workshop user.
-     */
-    private function workshopDashboard(User $user): View
-    {
-        /** @var Workshop $workshop */
-        $workshop = $user->workshop;
-
-        $totalServices = $workshop->serviceRecords()->count();
-
-        $thisMonthServices = $workshop->serviceRecords()
-            ->whereMonth('service_date', now()->month)
-            ->whereYear('service_date', now()->year)
-            ->count();
-
-        $recentServices = $workshop->serviceRecords()
-            ->with(['vehicle', 'vehicle.owner'])
-            ->orderByDesc('service_date')
-            ->limit(5)
-            ->get();
-
-        $activeCustomers = $workshop->serviceRecords()
-            ->join('vehicles', 'service_records.vehicle_id', '=', 'vehicles.id')
-            ->distinct('vehicles.user_id')
-            ->count('vehicles.user_id');
-
-        return view('dashboard', compact(
-            'workshop',
-            'totalServices',
-            'thisMonthServices',
-            'recentServices',
-            'activeCustomers',
-        ));
-    }
-
-    /**
-     * Build dashboard data for a Super Admin.
-     */
-    private function superAdminDashboard(): View
-    {
-        $totalUsers = User::where('role', User::ROLE_VEHICLE_OWNER)->count();
-
-        $newUsersThisMonth = User::where('role', User::ROLE_VEHICLE_OWNER)
-            ->whereMonth('created_at', now()->month)
-            ->whereYear('created_at', now()->year)
-            ->count();
-
-        $totalVehicles = Vehicle::count();
-
-        $totalWorkshops = Workshop::where('status', Workshop::STATUS_APPROVED)->count();
-
-        $pendingWorkshops = Workshop::where('status', Workshop::STATUS_PENDING)->count();
-
-        $totalServiceRecords = ServiceRecord::count();
-
-        return view('dashboard', compact(
-            'totalUsers',
-            'newUsersThisMonth',
-            'totalVehicles',
-            'totalWorkshops',
-            'pendingWorkshops',
-            'totalServiceRecords',
         ));
     }
 }

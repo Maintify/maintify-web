@@ -5,6 +5,8 @@ namespace Tests\Feature\Auth;
 use App\Models\User;
 use App\Models\Workshop;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -62,7 +64,7 @@ class AuthenticationTest extends TestCase
 
     public function test_super_admin_redirects_to_dashboard_after_login(): void
     {
-        \Illuminate\Support\Facades\Mail::fake();
+        Mail::fake();
         $user = User::factory()->superAdmin()->create();
 
         $this->post('/login', [
@@ -70,7 +72,7 @@ class AuthenticationTest extends TestCase
             'password' => 'password',
         ]);
 
-        $otp = \Illuminate\Support\Facades\Cache::get("otp:{$user->id}");
+        $otp = Cache::get("otp:{$user->id}");
 
         $response = $this->post('/otp-verify', [
             'otp' => $otp,

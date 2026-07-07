@@ -46,7 +46,7 @@ class DashboardTest extends TestCase
     {
         $customer = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
         $owner = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
-        
+
         $workshop = Workshop::create([
             'user_id' => $owner->id,
             'name' => 'Pending Garage',
@@ -67,7 +67,7 @@ class DashboardTest extends TestCase
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
         $owner = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
-        
+
         $workshop = Workshop::create([
             'user_id' => $owner->id,
             'name' => 'Signature Garage',
@@ -77,7 +77,7 @@ class DashboardTest extends TestCase
         $response = $this->actingAs($superAdmin)->post(route('admin.workshops.approve', $workshop->id));
 
         $response->assertRedirect();
-        
+
         // Assert workshop status changed to approved
         $workshop->refresh();
         $this->assertEquals(Workshop::STATUS_APPROVED, $workshop->status);
@@ -105,7 +105,7 @@ class DashboardTest extends TestCase
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
         $owner = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
-        
+
         $workshop = Workshop::create([
             'user_id' => $owner->id,
             'name' => 'Signature Garage',
@@ -118,7 +118,7 @@ class DashboardTest extends TestCase
         ]);
 
         $response->assertRedirect();
-        
+
         // Assert workshop status changed to rejected
         $workshop->refresh();
         $this->assertEquals(Workshop::STATUS_REJECTED, $workshop->status);
@@ -146,7 +146,7 @@ class DashboardTest extends TestCase
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
         $owner = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
-        
+
         $workshop = Workshop::create([
             'user_id' => $owner->id,
             'name' => 'Signature Garage',
@@ -158,7 +158,7 @@ class DashboardTest extends TestCase
         ]);
 
         $response->assertSessionHasErrors(['rejection_reason']);
-        
+
         // Assert status did not change
         $workshop->refresh();
         $this->assertEquals(Workshop::STATUS_PENDING, $workshop->status);

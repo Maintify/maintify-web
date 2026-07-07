@@ -32,7 +32,7 @@ class DashboardTest extends TestCase
     public function workshop_user_with_pending_status_is_redirected_to_pending_page()
     {
         $user = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
-        
+
         $workshop = Workshop::create([
             'user_id' => $user->id,
             'name' => 'Pending Bengkel',
@@ -51,7 +51,7 @@ class DashboardTest extends TestCase
     public function workshop_user_with_approved_status_can_access_dashboard_with_all_metrics()
     {
         $user = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
-        
+
         $workshop = Workshop::create([
             'user_id' => $user->id,
             'name' => 'Bengkel Sejahtera',

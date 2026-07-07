@@ -53,8 +53,13 @@ Route::get('/workshop/pending', [WorkshopPendingController::class, 'show'])
     ->middleware('auth')
     ->name('workshop.pending');
 
+use App\Http\Controllers\Workshop\ScanController;
+
 // Workshop Routes
 Route::middleware(['auth', 'verified', 'role:workshop', 'workshop.approved'])->prefix('workshop')->name('workshop.')->group(function () {
+    Route::get('/scan', [ScanController::class, 'show'])->name('scan');
+    Route::post('/scan/resolve', [ScanController::class, 'resolve'])->name('scan.resolve');
+
     Route::get('/reports', function () {
         return view('workshop.reports.index');
     })->name('reports.index');
@@ -62,8 +67,8 @@ Route::middleware(['auth', 'verified', 'role:workshop', 'workshop.approved'])->p
 
 // Super Admin Routes
 Route::middleware(['auth', 'verified', 'role:super_admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::post('/workshops/{workshop}/approve', [\App\Http\Controllers\SuperAdmin\DashboardController::class, 'approve'])->name('workshops.approve');
-    Route::post('/workshops/{workshop}/reject', [\App\Http\Controllers\SuperAdmin\DashboardController::class, 'reject'])->name('workshops.reject');
+    Route::post('/workshops/{workshop}/approve', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'approve'])->name('workshops.approve');
+    Route::post('/workshops/{workshop}/reject', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'reject'])->name('workshops.reject');
 });
 
 require __DIR__.'/auth.php';
