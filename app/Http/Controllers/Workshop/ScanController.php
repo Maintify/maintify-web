@@ -110,21 +110,29 @@ class ScanController extends Controller
         ]);
 
         // Fetch recent service history (last 5 records)
-        $recentServices = $vehicle->serviceRecords()
+        $services = $vehicle->serviceRecords()
             ->with('workshop:id,name')
             ->latest('service_date')
             ->take(5)
-            ->get()
-            ->map(fn (ServiceRecord $sr) => [
-                'id' => $sr->id,
-                'service_type' => $sr->service_type,
-                'service_type_label' => $sr->service_type_label_readable,
-                'service_date' => $sr->service_date?->toDateString(),
-                'odometer_at_service' => $sr->odometer_at_service,
-                'workshop_name' => $sr->workshop?->name,
-                'mechanic_notes' => $sr->mechanic_notes,
-                'total_cost' => $sr->total_cost,
-            ]);
+            ->get();
+
+        $recentServices = [];
+        foreach ($services as $service) {
+            /** @var ServiceRecord $service */
+            /** @var Workshop|null $workshop */
+            $workshop = $service->workshop;
+
+            $recentServices[] = [
+                'id' => $service->id,
+                'service_type' => $service->service_type,
+                'service_type_label' => $service->service_type_label_readable,
+                'service_date' => $service->service_date->toDateString(),
+                'odometer_at_service' => $service->odometer_at_service,
+                'workshop_name' => $workshop ? $workshop->name : null,
+                'mechanic_notes' => $service->mechanic_notes,
+                'total_cost' => $service->total_cost,
+            ];
+        }
 
         return response()->json([
             'status' => 'success',

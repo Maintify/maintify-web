@@ -58,7 +58,7 @@ class VehicleHealthService
         }
 
         // 3. Kalkulasi health_status berdasarkan aturan bisnis
-        $updates['health_status'] = $this->calculateHealthStatus($vehicle, $record, $updates['oil_life_percentage'] ?? $vehicle->oil_life_percentage);
+        $updates['health_status'] = $this->calculateHealthStatus($vehicle, $record, $updates['oil_life_percentage']);
 
         // 4. Update next_service_odometer
         if ($record->odometer_at_service) {
@@ -151,7 +151,7 @@ class VehicleHealthService
             ->latest('service_date')
             ->first();
 
-        if ($lastService && $lastService->service_date) {
+        if ($lastService) {
             $daysSince = (int) $lastService->service_date->diffInDays(now());
 
             if ($daysSince >= self::DEFAULT_SERVICE_DAY_INTERVAL) {
