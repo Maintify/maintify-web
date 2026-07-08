@@ -36,6 +36,41 @@
             </div>
         @endif
 
+        {{-- Active Transfer Banner --}}
+        @if ($vehicle->activeTransfer)
+            @php $transfer = $vehicle->activeTransfer; @endphp
+            <div style="background: linear-gradient(145deg, rgba(245, 158, 11, 0.08) 0%, rgba(245, 158, 11, 0.02) 100%); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 12px; padding: 16px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="background: rgba(245, 158, 11, 0.15); border-radius: 50%; padding: 6px; display: flex; align-items: center; justify-content: center; color: #fbbf24;">
+                        <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 style="color: #fbbf24; font-size: 14px; font-weight: 700; margin: 0 0 2px;">
+                            @if ($transfer->status === \App\Models\OwnershipTransfer::STATUS_PENDING_RECIPIENT)
+                                Menunggu Persetujuan Penerima
+                            @elseif ($transfer->status === \App\Models\OwnershipTransfer::STATUS_APPROVED)
+                                Transfer Disetujui
+                            @endif
+                        </h4>
+                        <p style="color: #A1A1AA; font-size: 13px; margin: 0;">
+                            @if ($transfer->status === \App\Models\OwnershipTransfer::STATUS_PENDING_RECIPIENT)
+                                Permintaan transfer ke <strong>{{ $transfer->toUser->name }}</strong> sedang menunggu persetujuan.
+                            @elseif ($transfer->status === \App\Models\OwnershipTransfer::STATUS_APPROVED)
+                                <strong>{{ $transfer->toUser->name }}</strong> telah menyetujui transfer ini. Anda perlu melakukan konfirmasi akhir.
+                            @endif
+                        </p>
+                    </div>
+                </div>
+                @if ($transfer->status === \App\Models\OwnershipTransfer::STATUS_APPROVED)
+                    <a href="{{ route('transfers.review', $transfer) }}" style="display: inline-flex; align-items: center; padding: 10px 20px; background-color: #fbbf24; color: #121414; font-size: 13px; font-weight: 700; text-decoration: none; border-radius: 8px; transition: background-color 150ms;" onmouseover="this.style.backgroundColor='#fcd34d'" onmouseout="this.style.backgroundColor='#fbbf24'">
+                        Lakukan Konfirmasi Akhir
+                    </a>
+                @endif
+            </div>
+        @endif
+
         {{-- Main Two-Column Layout Grid --}}
         <div style="display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start;" class="lg:grid-cols-[380px_1fr]">
             
@@ -209,7 +244,7 @@
                 <div style="background-color: #1A1C1C; border: 1px solid #2E3030; border-radius: 20px; padding: 20px; display: flex; flex-direction: column; gap: 12px;">
                     <span style="font-size: 11px; font-weight: 700; color: #71717A; text-transform: uppercase; letter-spacing: 0.05em;">Aksi Lainnya</span>
                     
-                    <button onclick="alert('Fitur Transfer Kepemilikan dalam pengembangan (Epic 6)')" style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 12px; background-color: #252828; border: 1px solid #2E3030; border-radius: 12px; color: #A1A1AA; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 150ms;" onmouseover="this.style.borderColor='#ff9aa4';this.style.color='#ff9aa4';" onmouseout="this.style.borderColor='#2E3030';this.style.color='#A1A1AA';">
+                    <a href="{{ route('vehicles.transfer.create', $vehicle) }}" style="width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 12px; background-color: #252828; border: 1px solid #2E3030; border-radius: 12px; color: #A1A1AA; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 150ms; text-decoration: none;" onmouseover="this.style.borderColor='#ff9aa4';this.style.color='#ff9aa4';" onmouseout="this.style.borderColor='#2E3030';this.style.color='#A1A1AA';">
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
@@ -219,7 +254,7 @@
                         <svg style="width: 14px; height: 14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                         </svg>
-                    </button>
+                    </a>
                 </div>
 
             </div>

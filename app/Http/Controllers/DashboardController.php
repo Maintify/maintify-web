@@ -57,6 +57,11 @@ class DashboardController extends Controller
 
         $totalServices = ServiceRecord::whereIn('vehicle_id', $vehicleIds)->count();
 
+        $pendingTransfers = \App\Models\OwnershipTransfer::where('to_user_id', $user->id)
+            ->where('status', \App\Models\OwnershipTransfer::STATUS_PENDING_RECIPIENT)
+            ->with(['vehicle', 'fromUser'])
+            ->get();
+
         return view('dashboard', compact(
             'totalVehicles',
             'avgHealthScore',
@@ -65,6 +70,7 @@ class DashboardController extends Controller
             'recentActivities',
             'recentVehicles',
             'totalServices',
+            'pendingTransfers',
         ));
     }
 }

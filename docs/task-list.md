@@ -1140,7 +1140,7 @@
   - `tests/Feature/Transfer/InitiateTransferTest.php`
 - **Suggested Commit Message:** `feat(transfer): implement transfer initiation with recipient verification`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1171,7 +1171,7 @@
   - `tests/Feature/Transfer/TransferWorkflowTest.php`
 - **Suggested Commit Message:** `feat(transfer): implement full transfer review, confirmation, and execution`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1192,7 +1192,7 @@
   - `tests/Unit/Commands/ExpireTransfersCommandTest.php`
 - **Suggested Commit Message:** `feat(transfer): add scheduled job for transfer expiry`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 

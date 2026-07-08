@@ -23,6 +23,43 @@
     </div>
 </div>
 
+{{-- ── Pending Transfers ── --}}
+@if(isset($pendingTransfers) && $pendingTransfers->count() > 0)
+    <div style="margin-bottom: 24px;">
+        @foreach($pendingTransfers as $transfer)
+            <div style="background: linear-gradient(145deg, rgba(59, 130, 246, 0.08) 0%, rgba(59, 130, 246, 0.02) 100%); border: 1px solid rgba(59, 130, 246, 0.2); border-radius: 16px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(59, 130, 246, 0.1); display: flex; align-items: center; justify-content: center; color: #60a5fa; flex-shrink: 0;">
+                        <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h4 style="font-size: 14px; font-weight: 700; color: #F4F4F5; margin: 0 0 2px;">Permintaan Transfer Kendaraan</h4>
+                        <p style="font-size: 13px; color: #A1A1AA; margin: 0;">
+                            <strong>{{ $transfer->fromUser->name }}</strong> ingin mentransfer kendaraan <strong>{{ $transfer->vehicle->brand }} {{ $transfer->vehicle->model }}</strong> ({{ $transfer->vehicle->plate_number }}) kepada Anda.
+                        </p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <form action="{{ route('transfers.reject', $transfer) }}" method="POST">
+                        @csrf
+                        <button type="submit" style="padding: 8px 16px; background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.2); border-radius: 8px; color: #f87171; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 150ms;" onmouseover="this.style.background='rgba(239, 68, 68, 0.2)'" onmouseout="this.style.background='rgba(239, 68, 68, 0.1)'">
+                            Tolak
+                        </button>
+                    </form>
+                    <form action="{{ route('transfers.approve', $transfer) }}" method="POST">
+                        @csrf
+                        <button type="submit" style="padding: 8px 16px; background: #60a5fa; border: 1px solid #60a5fa; border-radius: 8px; color: #121414; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 150ms;" onmouseover="this.style.background='#93c5fd'" onmouseout="this.style.background='#60a5fa'">
+                            Terima Transfer
+                        </button>
+                    </form>
+                </div>
+            </div>
+        @endforeach
+    </div>
+@endif
+
 {{-- ── KPI Stats ── --}}
 @php
     $healthColor = match($healthStatus) { 'good' => '#4ade80', 'warning' => '#fbbf24', 'critical' => '#f87171', default => '#71717A' };

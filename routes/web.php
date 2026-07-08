@@ -34,6 +34,7 @@ Route::middleware(['auth', 'verified', 'workshop.approved'])->group(function () 
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+use App\Http\Controllers\OwnershipTransferController;
 use App\Http\Controllers\ServiceHistoryController;
 use App\Http\Controllers\WorkshopSearchController;
 
@@ -48,6 +49,16 @@ Route::middleware(['auth', 'verified', 'role:vehicle_owner'])->group(function ()
     Route::get('vehicles/{vehicle}/qr', [QrCodeController::class, 'show'])->name('vehicles.qr.show');
     Route::get('vehicles/{vehicle}/qr/download', [QrCodeController::class, 'download'])->name('vehicles.qr.download');
     Route::post('vehicles/{vehicle}/qr/regenerate', [QrCodeController::class, 'regenerate'])->name('vehicles.qr.regenerate');
+
+    // Ownership Transfer
+    Route::get('vehicles/{vehicle}/transfer', [OwnershipTransferController::class, 'create'])->name('vehicles.transfer.create');
+    Route::post('vehicles/{vehicle}/transfer', [OwnershipTransferController::class, 'store'])->name('vehicles.transfer.store');
+    
+    Route::post('transfers/{transfer}/approve', [OwnershipTransferController::class, 'approve'])->name('transfers.approve');
+    Route::post('transfers/{transfer}/reject', [OwnershipTransferController::class, 'reject'])->name('transfers.reject');
+    Route::get('transfers/{transfer}/review', [OwnershipTransferController::class, 'review'])->name('transfers.review');
+    Route::post('transfers/{transfer}/confirm', [OwnershipTransferController::class, 'confirm'])->name('transfers.confirm');
+    Route::get('transfers/{transfer}/success', [OwnershipTransferController::class, 'success'])->name('transfers.success');
 });
 
 // Workshop Registration (guest)

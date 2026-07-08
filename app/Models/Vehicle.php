@@ -127,6 +127,16 @@ class Vehicle extends Model
         return $this->hasMany(OwnershipTransfer::class);
     }
 
+    /**
+     * Active ownership transfer (pending or approved).
+     */
+    public function activeTransfer()
+    {
+        return $this->hasOne(OwnershipTransfer::class)
+            ->whereIn('status', [OwnershipTransfer::STATUS_PENDING_RECIPIENT, OwnershipTransfer::STATUS_APPROVED])
+            ->latestOfMany();
+    }
+
     // =========================================================
     // Scopes
     // =========================================================
