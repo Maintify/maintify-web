@@ -108,6 +108,31 @@ class WorkshopSeeder extends Seeder
             ]
         );
 
+        // Seed spareparts for Workshop 1
+        $spareparts = [
+            ['name' => 'Oli Shell Helix HX7 10W-40', 'category' => 'Oli', 'price' => 95000.00],
+            ['name' => 'Oli MPX 2 10W-30', 'category' => 'Oli', 'price' => 52000.00],
+            ['name' => 'Kampas Rem Depan Honda Vario', 'category' => 'Rem', 'price' => 65000.00],
+            ['name' => 'Kampas Rem Belakang Honda Vario', 'category' => 'Rem', 'price' => 55000.00],
+            ['name' => 'Busi NGK Iridium', 'category' => 'Kelistrikan', 'price' => 120000.00],
+            ['name' => 'Filter Udara Vario 160', 'category' => 'Filter', 'price' => 75000.00],
+            ['name' => 'V-Belt Kit Honda Vario 150', 'category' => 'Transmisi', 'price' => 185000.00],
+        ];
+
+        foreach ($spareparts as $part) {
+            \App\Models\Sparepart::firstOrCreate(
+                [
+                    'workshop_id' => $workshop1->id,
+                    'name' => $part['name'],
+                ],
+                [
+                    'category' => $part['category'],
+                    'price' => $part['price'],
+                    'is_active' => true,
+                ]
+            );
+        }
+
         $this->command->info('✅ Workshops seeded (1 approved: Bengkel Maju Jaya, 1 pending: Bengkel Sentosa Motor)');
     }
 }

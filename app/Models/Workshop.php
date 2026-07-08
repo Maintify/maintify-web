@@ -123,6 +123,14 @@ class Workshop extends Model
     }
 
     /**
+     * Katalog sparepart untuk bengkel ini.
+     */
+    public function spareparts(): HasMany
+    {
+        return $this->hasMany(Sparepart::class);
+    }
+
+    /**
      * Admin yang approve bengkel ini.
      */
     public function approver(): BelongsTo

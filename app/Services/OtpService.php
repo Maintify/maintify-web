@@ -19,10 +19,7 @@ class OtpService
         Cache::put($this->getCacheKey($user->id), $otp, now()->addMinutes(5));
 
         // Delivery via Email
-        Mail::raw("Kode OTP verifikasi masuk Maintify Anda adalah: {$otp}. Kode ini berlaku selama 5 menit.", function ($message) use ($user) {
-            $message->to($user->email)
-                ->subject('Kode OTP Masuk Maintify');
-        });
+        Mail::to($user->email)->send(new \App\Mail\OtpMail($otp));
 
         return $otp;
     }

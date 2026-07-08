@@ -29,12 +29,18 @@ class ServiceRecordController extends Controller
     public function create(Request $request): View
     {
         $vehicle = Vehicle::findOrFail($request->query('vehicle_id'));
+        /** @var User $user */
+        $user = $request->user();
+        /** @var Workshop $workshop */
+        $workshop = $user->workshop ?? $user->workshopStaff?->workshop;
+        $spareparts = $workshop ? $workshop->spareparts()->active()->get(['name', 'category', 'price']) : collect();
 
         return view('workshop.service-records.create', [
             'vehicle' => $vehicle->load(['owner', 'serviceRecords' => function ($q) {
                 $q->latest('service_date')->take(5);
             }]),
             'serviceTypes' => ServiceRecord::SERVICE_TYPES,
+            'spareparts' => $spareparts,
         ]);
     }
 
@@ -100,5 +106,151 @@ class ServiceRecordController extends Controller
         return redirect()
             ->route('workshop.scan')
             ->with('success', 'Service record berhasil disimpan.');
+    }
+
+    /**
+     * Show the form for editing the specified service record.
+     */
+    public function edit(ServiceRecord $serviceRecord, Request $request): View|RedirectResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        /** @var Workshop $workshop */
+        $workshop = $user->workshop ?? $user->workshopStaff?->workshop;
+
+        // Authorize
+        if (!$workshop || $serviceRecord->workshop_id !== $workshop->id) {
+            abort(403, 'Unauthorized.');
+        }
+
+        // Validate time limit
+        $limitHours = config('maintify.service_records.edit_limit_hours', 24);
+        if ($serviceRecord->created_at->addHours($limitHours)->isPast()) {
+            return redirect()
+                ->route('workshop.scan')
+                ->with('error', "Batas waktu mengubah riwayat service telah habis ({$limitHours} jam).");
+        }
+
+        $spareparts = $workshop->spareparts()->active()->get(['name', 'category', 'price']);
+
+        return view('workshop.service-records.edit', [
+            'serviceRecord' => $serviceRecord->load('parts'),
+            'vehicle' => $serviceRecord->vehicle,
+            'serviceTypes' => ServiceRecord::SERVICE_TYPES,
+            'spareparts' => $spareparts,
+        ]);
+    }
+
+    /**
+     * Update the specified service record in storage.
+     */
+    public function update(StoreServiceRecordRequest $request, ServiceRecord $serviceRecord): RedirectResponse
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        /** @var Workshop $workshop */
+        $workshop = $user->workshop ?? $user->workshopStaff?->workshop;
+
+        // Authorize
+        if (!$workshop || $serviceRecord->workshop_id !== $workshop->id) {
+            abort(403, 'Unauthorized.');
+        }
+
+        // Validate time limit
+        $limitHours = config('maintify.service_records.edit_limit_hours', 24);
+        if ($serviceRecord->created_at->addHours($limitHours)->isPast()) {
+            return redirect()
+                ->route('workshop.scan')
+                ->with('error', "Batas waktu mengubah riwayat service telah habis ({$limitHours} jam).");
+        }
+
+        // Get old values for audit logging
+        $oldData = $serviceRecord->only([
+            'service_type',
+            'service_date',
+            'odometer_at_service',
+            'mechanic_notes',
+            'status',
+            'total_cost'
+        ]);
+
+        // Update service record
+        $serviceRecord->update([
+            'service_type' => $request->validated('service_type'),
+            'service_date' => $request->validated('service_date'),
+            'odometer_at_service' => $request->validated('odometer_at_service'),
+            'mechanic_notes' => $request->validated('mechanic_notes'),
+            'status' => $request->validated('status'),
+            'total_cost' => $request->validated('total_cost'),
+        ]);
+
+        $newData = $serviceRecord->only([
+            'service_type',
+            'service_date',
+            'odometer_at_service',
+            'mechanic_notes',
+            'status',
+            'total_cost'
+        ]);
+
+        // Determine changes
+        $changes = [];
+        foreach ($newData as $key => $val) {
+            if ($oldData[$key] != $val) {
+                if ($oldData[$key] instanceof \Carbon\Carbon && $val instanceof \Carbon\Carbon) {
+                    if ($oldData[$key]->equalTo($val)) {
+                        continue;
+                    }
+                }
+                $changes[$key] = [
+                    'old' => $oldData[$key] instanceof \Carbon\Carbon ? $oldData[$key]->toDateTimeString() : $oldData[$key],
+                    'new' => $val instanceof \Carbon\Carbon ? $val->toDateTimeString() : $val
+                ];
+            }
+        }
+
+        // Recreate spareparts
+        $serviceRecord->parts()->delete();
+        $parts = $request->validated('parts', []);
+        if (! empty($parts)) {
+            foreach ($parts as $part) {
+                $serviceRecord->parts()->create([
+                    'part_name' => $part['part_name'],
+                    'quantity' => $part['quantity'],
+                    'unit_price' => $part['unit_price'],
+                    'part_category' => $part['part_category'] ?? null,
+                ]);
+            }
+        }
+
+        // Recalculate vehicle health and odometer
+        $vehicle = $serviceRecord->vehicle;
+        $maxOdometerRecord = $vehicle->serviceRecords()->orderBy('odometer_at_service', 'desc')->first();
+        $vehicle->current_odometer = $maxOdometerRecord ? $maxOdometerRecord->odometer_at_service : $vehicle->initial_odometer;
+        $vehicle->save();
+
+        $latestRecord = $vehicle->serviceRecords()->latest('service_date')->first();
+        if ($latestRecord) {
+            $this->healthService->updateAfterService($vehicle, $latestRecord);
+        }
+
+        // Log audit trail
+        \App\Models\AuditLog::create([
+            'actor_user_id' => $user->id,
+            'action' => 'service_record.updated',
+            'entity_type' => 'ServiceRecord',
+            'entity_id' => $serviceRecord->id,
+            'metadata' => [
+                'changes' => $changes,
+                'vehicle_id' => $vehicle->id,
+            ],
+            'ip_address' => $request->ip(),
+        ]);
+
+        return redirect()
+            ->route('workshop.scan')
+            ->with('success', 'Service record berhasil diperbarui.');
     }
 }

@@ -7,7 +7,8 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/js/qr-scanner.js'
+                'resources/js/qr-scanner.js',
+                'resources/js/workshop-map.js'
             ],
             refresh: true,
         }),

@@ -277,6 +277,16 @@
                     {{-- Tab Contents --}}
                     <div id="tab-content-timeline" style="display: block;">
                         @include('vehicles.partials.service-timeline')
+                        @if($serviceRecords->isNotEmpty())
+                            <div style="margin-top: 16px; text-align: center;">
+                                <a href="{{ route('vehicles.service-history', $vehicle) }}" style="display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; background-color: #252828; border: 1px solid #2E3030; border-radius: 8px; color: #F4F4F5; font-size: 13px; font-weight: 600; text-decoration: none; transition: background-color 150ms;" onmouseover="this.style.backgroundColor='#2A2D2D';" onmouseout="this.style.backgroundColor='#252828';">
+                                    Lihat Riwayat Lengkap & Filter
+                                    <svg style="width: 14px; height: 14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        @endif
                     </div>
                     <div id="tab-content-spareparts" style="display: none;">
                         @include('vehicles.partials.spareparts-list')

@@ -37,7 +37,7 @@ class SuperAdminOtpTest extends TestCase
         $cacheKey = "otp:{$superAdmin->id}";
         $this->assertTrue(Cache::has($cacheKey));
 
-        Mail::assertSent(function ($mail) use ($superAdmin) {
+        Mail::assertSent(\App\Mail\OtpMail::class, function ($mail) use ($superAdmin) {
             return $mail->hasTo($superAdmin->email);
         });
 
@@ -170,7 +170,7 @@ class SuperAdminOtpTest extends TestCase
         $cacheKey = "otp:{$superAdmin->id}";
         $this->assertTrue(Cache::has($cacheKey));
 
-        Mail::assertSent(function ($mail) use ($superAdmin) {
+        Mail::assertSent(\App\Mail\OtpMail::class, function ($mail) use ($superAdmin) {
             return $mail->hasTo($superAdmin->email);
         });
 

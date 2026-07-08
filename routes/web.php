@@ -34,9 +34,15 @@ Route::middleware(['auth', 'verified', 'workshop.approved'])->group(function () 
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+use App\Http\Controllers\ServiceHistoryController;
+use App\Http\Controllers\WorkshopSearchController;
+
 // Vehicle Owner Routes
 Route::middleware(['auth', 'verified', 'role:vehicle_owner'])->group(function () {
     Route::resource('vehicles', VehicleController::class);
+    Route::get('vehicles/{vehicle}/service-history', [ServiceHistoryController::class, 'index'])->name('vehicles.service-history');
+    Route::get('workshops/nearby', [WorkshopSearchController::class, 'index'])->name('workshops.nearby');
+    Route::get('api/workshops/nearby', [WorkshopSearchController::class, 'search'])->name('api.workshops.nearby');
 
     // QR Code Management
     Route::get('vehicles/{vehicle}/qr', [QrCodeController::class, 'show'])->name('vehicles.qr.show');
@@ -55,15 +61,25 @@ Route::get('/workshop/pending', [WorkshopPendingController::class, 'show'])
 
 use App\Http\Controllers\Workshop\ScanController;
 use App\Http\Controllers\Workshop\ServiceRecordController;
+use App\Http\Controllers\Workshop\SparepartController;
+use App\Http\Controllers\Workshop\CustomerController;
 
 // Workshop Routes
 Route::middleware(['auth', 'verified', 'role:workshop', 'workshop.approved'])->prefix('workshop')->name('workshop.')->group(function () {
     Route::get('/scan', [ScanController::class, 'show'])->name('scan');
     Route::post('/scan/resolve', [ScanController::class, 'resolve'])->name('scan.resolve');
 
+    // Spareparts
+    Route::resource('spareparts', SparepartController::class)->except(['show']);
+
+    // Customers
+    Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+
     // Service Records
     Route::get('/service-records/create', [ServiceRecordController::class, 'create'])->name('service-records.create');
     Route::post('/service-records', [ServiceRecordController::class, 'store'])->name('service-records.store');
+    Route::get('/service-records/{service_record}/edit', [ServiceRecordController::class, 'edit'])->name('service-records.edit');
+    Route::put('/service-records/{service_record}', [ServiceRecordController::class, 'update'])->name('service-records.update');
 
     Route::get('/reports', function () {
         return view('workshop.reports.index');

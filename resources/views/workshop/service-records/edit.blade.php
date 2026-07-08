@@ -1,6 +1,6 @@
 <x-app-layout>
-    @slot('pageTitle', 'Catat Service Baru')
-    @slot('breadcrumb', 'Workshop / Scan / Catat Service')
+    @slot('pageTitle', 'Ubah Service Record')
+    @slot('breadcrumb', 'Workshop / Scan / Ubah Service')
 
     @push('head')
         <style>
@@ -30,8 +30,8 @@
                 </svg>
             </a>
             <div>
-                <h1 class="text-2xl font-bold text-zinc-100 tracking-tight">Catat Service Baru</h1>
-                <p class="text-sm text-zinc-500 mt-0.5">Isi detail service untuk kendaraan di bawah ini</p>
+                <h1 class="text-2xl font-bold text-zinc-100 tracking-tight">Ubah Service Record</h1>
+                <p class="text-sm text-zinc-500 mt-0.5">Perbarui detail service untuk kendaraan di bawah ini</p>
             </div>
         </div>
 
@@ -73,9 +73,10 @@
         {{-- ── Form ── --}}
         <form id="service-record-form"
               method="POST"
-              action="{{ route('workshop.service-records.store') }}"
-              x-data="serviceRecordForm({{ $vehicle->id }}, {{ $vehicle->current_odometer }})">
+              action="{{ route('workshop.service-records.update', $serviceRecord) }}"
+              x-data="serviceRecordForm({{ $vehicle->id }}, {{ $vehicle->current_odometer }}, {{ json_encode($serviceRecord) }})">
             @csrf
+            @method('PUT')
             <input type="hidden" name="vehicle_id" value="{{ $vehicle->id }}">
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -100,7 +101,7 @@
                                         class="form-input w-full bg-zinc-900 border border-zinc-700 text-zinc-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors">
                                     <option value="">-- Pilih Jenis Service --</option>
                                     @foreach($serviceTypes as $key => $label)
-                                        <option value="{{ $key }}" {{ old('service_type') === $key ? 'selected' : '' }}>{{ $label }}</option>
+                                        <option value="{{ $key }}">{{ $label }}</option>
                                     @endforeach
                                 </select>
                                 @error('service_type')
@@ -116,7 +117,7 @@
                                 <input type="date"
                                        id="service_date"
                                        name="service_date"
-                                       value="{{ old('service_date', now()->toDateString()) }}"
+                                       value="{{ old('service_date', $serviceRecord->service_date->toDateString()) }}"
                                        max="{{ now()->toDateString() }}"
                                        required
                                        class="form-input w-full bg-zinc-900 border border-zinc-700 text-zinc-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors">
@@ -134,12 +135,8 @@
                                        id="odometer_at_service"
                                        name="odometer_at_service"
                                        x-model="odometer"
-                                       value="{{ old('odometer_at_service', $vehicle->current_odometer) }}"
-                                       min="{{ $vehicle->current_odometer }}"
                                        required
-                                       placeholder="{{ $vehicle->current_odometer }}"
                                        class="form-input w-full bg-zinc-900 border border-zinc-700 text-zinc-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors">
-                                <p class="text-zinc-600 text-xs mt-1">Min: {{ number_format($vehicle->current_odometer) }} km (odometer terakhir)</p>
                                 @error('odometer_at_service')
                                     <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
                                 @enderror
@@ -154,8 +151,8 @@
                                         name="status"
                                         required
                                         class="form-input w-full bg-zinc-900 border border-zinc-700 text-zinc-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors">
-                                    <option value="completed" {{ old('status', 'completed') === 'completed' ? 'selected' : '' }}>Selesai</option>
-                                    <option value="in_progress" {{ old('status') === 'in_progress' ? 'selected' : '' }}>Dalam Pengerjaan</option>
+                                    <option value="completed" {{ old('status', $serviceRecord->status) === 'completed' ? 'selected' : '' }}>Selesai</option>
+                                    <option value="in_progress" {{ old('status', $serviceRecord->status) === 'in_progress' ? 'selected' : '' }}>Dalam Pengerjaan</option>
                                 </select>
                                 @error('status')
                                     <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
@@ -171,7 +168,6 @@
                                        id="total_cost"
                                        name="total_cost"
                                        x-model.number="manualCost"
-                                       value="{{ old('total_cost', 0) }}"
                                        min="0"
                                        step="1000"
                                        required
@@ -189,7 +185,7 @@
                                           rows="3"
                                           maxlength="2000"
                                           placeholder="Contoh: Ganti oli mesin Shell Helix 10W-40, filter oli diganti, kondisi rem depan mulai tipis..."
-                                          class="form-input w-full bg-zinc-900 border border-zinc-700 text-zinc-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors resize-none">{{ old('mechanic_notes') }}</textarea>
+                                          class="form-input w-full bg-zinc-900 border border-zinc-700 text-zinc-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors resize-none">{{ old('mechanic_notes', $serviceRecord->mechanic_notes) }}</textarea>
                                 @error('mechanic_notes')
                                     <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
                                 @enderror
@@ -360,7 +356,7 @@
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
-                            Simpan Service Record
+                            Perbarui Service Record
                         </button>
 
                         <a href="{{ route('workshop.scan') }}"
@@ -382,14 +378,14 @@
 
     @push('scripts')
     <script>
-        function serviceRecordForm(vehicleId, currentOdometer) {
+        function serviceRecordForm(vehicleId, currentOdometer, serviceRecord) {
             return {
                 vehicleId: vehicleId,
                 currentOdometer: currentOdometer,
-                serviceType: '{{ old("service_type", "") }}',
-                odometer: currentOdometer,
-                manualCost: {{ old('total_cost', 0) }},
-                parts: [],
+                serviceType: serviceRecord.service_type,
+                odometer: serviceRecord.odometer_at_service,
+                manualCost: parseFloat(serviceRecord.total_cost),
+                parts: serviceRecord.parts || [],
                 catalog: @json($spareparts),
 
                 get serviceTypeLabel() {
@@ -398,7 +394,7 @@
                 },
 
                 get partsSubtotal() {
-                    return this.parts.reduce((sum, p) => sum + (p.quantity * p.unit_price), 0);
+                    return this.parts.reduce((sum, p) => sum + (parseFloat(p.quantity) * parseFloat(p.unit_price)), 0);
                 },
 
                 get totalCost() {

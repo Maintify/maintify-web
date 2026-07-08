@@ -967,7 +967,7 @@
   - `tests/Feature/Workshop/EditServiceRecordTest.php`
 - **Suggested Commit Message:** `feat(workshop): implement time-limited service record editing`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -991,7 +991,7 @@
   - `resources/views/workshop/spareparts/create.blade.php`
 - **Suggested Commit Message:** `feat(workshop): implement sparepart catalog management`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1014,7 +1014,7 @@
   - `resources/views/workshop/customers/index.blade.php`
 - **Suggested Commit Message:** `feat(workshop): implement customer directory page`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1047,7 +1047,7 @@
   - `resources/views/vehicles/service-history.blade.php`
 - **Suggested Commit Message:** `feat(vehicle): implement service history timeline with filters`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1078,7 +1078,7 @@
   - `tests/Feature/Workshop/NearbySearchTest.php`
 - **Suggested Commit Message:** `feat(workshop): implement geospatial nearby workshop search`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1106,7 +1106,7 @@
   - `resources/js/workshop-map.js`
 - **Suggested Commit Message:** `feat(workshop): implement nearby workshop map page with directions`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 

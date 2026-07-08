@@ -34,11 +34,22 @@ class StoreServiceRecordRequest extends FormRequest
                 'required',
                 'integer',
                 'min:0',
-                // Custom rule: odometer tidak boleh kurang dari nilai terakhir (Edge Case #5)
                 function (string $attribute, mixed $value, \Closure $fail) {
                     $vehicle = Vehicle::find($this->input('vehicle_id'));
-                    if ($vehicle && (int) $value < $vehicle->current_odometer) {
-                        $fail("Odometer tidak boleh kurang dari odometer terakhir kendaraan ({$vehicle->current_odometer} km).");
+                    if ($vehicle) {
+                        $serviceRecordId = $this->route('service_record')?->id;
+                        if ($serviceRecordId) {
+                            $maxPriorOdometer = $vehicle->serviceRecords()
+                                ->where('id', '!=', $serviceRecordId)
+                                ->max('odometer_at_service');
+                            if ($maxPriorOdometer !== null && (int) $value < $maxPriorOdometer) {
+                                $fail("Odometer tidak boleh kurang dari odometer sebelum service ini ({$maxPriorOdometer} km).");
+                            }
+                        } else {
+                            if ((int) $value < $vehicle->current_odometer) {
+                                $fail("Odometer tidak boleh kurang dari odometer terakhir kendaraan ({$vehicle->current_odometer} km).");
+                            }
+                        }
                     }
                 },
             ],
