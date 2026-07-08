@@ -900,9 +900,10 @@
   - `tests/Feature/Workshop/QrResolveTest.php`
 - **Suggested Commit Message:** `feat(workshop): implement QR token resolution with scan logging`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
+
 
 ### Feature 5.2: Service Record Management
 
@@ -930,7 +931,7 @@
   - `tests/Feature/Workshop/CreateServiceRecordTest.php`
 - **Suggested Commit Message:** `feat(workshop): implement service record creation with auto health update`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ##### Subtask 5.2.1a: Implement Vehicle Health Auto-Update Logic
 
@@ -943,6 +944,8 @@
 - **Definition of Done:** Unit tests verify health calculation logic.
 - **Files Expected:** `app/Services/VehicleHealthService.php`, `tests/Unit/Services/VehicleHealthServiceTest.php`
 - **Suggested Commit Message:** `feat(vehicle): implement auto health status calculation`
+
+**Status:** `[x]` Done
 
 ---
 

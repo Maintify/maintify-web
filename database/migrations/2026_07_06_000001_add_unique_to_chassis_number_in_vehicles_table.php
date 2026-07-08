@@ -14,8 +14,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('vehicles', function (Blueprint $table) {
-            // Only add if not already unique
-            $table->string('chassis_number', 17)->nullable()->unique()->change();
+            // Only add unique constraint if it doesn't already exist (database-agnostic)
+            if (! Schema::hasIndex('vehicles', 'vehicles_chassis_number_unique')) {
+                $table->string('chassis_number', 17)->nullable()->unique()->change();
+            }
         });
     }
 

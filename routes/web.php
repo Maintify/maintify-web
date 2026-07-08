@@ -54,11 +54,16 @@ Route::get('/workshop/pending', [WorkshopPendingController::class, 'show'])
     ->name('workshop.pending');
 
 use App\Http\Controllers\Workshop\ScanController;
+use App\Http\Controllers\Workshop\ServiceRecordController;
 
 // Workshop Routes
 Route::middleware(['auth', 'verified', 'role:workshop', 'workshop.approved'])->prefix('workshop')->name('workshop.')->group(function () {
     Route::get('/scan', [ScanController::class, 'show'])->name('scan');
     Route::post('/scan/resolve', [ScanController::class, 'resolve'])->name('scan.resolve');
+
+    // Service Records
+    Route::get('/service-records/create', [ServiceRecordController::class, 'create'])->name('service-records.create');
+    Route::post('/service-records', [ServiceRecordController::class, 'store'])->name('service-records.store');
 
     Route::get('/reports', function () {
         return view('workshop.reports.index');

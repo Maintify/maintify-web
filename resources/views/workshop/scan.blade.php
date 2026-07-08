@@ -165,7 +165,8 @@
 
                 {{-- Footer Actions --}}
                 <div class="flex justify-end gap-3">
-                    <a id="res-action-btn" href="#" class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-lg shadow-lg hover:shadow-red-900/20 transition-all flex items-center gap-2">
+                    <a id="res-action-btn" href="#"
+                       class="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-lg shadow-lg hover:shadow-red-900/20 transition-all flex items-center gap-2">
                         <svg class="w-4.5 h-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
