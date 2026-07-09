@@ -1227,7 +1227,7 @@
   - `tests/Feature/Workshop/StaffManagementTest.php`
 - **Suggested Commit Message:** `feat(workshop): implement staff management CRUD`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1249,7 +1249,7 @@
   - `resources/views/workshop/profile/edit.blade.php`
 - **Suggested Commit Message:** `feat(workshop): implement workshop profile management`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1273,7 +1273,7 @@
   - `app/Services/ReportExportService.php`
 - **Suggested Commit Message:** `feat(workshop): implement operational reports with export`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 

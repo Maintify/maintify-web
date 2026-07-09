@@ -74,6 +74,9 @@ use App\Http\Controllers\Workshop\ScanController;
 use App\Http\Controllers\Workshop\ServiceRecordController;
 use App\Http\Controllers\Workshop\SparepartController;
 use App\Http\Controllers\Workshop\CustomerController;
+use App\Http\Controllers\Workshop\StaffController;
+use App\Http\Controllers\Workshop\ProfileController as WorkshopProfileController;
+use App\Http\Controllers\Workshop\ReportController;
 
 // Workshop Routes
 Route::middleware(['auth', 'verified', 'role:workshop', 'workshop.approved'])->prefix('workshop')->name('workshop.')->group(function () {
@@ -83,8 +86,15 @@ Route::middleware(['auth', 'verified', 'role:workshop', 'workshop.approved'])->p
     // Spareparts
     Route::resource('spareparts', SparepartController::class)->except(['show']);
 
+    // Staff Management
+    Route::resource('staff', StaffController::class)->except(['show']);
+
     // Customers
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+
+    // Workshop Profile Edit
+    Route::get('/profile-bengkel', [WorkshopProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile-bengkel', [WorkshopProfileController::class, 'update'])->name('profile.update');
 
     // Service Records
     Route::get('/service-records/create', [ServiceRecordController::class, 'create'])->name('service-records.create');
@@ -92,9 +102,9 @@ Route::middleware(['auth', 'verified', 'role:workshop', 'workshop.approved'])->p
     Route::get('/service-records/{service_record}/edit', [ServiceRecordController::class, 'edit'])->name('service-records.edit');
     Route::put('/service-records/{service_record}', [ServiceRecordController::class, 'update'])->name('service-records.update');
 
-    Route::get('/reports', function () {
-        return view('workshop.reports.index');
-    })->name('reports.index');
+    // Reports
+    Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
+    Route::get('/reports/export', [ReportController::class, 'export'])->name('reports.export');
 });
 
 // Super Admin Routes

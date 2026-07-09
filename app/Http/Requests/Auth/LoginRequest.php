@@ -51,6 +51,14 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        $user = Auth::user();
+        if ($user && $user->workshopStaff && !$user->workshopStaff->is_active) {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'email' => __('Akun staff Anda telah dinonaktifkan.'),
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 
