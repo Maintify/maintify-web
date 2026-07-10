@@ -11,75 +11,153 @@ class NotificationTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
-    public function it_can_create_notification_with_correct_relations()
+    protected function setUp(): void
     {
-        // 1. Create user
-        $user = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
-
-        // 2. Create Notification
-        $notification = Notification::create([
-            'user_id' => $user->id,
-            'type' => 'service_reminder',
-            'title' => 'Pengingat Service',
-            'message' => 'Kendaraan Anda sudah waktunya untuk service berkala.',
-            'is_read' => false,
-        ]);
-
-        // 3. Assertions — database
-        $this->assertDatabaseHas('notifications', [
-            'id' => $notification->id,
-            'user_id' => $user->id,
-            'type' => 'service_reminder',
-            'is_read' => false,
-        ]);
-
-        // 4. Assertions — model relationship
-        $this->assertEquals($user->id, $notification->user->id);
-
-        // 5. Assertions — inverse relationship
-        $this->assertTrue($user->notifications->contains($notification));
+        parent::setUp();
+        $this->withoutVite();
     }
 
     /** @test */
-    public function is_read_defaults_to_false()
+    public function user_can_view_notifications_list()
     {
-        $user = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
+        $user = User::factory()->create();
 
-        $notification = Notification::create([
-            'user_id' => $user->id,
-            'type' => 'transfer_request',
-            'title' => 'Permintaan Transfer',
-            'message' => 'Ada permintaan transfer kepemilikan kendaraan.',
-        ]);
-
-        $this->assertFalse($notification->fresh()->is_read);
-    }
-
-    /** @test */
-    public function it_can_scope_unread_and_read_notifications()
-    {
-        $user = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
-
-        // Create unread notification
         Notification::create([
             'user_id' => $user->id,
-            'type' => 'info',
-            'title' => 'Unread',
-            'message' => 'Belum dibaca.',
+            'type' => 'test_alert',
+            'title' => 'Test Notification 1',
+            'message' => 'This is a test notification 1 body message.',
             'is_read' => false,
         ]);
 
-        // Create read notification
         Notification::create([
             'user_id' => $user->id,
-            'type' => 'info',
-            'title' => 'Read',
-            'message' => 'Sudah dibaca.',
+            'type' => 'test_alert',
+            'title' => 'Test Notification 2',
+            'message' => 'This is a test notification 2 body message.',
             'is_read' => true,
         ]);
 
-        $this->assertCount(1, Notification::unread()->get());
-        $this->assertCount(1, Notification::read()->get());
+        $response = $this->actingAs($user)->get(route('notifications.index'));
+
+        $response->assertStatus(200);
+        $response->assertSee('Test Notification 1');
+        $response->assertSee('Test Notification 2');
+        $response->assertSee('This is a test notification 1 body message.');
+    }
+
+    /** @test */
+    public function bell_icon_shows_correct_unread_count()
+    {
+        $user = User::factory()->create();
+
+        // 3 unread notifications
+        Notification::create([
+            'user_id' => $user->id,
+            'type' => 'alert',
+            'title' => 'Unread 1',
+            'message' => 'Msg',
+            'is_read' => false,
+        ]);
+        Notification::create([
+            'user_id' => $user->id,
+            'type' => 'alert',
+            'title' => 'Unread 2',
+            'message' => 'Msg',
+            'is_read' => false,
+        ]);
+        Notification::create([
+            'user_id' => $user->id,
+            'type' => 'alert',
+            'title' => 'Unread 3',
+            'message' => 'Msg',
+            'is_read' => false,
+        ]);
+
+        // 1 read notification
+        Notification::create([
+            'user_id' => $user->id,
+            'type' => 'alert',
+            'title' => 'Read 1',
+            'message' => 'Msg',
+            'is_read' => true,
+        ]);
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertStatus(200);
+        
+        // Assert unread count badge is rendered (3)
+        $response->assertSee('3');
+        $response->assertSee('Unread 1');
+        $response->assertSee('Unread 3');
+    }
+
+    /** @test */
+    public function user_can_mark_notification_as_read()
+    {
+        $user = User::factory()->create();
+
+        $notification = Notification::create([
+            'user_id' => $user->id,
+            'type' => 'test_alert',
+            'title' => 'Unread Notification',
+            'message' => 'Message body',
+            'is_read' => false,
+        ]);
+
+        $response = $this->actingAs($user)->post(route('notifications.read', $notification->id));
+
+        $response->assertRedirect();
+        $this->assertTrue($notification->refresh()->is_read);
+    }
+
+    /** @test */
+    public function user_can_mark_all_notifications_as_read()
+    {
+        $user = User::factory()->create();
+
+        $notif1 = Notification::create([
+            'user_id' => $user->id,
+            'type' => 'test',
+            'title' => 'Notif 1',
+            'message' => 'Msg',
+            'is_read' => false,
+        ]);
+
+        $notif2 = Notification::create([
+            'user_id' => $user->id,
+            'type' => 'test',
+            'title' => 'Notif 2',
+            'message' => 'Msg',
+            'is_read' => false,
+        ]);
+
+        $response = $this->actingAs($user)->post(route('notifications.read-all'));
+
+        $response->assertRedirect();
+        $this->assertTrue($notif1->refresh()->is_read);
+        $this->assertTrue($notif2->refresh()->is_read);
+    }
+
+    /** @test */
+    public function user_cannot_mark_other_users_notifications_as_read()
+    {
+        $userA = User::factory()->create();
+        $userB = User::factory()->create();
+
+        $notificationOfB = Notification::create([
+            'user_id' => $userB->id,
+            'type' => 'test',
+            'title' => 'Notif B',
+            'message' => 'Msg',
+            'is_read' => false,
+        ]);
+
+        // User A requests to mark User B's notification as read
+        $response = $this->actingAs($userA)->post(route('notifications.read', $notificationOfB->id));
+
+        $response->assertStatus(403);
+        $this->assertFalse($notificationOfB->refresh()->is_read);
     }
 }

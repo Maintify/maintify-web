@@ -31,7 +31,13 @@ Route::middleware(['auth', 'verified', 'workshop.approved'])->group(function () 
     // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/notifications', [ProfileController::class, 'updateNotifications'])->name('profile.notifications.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Notifications
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{notification}/read', [App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
 });
 
 use App\Http\Controllers\OwnershipTransferController;
@@ -109,8 +115,27 @@ Route::middleware(['auth', 'verified', 'role:workshop', 'workshop.approved'])->p
 
 // Super Admin Routes
 Route::middleware(['auth', 'verified', 'role:super_admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::post('/workshops/{workshop}/approve', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'approve'])->name('workshops.approve');
-    Route::post('/workshops/{workshop}/reject', [App\Http\Controllers\SuperAdmin\DashboardController::class, 'reject'])->name('workshops.reject');
+    Route::get('/workshops/pending', [App\Http\Controllers\SuperAdmin\WorkshopVerificationController::class, 'index'])->name('workshops.pending');
+    Route::get('/workshops/{workshop}/review', [App\Http\Controllers\SuperAdmin\WorkshopVerificationController::class, 'show'])->name('workshops.review');
+    Route::post('/workshops/{workshop}/approve', [App\Http\Controllers\SuperAdmin\WorkshopVerificationController::class, 'approve'])->name('workshops.approve');
+    Route::post('/workshops/{workshop}/reject', [App\Http\Controllers\SuperAdmin\WorkshopVerificationController::class, 'reject'])->name('workshops.reject');
+    Route::post('/workshops/{workshop}/revision', [App\Http\Controllers\SuperAdmin\WorkshopVerificationController::class, 'requestRevision'])->name('workshops.revision');
+
+    // User Management
+    Route::resource('users', App\Http\Controllers\SuperAdmin\UserController::class)->only(['index', 'show', 'update']);
+
+    // Vehicle Monitoring
+    Route::resource('vehicles', App\Http\Controllers\SuperAdmin\VehicleController::class)->only(['index', 'show']);
+
+    // Workshop Management
+    Route::resource('workshops', App\Http\Controllers\SuperAdmin\WorkshopController::class)->only(['index', 'show', 'update']);
+
+    // Audit Logs
+    Route::resource('audit-logs', App\Http\Controllers\SuperAdmin\AuditLogController::class)->only(['index', 'show']);
+
+    // Global Settings
+    Route::get('/settings', [App\Http\Controllers\SuperAdmin\SettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings', [App\Http\Controllers\SuperAdmin\SettingController::class, 'update'])->name('settings.update');
 });
 
 require __DIR__.'/auth.php';

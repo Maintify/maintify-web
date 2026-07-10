@@ -21,18 +21,26 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Update the user's profile information.
-     */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request, \App\Services\FileUploadService $fileUploadService): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user->fill($request->safe()->except(['photo']));
+
+        if ($request->hasFile('photo')) {
+            // Hapus foto lama jika ada
+            if ($user->photo_url) {
+                $fileUploadService->delete($user->photo_url);
+            }
+            // Upload foto baru ke folder 'avatars'
+            $user->photo_url = $fileUploadService->uploadVehiclePhoto($request->file('photo'), 'avatars');
         }
 
-        $request->user()->save();
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
@@ -56,5 +64,18 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    /**
+     * Update the user's notification preferences.
+     */
+    public function updateNotifications(Request $request): RedirectResponse
+    {
+        $request->user()->update([
+            'enable_service_reminders' => $request->boolean('enable_service_reminders'),
+            'enable_email_notifications' => $request->boolean('enable_email_notifications'),
+        ]);
+
+        return Redirect::route('profile.edit')->with('status', 'notifications-updated');
     }
 }

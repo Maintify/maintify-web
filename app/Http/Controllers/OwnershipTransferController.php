@@ -119,7 +119,7 @@ class OwnershipTransferController extends Controller
             'to_user_id' => $recipient->id,
             'status' => OwnershipTransfer::STATUS_PENDING_RECIPIENT,
             'requested_at' => now(),
-            'expires_at' => now()->addDays(7),
+            'expires_at' => now()->addDays((int) \App\Models\Setting::get('transfer_expiry_days', 7)),
         ]);
 
         // Send notification to recipient

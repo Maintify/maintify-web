@@ -1309,7 +1309,7 @@
   - `tests/Feature/SuperAdmin/WorkshopVerificationTest.php`
 - **Suggested Commit Message:** `feat(admin): implement workshop verification queue with audit logging`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1334,7 +1334,7 @@
   - `resources/views/super-admin/users/show.blade.php`
 - **Suggested Commit Message:** `feat(admin): implement user management module`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1354,7 +1354,7 @@
   - `resources/views/super-admin/vehicles/index.blade.php`
 - **Suggested Commit Message:** `feat(admin): implement vehicle management module`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1375,7 +1375,7 @@
   - `resources/views/super-admin/workshops/show.blade.php`
 - **Suggested Commit Message:** `feat(admin): implement workshop management module`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1400,7 +1400,7 @@
   - `resources/views/super-admin/audit-logs/index.blade.php`
 - **Suggested Commit Message:** `feat(admin): implement audit log viewer with filters`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1422,7 +1422,7 @@
   - `app/Models/SystemSetting.php` (or config-based)
 - **Suggested Commit Message:** `feat(admin): implement global platform settings page`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1455,7 +1455,7 @@
   - `resources/views/notifications/index.blade.php`
 - **Suggested Commit Message:** `feat(notification): implement notification service and bell icon UI`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1480,7 +1480,7 @@
   - `tests/Unit/Services/ServiceReminderServiceTest.php`
 - **Suggested Commit Message:** `feat(notification): implement scheduled service reminder jobs`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1509,7 +1509,7 @@
   - `resources/views/profile/edit.blade.php`
 - **Suggested Commit Message:** `feat(profile): implement profile edit page`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1530,7 +1530,7 @@
   - `tests/Feature/ProfileTest.php`
 - **Suggested Commit Message:** `feat(profile): implement password and email change`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done dinonaktifkan
 
 ---
 
@@ -1550,7 +1550,7 @@
   - `app/Http/Controllers/ProfileController.php`
 - **Suggested Commit Message:** `feat(profile): implement notification preference toggles`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 

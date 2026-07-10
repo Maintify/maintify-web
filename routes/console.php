@@ -9,3 +9,4 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote');
 
 Schedule::command('transfers:expire')->hourly();
+Schedule::command('maintify:send-reminders')->daily();
