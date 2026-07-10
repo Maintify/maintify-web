@@ -26,6 +26,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        if (!app()->runningUnitTests()) {
+            \Illuminate\Validation\Rules\Password::defaults(function () {
+                return \Illuminate\Validation\Rules\Password::min(8)
+                    ->letters()
+                    ->numbers();
+            });
+        }
+
         RateLimiter::for('login', function (Request $request) {
             $email = (string) $request->input('email');
 

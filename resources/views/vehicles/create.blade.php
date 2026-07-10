@@ -37,7 +37,7 @@
                     @enderror
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {{-- Brand --}}
                     <div class="form-group">
                         <label for="brand" class="form-label" style="display: block; font-size: 13px; font-weight: 600; color: #F4F4F5; margin-bottom: 8px;">Merek *</label>
@@ -73,7 +73,7 @@
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {{-- Type / Varian --}}
                     <div class="form-group">
                         <label for="type" class="form-label" style="display: block; font-size: 13px; font-weight: 600; color: #F4F4F5; margin-bottom: 8px;">Tipe / Varian <span style="color: #71717A; font-weight: 400; font-size: 11px;">(Opsional)</span></label>
@@ -110,7 +110,7 @@
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {{-- Plate Number --}}
                     <div class="form-group">
                         <label for="plate_number" class="form-label" style="display: block; font-size: 13px; font-weight: 600; color: #F4F4F5; margin-bottom: 8px;">Nomor Plat (No. Polisi) *</label>
@@ -145,7 +145,7 @@
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {{-- Fuel Type --}}
                     <div class="form-group">
                         <label for="fuel_type" class="form-label" style="display: block; font-size: 13px; font-weight: 600; color: #F4F4F5; margin-bottom: 8px;">Bahan Bakar *</label>
@@ -185,7 +185,7 @@
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {{-- VIN (Chassis Number) --}}
                     <div class="form-group">
                         <label for="chassis_number" class="form-label" style="display: block; font-size: 13px; font-weight: 600; color: #F4F4F5; margin-bottom: 8px;">Nomor VIN (Rangka) * <span style="color: #71717A; font-weight: 400; font-size: 11px;">(17 Karakter)</span></label>

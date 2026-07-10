@@ -26,7 +26,11 @@
 
     @if($action || $slot->isNotEmpty())
         <div class="mt-5">
-            {{ $slot }}
+            @if($action)
+                <x-button href="{{ $actionHref }}">{{ $actionLabel }}</x-button>
+            @else
+                {{ $slot }}
+            @endif
         </div>
     @endif
 </div>

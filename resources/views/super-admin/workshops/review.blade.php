@@ -44,7 +44,7 @@
                             <span class="text-xs text-zinc-500 block mb-1">Nama Bengkel</span>
                             <span class="text-sm font-semibold text-zinc-200">{{ $workshop->name }}</span>
                         </div>
-                        <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
                                 <span class="text-xs text-zinc-500 block mb-1">No. Telepon</span>
                                 <span class="text-sm font-semibold text-zinc-200">{{ $workshop->phone }}</span>
@@ -62,7 +62,7 @@
                             <span class="text-xs text-zinc-500 block mb-1">Alamat Lengkap</span>
                             <span class="text-sm font-semibold text-zinc-200">{{ $workshop->address }}</span>
                         </div>
-                        <div class="grid grid-cols-3 gap-2">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                             <div>
                                 <span class="text-xs text-zinc-500 block mb-1">Kota</span>
                                 <span class="text-sm font-semibold text-zinc-200">{{ $workshop->city }}</span>

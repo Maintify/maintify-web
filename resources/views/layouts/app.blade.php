@@ -558,5 +558,6 @@
         </script>
 
         @stack('scripts')
+        <x-toast-notification />
     </body>
 </html>

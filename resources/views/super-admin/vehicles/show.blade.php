@@ -150,7 +150,7 @@
                 {{-- Service Summary statistics --}}
                 <div class="bg-[#181A1A] border border-[#2E3030] rounded-2xl p-6 shadow-lg">
                     <h3 class="text-sm font-bold text-zinc-200 mb-4 border-b border-[#2E3030] pb-2">Ringkasan Pemeliharaan</h3>
-                    <div class="grid grid-cols-3 gap-4 text-center">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
                         <div class="p-4 bg-zinc-900/50 rounded-xl border border-[#2E3030]/50">
                             <span class="text-[10px] text-zinc-500 block uppercase font-bold tracking-wider">Total Servis</span>
                             <span class="text-lg font-bold text-zinc-100 mt-1 block">{{ $totalServices }}</span>
@@ -201,7 +201,7 @@
                                         </div>
 
                                         {{-- Stats details --}}
-                                        <div class="grid grid-cols-2 gap-4 my-3 text-xs bg-zinc-950/40 p-3 rounded-lg border border-zinc-900">
+                                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-3 text-xs bg-zinc-950/40 p-3 rounded-lg border border-zinc-900">
                                             <div>
                                                 <span class="text-zinc-500 block">Odometer Service</span>
                                                 <span class="font-semibold text-zinc-300">{{ number_format($record->odometer_at_service) }} Km</span>

@@ -27,7 +27,7 @@ class StoreVehicleRequest extends FormRequest
             'brand' => ['required', 'string', 'max:255'],
             'model' => ['required', 'string', 'max:255'],
             'type' => ['nullable', 'string', 'max:255'],
-            'year' => ['required', 'integer', 'min:1900', 'max:'.(date('Y') + 1)],
+            'year' => ['required', 'integer', 'min:1900', 'max:'.date('Y')],
             'color' => ['nullable', 'string', 'max:255'],
             'fuel_type' => ['required', 'string', 'in:gasoline,diesel,electric,hybrid'],
             'engine_number' => ['nullable', 'string', 'max:255'],

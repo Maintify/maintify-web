@@ -139,3 +139,8 @@ Route::middleware(['auth', 'verified', 'role:super_admin'])->prefix('admin')->na
 });
 
 require __DIR__.'/auth.php';
+
+// API Documentation (Swagger UI)
+Route::get('/api/documentation', function () {
+    return view('swagger');
+});

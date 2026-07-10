@@ -75,7 +75,7 @@ class StaffController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'phone_number' => ['required', 'string', 'max:20'],
+            'phone_number' => ['required', 'string', 'regex:/^(\+?62|0)[0-9]{8,13}$/'],
             'position' => ['required', 'string', Rule::in([WorkshopStaff::POSITION_MECHANIC, WorkshopStaff::POSITION_ADMIN])],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
@@ -135,7 +135,7 @@ class StaffController extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($staff->user_id)],
-            'phone_number' => ['required', 'string', 'max:20'],
+            'phone_number' => ['required', 'string', 'regex:/^(\+?62|0)[0-9]{8,13}$/'],
             'position' => ['required', 'string', Rule::in([WorkshopStaff::POSITION_MECHANIC, WorkshopStaff::POSITION_ADMIN])],
             'is_active' => ['sometimes', 'boolean'],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],

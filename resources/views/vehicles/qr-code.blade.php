@@ -64,7 +64,7 @@
             </div>
 
             {{-- Vehicle Details Grid --}}
-            <div style="background-color: rgba(0,0,0,0.2); border-radius: 12px; padding: 16px; text-align: left; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px;">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 p-4 bg-black/20 rounded-xl text-left">
                 <div>
                     <span style="display: block; color: #71717A; font-size: 11px; font-weight: 600; text-transform: uppercase; margin-bottom: 4px;">Nomor Rangka (VIN)</span>
                     <span style="display: block; color: #E4E4E7; font-size: 13px; font-weight: 600; font-family: monospace;">{{ $vehicle->chassis_number }}</span>

@@ -46,7 +46,7 @@
                     @enderror
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {{-- Plate Number (Read Only) --}}
                     <div class="form-group">
                         <label for="plate_number" class="form-label" style="display: block; font-size: 13px; font-weight: 600; color: #71717A; margin-bottom: 8px;">Nomor Plat (No. Polisi) <span style="font-weight: 400; font-size: 11px;">(Tidak dapat diubah)</span></label>
@@ -76,7 +76,7 @@
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {{-- Brand --}}
                     <div class="form-group">
                         <label for="brand" class="form-label" style="display: block; font-size: 13px; font-weight: 600; color: #F4F4F5; margin-bottom: 8px;">Merek *</label>
@@ -112,7 +112,7 @@
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {{-- Type / Varian --}}
                     <div class="form-group">
                         <label for="type" class="form-label" style="display: block; font-size: 13px; font-weight: 600; color: #F4F4F5; margin-bottom: 8px;">Tipe / Varian <span style="color: #71717A; font-weight: 400; font-size: 11px;">(Opsional)</span></label>
@@ -149,7 +149,7 @@
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {{-- Color --}}
                     <div class="form-group">
                         <label for="color" class="form-label" style="display: block; font-size: 13px; font-weight: 600; color: #F4F4F5; margin-bottom: 8px;">Warna <span style="color: #71717A; font-weight: 400; font-size: 11px;">(Opsional)</span></label>
@@ -187,7 +187,7 @@
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {{-- Engine Number --}}
                     <div class="form-group">
                         <label for="engine_number" class="form-label" style="display: block; font-size: 13px; font-weight: 600; color: #F4F4F5; margin-bottom: 8px;">Nomor Mesin <span style="color: #71717A; font-weight: 400; font-size: 11px;">(Opsional)</span></label>

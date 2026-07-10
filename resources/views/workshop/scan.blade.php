@@ -129,7 +129,7 @@
                     </div>
 
                     {{-- Double Column --}}
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <span class="text-xs text-zinc-500 uppercase tracking-wider block mb-1">Plat Nomor</span>
                             <span id="res-plate" class="text-sm font-bold text-red-400 tracking-wide bg-red-950/30 border border-red-900/50 px-2.5 py-1 rounded inline-block">-</span>
@@ -140,7 +140,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <span class="text-xs text-zinc-500 uppercase tracking-wider block mb-1">Pemilik</span>
                             <span id="res-owner" class="text-sm font-semibold text-zinc-300">-</span>
@@ -151,7 +151,7 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
                             <span class="text-xs text-zinc-500 uppercase tracking-wider block mb-1">Odometer</span>
                             <span id="res-odometer" class="text-sm font-semibold text-zinc-300">-</span>

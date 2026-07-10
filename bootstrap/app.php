@@ -13,6 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(append: [
+            \App\Http\Middleware\SessionTimeoutMiddleware::class,
+        ]);
+
         $middleware->alias([
             'role' => RoleMiddleware::class,
             'workshop.approved' => WorkshopApprovedMiddleware::class,

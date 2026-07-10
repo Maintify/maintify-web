@@ -156,7 +156,7 @@
                 {{-- Stats Summary --}}
                 <div class="bg-[#181A1A] border border-[#2E3030] rounded-2xl p-6 shadow-lg">
                     <h3 class="text-sm font-bold text-zinc-200 mb-4 border-b border-[#2E3030] pb-2">Performa & Transaksi Servis</h3>
-                    <div class="grid grid-cols-2 gap-4 text-center">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center">
                         <div class="p-4 bg-zinc-900/50 rounded-xl border border-[#2E3030]/50">
                             <span class="text-[10px] text-zinc-500 block uppercase font-bold tracking-wider">Total Servis Diselesaikan</span>
                             <span class="text-lg font-bold text-zinc-100 mt-1 block">{{ $totalServices }}</span>

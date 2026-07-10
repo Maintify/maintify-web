@@ -1,0 +1,460 @@
+openapi: 3.0.3
+info:
+  title: Maintify API Documentation
+  description: >
+    API Documentation for Maintify Platform (PRD §26).
+  version: 1.0.0
+servers:
+  - url: /api/v1
+    description: Current API version 1
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:
+  /auth/register:
+    post:
+      summary: Registrasi akun pelanggan baru
+      tags: [Autentikasi]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name: { type: string }
+                email: { type: string }
+                password: { type: string }
+                password_confirmation: { type: string }
+                phone_number: { type: string }
+      responses:
+        '201':
+          description: Registration successful
+  /auth/login:
+    post:
+      summary: Login pengguna (semua role)
+      tags: [Autentikasi]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+                password: { type: string }
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token: { type: string }
+                  token_type: { type: string, example: bearer }
+  /auth/logout:
+    post:
+      summary: Logout pengguna
+      tags: [Autentikasi]
+      responses:
+        '200':
+          description: Logout successful
+  /auth/forgot-password:
+    post:
+      summary: Permintaan reset password
+      tags: [Autentikasi]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: { type: string }
+      responses:
+        '200':
+          description: Reset link sent
+  /auth/reset-password:
+    post:
+      summary: Reset password menggunakan token
+      tags: [Autentikasi]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token: { type: string }
+                email: { type: string }
+                password: { type: string }
+                password_confirmation: { type: string }
+      responses:
+        '200':
+          description: Password reset successful
+  /auth/otp/verify:
+    post:
+      summary: Verifikasi OTP (khusus Super Admin)
+      tags: [Autentikasi]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp: { type: string }
+      responses:
+        '200':
+          description: OTP verified
+  /auth/refresh-token:
+    post:
+      summary: Memperbarui access token
+      tags: [Autentikasi]
+      responses:
+        '200':
+          description: Token refreshed
+
+  /vehicles:
+    get:
+      summary: Mengambil daftar kendaraan milik pengguna
+      tags: [Kendaraan]
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Menambahkan kendaraan baru
+      tags: [Kendaraan]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                brand: { type: string }
+                model: { type: string }
+                plate_number: { type: string }
+                year: { type: integer }
+                chassis_number: { type: string }
+      responses:
+        '201':
+          description: Vehicle created
+  /vehicles/{id}:
+    get:
+      summary: Mengambil detail kendaraan
+      tags: [Kendaraan]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+    put:
+      summary: Memperbarui data kendaraan
+      tags: [Kendaraan]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                brand: { type: string }
+                model: { type: string }
+                color: { type: string }
+      responses:
+        '200':
+          description: Vehicle updated
+    delete:
+      summary: Menghapus (soft delete) data kendaraan
+      tags: [Kendaraan]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '204':
+          description: Vehicle deleted
+  /vehicles/{id}/qr-code:
+    get:
+      summary: Mengambil QR Code kendaraan
+      tags: [Kendaraan]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+  /vehicles/{id}/service-history:
+    get:
+      summary: Mengambil riwayat service kendaraan
+      tags: [Kendaraan]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+
+  /qr/{code}/resolve:
+    get:
+      summary: Mengambil data kendaraan berdasarkan QR Code yang dipindai
+      tags: [QR Code & Scan]
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: OK
+  /qr/{code}/scan-log:
+    post:
+      summary: Mencatat log pemindaian QR Code
+      tags: [QR Code & Scan]
+      parameters:
+        - in: path
+          name: code
+          required: true
+          schema: { type: string }
+      responses:
+        '201':
+          description: Log created
+
+  /service-records:
+    post:
+      summary: Menambahkan riwayat service baru
+      tags: [Service Record]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                vehicle_id: { type: integer }
+                workshop_id: { type: integer }
+                service_date: { type: string, format: date }
+                odometer_at_service: { type: integer }
+      responses:
+        '201':
+          description: Service record created
+  /service-records/{id}:
+    put:
+      summary: Memperbarui riwayat service
+      tags: [Service Record]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Service record updated
+    get:
+      summary: Mengambil detail riwayat service
+      tags: [Service Record]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+
+  /workshops/nearby:
+    get:
+      summary: Mengambil daftar bengkel terdekat berdasarkan koordinat
+      tags: [Bengkel]
+      parameters:
+        - in: query
+          name: lat
+          required: true
+          schema: { type: number }
+        - in: query
+          name: lng
+          required: true
+          schema: { type: number }
+      responses:
+        '200':
+          description: OK
+  /workshops/{id}:
+    get:
+      summary: Mengambil detail bengkel
+      tags: [Bengkel]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+  /workshops/register:
+    post:
+      summary: Registrasi bengkel mitra baru
+      tags: [Bengkel]
+      security: []
+      responses:
+        '201':
+          description: Workshop registered
+  /workshops/{id}/staff:
+    get:
+      summary: Mengambil daftar pegawai bengkel
+      tags: [Bengkel]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Menambahkan pegawai baru
+      tags: [Bengkel]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '201':
+          description: Staff added
+
+  /ownership-transfers:
+    post:
+      summary: Memulai proses transfer kepemilikan
+      tags: [Transfer Kepemilikan]
+      responses:
+        '201':
+          description: Transfer initiated
+  /ownership-transfers/{id}/approve:
+    post:
+      summary: Persetujuan transfer oleh penerima
+      tags: [Transfer Kepemilikan]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Transfer approved
+  /ownership-transfers/{id}/confirm:
+    post:
+      summary: Konfirmasi final oleh pemilik lama
+      tags: [Transfer Kepemilikan]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Transfer confirmed
+  /ownership-transfers/{id}:
+    get:
+      summary: Mengambil detail status transfer
+      tags: [Transfer Kepemilikan]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK
+
+  /admin/workshops/pending:
+    get:
+      summary: Mengambil daftar bengkel menunggu verifikasi
+      tags: [Admin & Super Admin]
+      responses:
+        '200':
+          description: OK
+  /admin/workshops/{id}/verify:
+    post:
+      summary: Menyetujui/menolak bengkel
+      tags: [Admin & Super Admin]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status: { type: string, enum: [approved, rejected] }
+      responses:
+        '200':
+          description: OK
+  /admin/users:
+    get:
+      summary: Mengambil daftar seluruh pengguna
+      tags: [Admin & Super Admin]
+      responses:
+        '200':
+          description: OK
+  /admin/audit-logs:
+    get:
+      summary: Mengambil data audit log
+      tags: [Admin & Super Admin]
+      responses:
+        '200':
+          description: OK
+  /admin/dashboard/stats:
+    get:
+      summary: Mengambil statistik ringkasan platform
+      tags: [Admin & Super Admin]
+      responses:
+        '200':
+          description: OK
+
+  /notifications:
+    get:
+      summary: Mengambil daftar notifikasi pengguna
+      tags: [Notifikasi]
+      responses:
+        '200':
+          description: OK
+  /notifications/{id}/read:
+    put:
+      summary: Menandai notifikasi sebagai telah dibaca
+      tags: [Notifikasi]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: OK

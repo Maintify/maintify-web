@@ -36,7 +36,7 @@ class WorkshopRegistrationController extends Controller
 
             // Step 2: Informasi Bengkel
             'workshop_name' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:20'],
+            'phone' => ['required', 'string', 'regex:/^(\+?62|0)[0-9]{8,13}$/'],
             'address' => ['required', 'string', 'max:500'],
             'city' => ['required', 'string', 'max:100'],
             'province' => ['required', 'string', 'max:100'],

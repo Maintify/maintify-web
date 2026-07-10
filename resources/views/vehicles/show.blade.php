@@ -72,7 +72,7 @@
         @endif
 
         {{-- Main Two-Column Layout Grid --}}
-        <div style="display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start;" class="lg:grid-cols-[380px_1fr]">
+        <div class="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6 items-start">
             
             {{-- ==========================================
                  LEFT COLUMN: Vehicle Identity & Overview
