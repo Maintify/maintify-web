@@ -10,7 +10,7 @@
         <title>{{ config('app.name', 'Maintify') }} | @yield('title', 'Selamat Datang')</title>
 
         <!-- Favicon -->
-        <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3e%3cpath d='M12 2L3 7L12 12L21 7L12 2Z' fill='%23410008'/%3e%3cpath d='M3 17L12 22L21 17' stroke='%23410008' stroke-width='2'/%3e%3c/svg%3e">
+        <link rel="icon" type="image/png" href="{{ asset('images/logo-icon.png') }}">
 
         <!-- Google Fonts - Inter -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,15 +40,10 @@
                 </div>
 
                 {{-- Logo --}}
-                <div style="display:flex;align-items:center;gap:12px;position:relative;z-index:1;">
-                    <div style="width:44px;height:44px;background:rgba(255,255,255,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,0.2);">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 2L3 7L12 12L21 7L12 2Z" fill="white"/>
-                            <path d="M3 17L12 22L21 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            <path d="M3 12L12 17L21 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                    </div>
-                    <span style="font-size:22px;font-weight:700;color:white;letter-spacing:-0.02em;">Maintify</span>
+                <div style="display:flex;align-items:center;position:relative;z-index:1;">
+                    <a href="/" class="flex items-center">
+                        <img src="{{ asset('images/logo.png') }}" alt="Maintify" style="height:48px;width:auto;display:block;">
+                    </a>
                 </div>
 
                 {{-- Hero Content --}}
@@ -100,15 +95,10 @@
                 <div class="auth-card fade-in" style="width:100%;max-width:440px;">
 
                     {{-- Mobile Logo --}}
-                    <div style="display:flex;align-items:center;gap:10px;margin-bottom:28px;" class="lg:hidden">
-                        <div style="width:36px;height:36px;background:#410008;border-radius:10px;display:flex;align-items:center;justify-content:center;">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 2L3 7L12 12L21 7L12 2Z" fill="white"/>
-                                <path d="M3 17L12 22L21 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M3 12L12 17L21 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        <span style="font-size:20px;font-weight:700;color:#F4F4F5;letter-spacing:-0.02em;">Maintify</span>
+                    <div style="display:flex;align-items:center;margin-bottom:28px;" class="lg:hidden">
+                        <a href="/" class="flex items-center">
+                            <img src="{{ asset('images/logo.png') }}" alt="Maintify" style="height:36px;width:auto;display:block;">
+                        </a>
                     </div>
 
                     {{ $slot }}

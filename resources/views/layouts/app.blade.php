@@ -10,7 +10,7 @@
         <title>{{ config('app.name', 'Maintify') }} | {{ $pageTitle ?? 'Dashboard' }}</title>
 
         <!-- Favicon -->
-        <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3e%3cpath d='M12 2L3 7L12 12L21 7L12 2Z' fill='%23410008'/%3e%3cpath d='M3 17L12 22L21 17' stroke='%23410008' stroke-width='2'/%3e%3c/svg%3e">
+        <link rel="icon" type="image/png" href="{{ asset('images/logo-icon.png') }}">
 
         <!-- Google Fonts - Inter -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,15 +42,8 @@
 
                 {{-- Sidebar Header --}}
                 <div class="sidebar-header">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3">
-                        <div class="sidebar-logo">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 2L3 7L12 12L21 7L12 2Z" fill="white"/>
-                                <path d="M3 17L12 22L21 17" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M3 12L12 17L21 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                        </div>
-                        <span class="sidebar-brand">Maintify</span>
+                    <a href="{{ route('dashboard') }}" class="flex items-center">
+                        <img src="{{ asset('images/logo.png') }}" alt="Maintify" class="h-9 w-auto" style="display:block;">
                     </a>
                 </div>
 
