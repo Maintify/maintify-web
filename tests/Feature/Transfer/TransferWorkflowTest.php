@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Transfer;
 
-use App\Models\AuditLog;
 use App\Models\Notification;
 use App\Models\OwnershipTransfer;
 use App\Models\User;
@@ -58,7 +57,7 @@ class TransferWorkflowTest extends TestCase
         $response->assertSessionHas('success');
 
         $this->assertEquals(OwnershipTransfer::STATUS_APPROVED, $transfer->fresh()->status);
-        
+
         $this->assertDatabaseHas('notifications', [
             'user_id' => $owner->id,
             'type' => 'transfer_approved',
@@ -79,7 +78,7 @@ class TransferWorkflowTest extends TestCase
         $response->assertSessionHas('success');
 
         $this->assertEquals(OwnershipTransfer::STATUS_REJECTED, $transfer->fresh()->status);
-        
+
         $this->assertDatabaseHas('notifications', [
             'user_id' => $owner->id,
             'type' => 'transfer_rejected',
@@ -135,17 +134,17 @@ class TransferWorkflowTest extends TestCase
 
         // Assert ownership changed
         $this->assertEquals($recipient->id, $vehicle->fresh()->user_id);
-        
+
         // Assert transfer status
         $this->assertEquals(OwnershipTransfer::STATUS_CONFIRMED, $transfer->fresh()->status);
         $this->assertNotNull($transfer->fresh()->disclaimer_acknowledged);
-        
+
         // Assert notification for new owner
         $this->assertDatabaseHas('notifications', [
             'user_id' => $recipient->id,
             'type' => 'transfer_completed',
         ]);
-        
+
         // Assert audit log exists
         $this->assertDatabaseHas('audit_logs', [
             'action' => 'transfer_completed_confirmed',
@@ -166,7 +165,7 @@ class TransferWorkflowTest extends TestCase
             ->post(route('transfers.confirm', $transfer)); // Missing disclaimer_agreed
 
         $response->assertSessionHasErrors('disclaimer_agreed');
-        
+
         // Assert ownership did not change
         $this->assertEquals($owner->id, $vehicle->fresh()->user_id);
     }
@@ -177,7 +176,7 @@ class TransferWorkflowTest extends TestCase
         [$owner, $vehicle] = $this->createOwnerWithVehicle();
         $recipient = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
         $otherUser = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
-        
+
         $transfer = $this->createPendingTransfer($vehicle, $owner, $recipient);
 
         $response = $this->actingAs($otherUser)
@@ -194,7 +193,7 @@ class TransferWorkflowTest extends TestCase
         [$owner, $vehicle] = $this->createOwnerWithVehicle();
         $recipient = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
         $otherUser = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
-        
+
         $transfer = $this->createPendingTransfer($vehicle, $owner, $recipient);
         $transfer->update(['status' => OwnershipTransfer::STATUS_APPROVED]);
 

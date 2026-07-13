@@ -2,7 +2,7 @@
     <x-slot name="pageTitle">Dashboard</x-slot>
     <x-slot name="breadcrumb">
         @if(auth()->user()->isVehicleOwner())
-            Selamat datang kembali 👋
+            Selamat datang kembali
         @elseif(auth()->user()->isWorkshop())
             Panel Bengkel
         @elseif(auth()->user()->isSuperAdmin())

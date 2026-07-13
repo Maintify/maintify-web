@@ -7,7 +7,7 @@
             <span style="width:6px;height:6px;border-radius:50%;background:#ff9aa4;display:inline-block;animation:pulse 2s infinite;"></span>
             <span style="font-size:11px;font-weight:600;color:#ff9aa4;letter-spacing:0.04em;text-transform:uppercase;">Real-Time · Digital ID</span>
         </div>
-        <h2 style="font-size:26px;font-weight:800;color:#F4F4F5;letter-spacing:-0.03em;line-height:1.2;margin-bottom:6px;">Selamat Datang<br>Kembali 👋</h2>
+        <h2 style="font-size:26px;font-weight:800;color:#F4F4F5;letter-spacing:-0.03em;line-height:1.2;margin-bottom:6px;">Selamat Datang<br>Kembali</h2>
         <p style="color:#71717A;font-size:14px;line-height:1.6;">Masuk untuk mengelola histori service kendaraan Anda</p>
     </div>
 

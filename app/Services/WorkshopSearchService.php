@@ -4,15 +4,13 @@ namespace App\Services;
 
 use App\Models\Workshop;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\SQLiteConnection;
 use Illuminate\Support\Facades\DB;
 
 class WorkshopSearchService
 {
     /**
      * Search workshops nearby using geospatial coordinates.
-     *
-     * @param array $params
-     * @return Collection
      */
     public function search(array $params): Collection
     {
@@ -27,7 +25,7 @@ class WorkshopSearchService
 
         // Register custom math functions in SQLite connection (for local/test databases)
         $connection = DB::connection();
-        if ($connection instanceof \Illuminate\Database\SQLiteConnection) {
+        if ($connection instanceof SQLiteConnection) {
             $pdo = $connection->getPdo();
             $pdo->sqliteCreateFunction('acos', 'acos', 1);
             $pdo->sqliteCreateFunction('cos', 'cos', 1);
@@ -59,13 +57,13 @@ class WorkshopSearchService
 
         // 3. Geospatial calculation using Haversine formula
         if ($latitude !== null && $longitude !== null) {
-            $query->selectRaw("
+            $query->selectRaw('
                 workshops.*,
                 (6371 * acos(
                     cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) +
                     sin(radians(?)) * sin(radians(latitude))
                 )) AS distance
-            ", [$latitude, $longitude, $latitude]);
+            ', [$latitude, $longitude, $latitude]);
 
             $query->orderBy('distance', 'asc');
         } else {
@@ -77,6 +75,7 @@ class WorkshopSearchService
         if ($latitude !== null && $longitude !== null) {
             $results = $results->filter(function ($workshop) use ($radius) {
                 $workshop->distance = (float) $workshop->distance;
+
                 return $workshop->distance <= $radius;
             })->values();
         }

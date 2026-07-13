@@ -30,7 +30,7 @@ class ServiceReminderService
             // 1. Pengingat Berdasarkan Batas Waktu (Time-based reminder)
             if ($vehicle->next_service_date && $vehicle->owner->enable_service_reminders) {
                 $nextServiceDate = Carbon::parse($vehicle->next_service_date);
-                
+
                 if ($nextServiceDate->isPast() || $nextServiceDate->isToday()) {
                     // Cari apakah notifikasi untuk target tanggal servis ini sudah dikirim sebelumnya
                     $alreadySentTime = Notification::where('user_id', $vehicle->user_id)
@@ -39,7 +39,7 @@ class ServiceReminderService
                         ->where('message', 'like', "%{$nextServiceDate->format('d-m-Y')}%")
                         ->exists();
 
-                    if (!$alreadySentTime) {
+                    if (! $alreadySentTime) {
                         Notification::create([
                             'user_id' => $vehicle->user_id,
                             'type' => 'service_reminder',
@@ -64,7 +64,7 @@ class ServiceReminderService
                         ->where('message', 'like', "%Target Odometer: {$vehicle->next_service_odometer} km%")
                         ->exists();
 
-                    if (!$alreadySentMileage) {
+                    if (! $alreadySentMileage) {
                         Notification::create([
                             'user_id' => $vehicle->user_id,
                             'type' => 'service_reminder',

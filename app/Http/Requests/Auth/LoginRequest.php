@@ -52,14 +52,14 @@ class LoginRequest extends FormRequest
         }
 
         $user = Auth::user();
-        if ($user && !$user->is_active) {
+        if ($user && ! $user->is_active) {
             Auth::logout();
             throw ValidationException::withMessages([
                 'email' => __('Akun Anda telah dinonaktifkan.'),
             ]);
         }
 
-        if ($user && $user->workshopStaff && !$user->workshopStaff->is_active) {
+        if ($user && $user->workshopStaff && ! $user->workshopStaff->is_active) {
             Auth::logout();
             throw ValidationException::withMessages([
                 'email' => __('Akun staff Anda telah dinonaktifkan.'),

@@ -18,8 +18,9 @@ class WorkshopApprovedMiddleware
 
         if ($user && $user->isWorkshop()) {
             // Check if user is staff and deactivated
-            if ($user->workshopStaff && !$user->workshopStaff->is_active) {
+            if ($user->workshopStaff && ! $user->workshopStaff->is_active) {
                 auth()->logout();
+
                 return redirect()->route('login')->withErrors(['email' => 'Akun staff Anda telah dinonaktifkan.']);
             }
 

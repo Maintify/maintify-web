@@ -19,7 +19,7 @@ class NearbySearchTest extends TestCase
     {
         parent::setUp();
         $this->withoutVite();
-        
+
         $this->customer = User::factory()->create([
             'role' => User::ROLE_VEHICLE_OWNER,
         ]);
@@ -28,7 +28,7 @@ class NearbySearchTest extends TestCase
     private function createWorkshop(array $attributes): Workshop
     {
         $user = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
-        
+
         return Workshop::create(array_merge([
             'user_id' => $user->id,
             'name' => 'Bengkel Test',
@@ -90,12 +90,12 @@ class NearbySearchTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJsonPath('success', true);
-        
+
         $data = $response->json('data');
-        
+
         // Assert only verified and active workshops are returned
         $this->assertCount(2, $data);
-        
+
         // Assert they are sorted by distance ascending (close workshop first)
         $this->assertEquals('Bengkel Dekat', $data[0]['name']);
         $this->assertEquals('Bengkel Jauh', $data[1]['name']);

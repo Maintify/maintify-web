@@ -25,7 +25,7 @@ class StaffController extends Controller
         $user = $request->user();
         $workshop = $user->workshop;
 
-        if (!$workshop) {
+        if (! $workshop) {
             abort(403, 'Hanya admin bengkel yang dapat mengelola staf.');
         }
 
@@ -45,8 +45,8 @@ class StaffController extends Controller
         if ($search) {
             $query->whereHas('user', function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone_number', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone_number', 'like', "%{$search}%");
             });
         }
 
@@ -150,7 +150,7 @@ class StaffController extends Controller
                 'phone_number' => $validated['phone_number'],
             ];
 
-            if (!empty($validated['password'])) {
+            if (! empty($validated['password'])) {
                 $userFields['password'] = Hash::make($validated['password']);
             }
 

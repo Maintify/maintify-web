@@ -19,7 +19,7 @@ class ServiceReminderServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        
+
         // Atur default setting agar konsisten
         Setting::set('service_reminder_interval', 180);
         Setting::set('service_reminder_mileage', 5000);
@@ -29,7 +29,7 @@ class ServiceReminderServiceTest extends TestCase
     public function it_sends_time_based_reminder_when_next_service_date_is_past_or_today()
     {
         $owner = User::factory()->create();
-        
+
         // 1. Overdue vehicle
         $vehicleOverdue = Vehicle::create([
             'user_id' => $owner->id,
@@ -52,7 +52,7 @@ class ServiceReminderServiceTest extends TestCase
             'next_service_date' => Carbon::tomorrow()->toDateString(),
         ]);
 
-        $service = new ServiceReminderService();
+        $service = new ServiceReminderService;
         $result = $service->sendServiceReminders();
 
         $this->assertEquals(1, $result['time_reminders_sent']);
@@ -99,7 +99,7 @@ class ServiceReminderServiceTest extends TestCase
             'next_service_odometer' => 10000,
         ]);
 
-        $service = new ServiceReminderService();
+        $service = new ServiceReminderService;
         $result = $service->sendServiceReminders();
 
         $this->assertEquals(1, $result['mileage_reminders_sent']);
@@ -122,7 +122,7 @@ class ServiceReminderServiceTest extends TestCase
     public function it_prevents_duplicate_reminders_for_same_service_window()
     {
         $owner = User::factory()->create();
-        
+
         $vehicle = Vehicle::create([
             'user_id' => $owner->id,
             'plate_number' => 'B 5555 AAA',
@@ -135,7 +135,7 @@ class ServiceReminderServiceTest extends TestCase
             'next_service_odometer' => 10000,
         ]);
 
-        $service = new ServiceReminderService();
+        $service = new ServiceReminderService;
 
         // First run -> should send both time and mileage reminders
         $result1 = $service->sendServiceReminders();
@@ -155,7 +155,7 @@ class ServiceReminderServiceTest extends TestCase
     public function it_can_execute_via_console_command()
     {
         $owner = User::factory()->create();
-        
+
         $vehicle = Vehicle::create([
             'user_id' => $owner->id,
             'plate_number' => 'B 6666 AAA',

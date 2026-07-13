@@ -23,7 +23,7 @@ class VehicleManagementTest extends TestCase
     public function super_admin_can_view_vehicles_list()
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
-        
+
         $owner1 = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
         $owner2 = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
 
@@ -58,7 +58,7 @@ class VehicleManagementTest extends TestCase
     public function super_admin_can_search_vehicles_by_plate_chassis_or_owner()
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
-        
+
         $owner1 = User::factory()->create(['name' => 'Andi', 'role' => User::ROLE_VEHICLE_OWNER]);
         $owner2 = User::factory()->create(['name' => 'Budi', 'role' => User::ROLE_VEHICLE_OWNER]);
 
@@ -150,7 +150,7 @@ class VehicleManagementTest extends TestCase
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
         $owner = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
-        
+
         $vehicle = Vehicle::create([
             'user_id' => $owner->id,
             'plate_number' => 'B 1234 ABC',
@@ -166,12 +166,12 @@ class VehicleManagementTest extends TestCase
         ]);
         $this->assertTrue($responseStore->status() === 404 || $responseStore->status() === 405);
 
-        $responseUpdate = $this->actingAs($superAdmin)->put('/admin/vehicles/' . $vehicle->id, [
+        $responseUpdate = $this->actingAs($superAdmin)->put('/admin/vehicles/'.$vehicle->id, [
             'plate_number' => 'B 9999 ZZZ',
         ]);
         $this->assertTrue($responseUpdate->status() === 404 || $responseUpdate->status() === 405);
 
-        $responseDelete = $this->actingAs($superAdmin)->delete('/admin/vehicles/' . $vehicle->id);
+        $responseDelete = $this->actingAs($superAdmin)->delete('/admin/vehicles/'.$vehicle->id);
         $this->assertTrue($responseDelete->status() === 404 || $responseDelete->status() === 405);
     }
 
@@ -180,7 +180,7 @@ class VehicleManagementTest extends TestCase
     {
         $regularUser = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
         $owner = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
-        
+
         $vehicle = Vehicle::create([
             'user_id' => $owner->id,
             'plate_number' => 'B 1234 ABC',

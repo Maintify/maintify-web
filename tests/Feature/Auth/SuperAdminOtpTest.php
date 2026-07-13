@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Mail\OtpMail;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
@@ -37,7 +38,7 @@ class SuperAdminOtpTest extends TestCase
         $cacheKey = "otp:{$superAdmin->id}";
         $this->assertTrue(Cache::has($cacheKey));
 
-        Mail::assertSent(\App\Mail\OtpMail::class, function ($mail) use ($superAdmin) {
+        Mail::assertSent(OtpMail::class, function ($mail) use ($superAdmin) {
             return $mail->hasTo($superAdmin->email);
         });
 
@@ -170,7 +171,7 @@ class SuperAdminOtpTest extends TestCase
         $cacheKey = "otp:{$superAdmin->id}";
         $this->assertTrue(Cache::has($cacheKey));
 
-        Mail::assertSent(\App\Mail\OtpMail::class, function ($mail) use ($superAdmin) {
+        Mail::assertSent(OtpMail::class, function ($mail) use ($superAdmin) {
             return $mail->hasTo($superAdmin->email);
         });
 

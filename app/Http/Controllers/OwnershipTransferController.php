@@ -6,6 +6,7 @@ use App\Http\Requests\InitiateTransferRequest;
 use App\Models\AuditLog;
 use App\Models\Notification;
 use App\Models\OwnershipTransfer;
+use App\Models\Setting;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Services\OwnershipTransferService;
@@ -119,7 +120,7 @@ class OwnershipTransferController extends Controller
             'to_user_id' => $recipient->id,
             'status' => OwnershipTransfer::STATUS_PENDING_RECIPIENT,
             'requested_at' => now(),
-            'expires_at' => now()->addDays((int) \App\Models\Setting::get('transfer_expiry_days', 7)),
+            'expires_at' => now()->addDays((int) Setting::get('transfer_expiry_days', 7)),
         ]);
 
         // Send notification to recipient
@@ -127,7 +128,7 @@ class OwnershipTransferController extends Controller
             'user_id' => $recipient->id,
             'type' => 'transfer_request',
             'title' => 'Permintaan Transfer Kendaraan',
-            'message' => auth()->user()->name . ' ingin mentransfer kepemilikan kendaraan ' . $vehicle->brand . ' ' . $vehicle->model . ' (' . $vehicle->plate_number . ') kepada Anda. Silakan tinjau dan setujui permintaan ini.',
+            'message' => auth()->user()->name.' ingin mentransfer kepemilikan kendaraan '.$vehicle->brand.' '.$vehicle->model.' ('.$vehicle->plate_number.') kepada Anda. Silakan tinjau dan setujui permintaan ini.',
             'is_read' => false,
         ]);
 
@@ -145,7 +146,7 @@ class OwnershipTransferController extends Controller
         );
 
         return redirect()->route('vehicles.show', $vehicle)
-            ->with('success', 'Permintaan transfer kepemilikan berhasil dikirim ke ' . $recipient->name . '. Menunggu persetujuan penerima.');
+            ->with('success', 'Permintaan transfer kepemilikan berhasil dikirim ke '.$recipient->name.'. Menunggu persetujuan penerima.');
     }
 
     /**
@@ -155,6 +156,7 @@ class OwnershipTransferController extends Controller
     {
         try {
             $this->transferService->approve($transfer, auth()->user());
+
             return redirect()->back()->with('success', 'Permintaan transfer berhasil disetujui. Menunggu konfirmasi akhir dari pemilik saat ini.');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -168,6 +170,7 @@ class OwnershipTransferController extends Controller
     {
         try {
             $this->transferService->reject($transfer, auth()->user());
+
             return redirect()->back()->with('success', 'Permintaan transfer berhasil ditolak.');
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());
@@ -209,7 +212,7 @@ class OwnershipTransferController extends Controller
         try {
             $disclaimerText = 'Saya menyatakan setuju untuk memindahkan kepemilikan kendaraan secara permanen. Seluruh data kendaraan dan riwayat servis akan menjadi hak milik penerima sepenuhnya. Saya memahami bahwa aksi ini bersifat final dan tidak dapat dibatalkan.';
             $this->transferService->confirm($transfer, auth()->user(), $disclaimerText);
-            
+
             return redirect()->route('transfers.success', $transfer);
         } catch (Exception $e) {
             return redirect()->back()->with('error', $e->getMessage());

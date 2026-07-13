@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ServiceRecord;
 use App\Services\WorkshopSearchService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-
-use App\Models\ServiceRecord;
 use Illuminate\View\View;
 
 class WorkshopSearchController extends Controller
@@ -20,20 +19,16 @@ class WorkshopSearchController extends Controller
 
     /**
      * Display the nearby workshops map page.
-     *
-     * @return View
      */
     public function index(): View
     {
         $serviceTypes = ServiceRecord::SERVICE_TYPES;
+
         return view('workshops.nearby', compact('serviceTypes'));
     }
 
     /**
      * Search for nearby workshops.
-     *
-     * @param Request $request
-     * @return JsonResponse
      */
     public function search(Request $request): JsonResponse
     {
@@ -64,7 +59,7 @@ class WorkshopSearchController extends Controller
 
         // Only verified workshops returned to customers (FR-051)
         $user = $request->user();
-        if (!$user || $user->role !== 'super_admin') {
+        if (! $user || $user->role !== 'super_admin') {
             $params['status'] = 'approved';
         }
 

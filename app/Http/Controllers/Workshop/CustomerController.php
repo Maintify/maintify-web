@@ -18,6 +18,7 @@ class CustomerController extends Controller
     {
         /** @var User $user */
         $user = $request->user();
+
         return $user->workshop ?? $user->workshopStaff?->workshop;
     }
 
@@ -27,7 +28,7 @@ class CustomerController extends Controller
     public function index(Request $request): View
     {
         $workshop = $this->getWorkshop($request);
-        if (!$workshop) {
+        if (! $workshop) {
             abort(403, 'Unauthorized.');
         }
 
@@ -43,12 +44,12 @@ class CustomerController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search, $workshop) {
                 $q->where('users.name', 'like', "%{$search}%")
-                  ->orWhereHas('vehicles', function ($vq) use ($search, $workshop) {
-                      $vq->where('plate_number', 'like', "%{$search}%")
-                         ->whereHas('serviceRecords', function ($sq) use ($workshop) {
-                             $sq->where('workshop_id', $workshop->id);
-                         });
-                  });
+                    ->orWhereHas('vehicles', function ($vq) use ($search, $workshop) {
+                        $vq->where('plate_number', 'like', "%{$search}%")
+                            ->whereHas('serviceRecords', function ($sq) use ($workshop) {
+                                $sq->where('workshop_id', $workshop->id);
+                            });
+                    });
             });
         }
 

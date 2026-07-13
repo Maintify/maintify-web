@@ -110,7 +110,7 @@ class EditServiceRecordTest extends TestCase
     public function workshop_cannot_edit_service_record_belonging_to_another_workshop()
     {
         [$user, $workshop] = $this->createApprovedWorkshop();
-        
+
         // Create another workshop
         $anotherUser = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
         $anotherWorkshop = Workshop::create([
@@ -175,7 +175,7 @@ class EditServiceRecordTest extends TestCase
             'mechanic_notes' => 'Updated notes.',
             'parts' => [
                 ['part_name' => 'New Part 1', 'quantity' => 2, 'unit_price' => 75000, 'part_category' => 'Brake'],
-            ]
+            ],
         ];
 
         $response = $this->actingAs($user)

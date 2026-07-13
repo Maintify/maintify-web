@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\ServiceRecord;
+use App\Models\Setting;
 use App\Models\Vehicle;
 
 /**
@@ -62,12 +63,12 @@ class VehicleHealthService
 
         // 4. Update next_service_odometer
         if ($record->odometer_at_service) {
-            $odometerInterval = (int) \App\Models\Setting::get('service_reminder_mileage', self::DEFAULT_SERVICE_ODOMETER_INTERVAL);
+            $odometerInterval = (int) Setting::get('service_reminder_mileage', self::DEFAULT_SERVICE_ODOMETER_INTERVAL);
             $updates['next_service_odometer'] = $record->odometer_at_service + $odometerInterval;
         }
 
         // 5. Update next_service_date
-        $dayInterval = (int) \App\Models\Setting::get('service_reminder_interval', self::DEFAULT_SERVICE_DAY_INTERVAL);
+        $dayInterval = (int) Setting::get('service_reminder_interval', self::DEFAULT_SERVICE_DAY_INTERVAL);
         $updates['next_service_date'] = now()->addDays($dayInterval)->toDateString();
 
         $vehicle->update($updates);

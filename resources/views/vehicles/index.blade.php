@@ -5,7 +5,7 @@
         {{-- Header & Add Action --}}
         <div style="display: flex; flex-direction: column; md-flex-direction: row; justify-content: space-between; align-items: flex-start; md-align-items: center; gap: 16px; margin-bottom: 28px;">
             <div>
-                <h1 style="font-size: 28px; font-weight: 800; color: #F4F4F5; letter-spacing: -0.02em; margin: 0 0 6px;">Garasi Saya 🏍️</h1>
+                <h1 style="font-size: 28px; font-weight: 800; color: #F4F4F5; letter-spacing: -0.02em; margin: 0 0 6px;">Garasi Saya </h1>
                 <p style="color: #71717A; font-size: 14px; margin: 0;">Kelola dan pantau kondisi semua kendaraan Anda di satu tempat.</p>
             </div>
             

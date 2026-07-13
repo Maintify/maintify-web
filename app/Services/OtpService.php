@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Mail\OtpMail;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
@@ -19,7 +20,7 @@ class OtpService
         Cache::put($this->getCacheKey($user->id), $otp, now()->addMinutes(5));
 
         // Delivery via Email
-        Mail::to($user->email)->send(new \App\Mail\OtpMail($otp));
+        Mail::to($user->email)->send(new OtpMail($otp));
 
         return $otp;
     }

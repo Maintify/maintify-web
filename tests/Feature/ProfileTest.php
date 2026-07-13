@@ -3,7 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Models\Vehicle;
+use App\Services\ServiceReminderService;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
@@ -99,11 +105,11 @@ class ProfileTest extends TestCase
 
     public function test_profile_photo_and_phone_number_can_be_updated(): void
     {
-        \Illuminate\Support\Facades\Storage::fake('public');
+        Storage::fake('public');
 
         $user = User::factory()->create();
 
-        $photo = \Illuminate\Http\UploadedFile::fake()->create('avatar.jpg', 100, 'image/jpeg');
+        $photo = UploadedFile::fake()->create('avatar.jpg', 100, 'image/jpeg');
 
         $response = $this
             ->actingAs($user)
@@ -124,7 +130,7 @@ class ProfileTest extends TestCase
 
         // Verify file stored in public disk
         $relativePath = str_replace('/storage/', '', $user->photo_url);
-        \Illuminate\Support\Facades\Storage::disk('public')->assertExists($relativePath);
+        Storage::disk('public')->assertExists($relativePath);
     }
 
     public function test_password_can_be_updated(): void
@@ -144,7 +150,7 @@ class ProfileTest extends TestCase
             ->assertSessionHasNoErrors()
             ->assertRedirect('/profile');
 
-        $this->assertTrue(\Illuminate\Support\Facades\Hash::check('new-password123', $user->refresh()->password));
+        $this->assertTrue(Hash::check('new-password123', $user->refresh()->password));
     }
 
     public function test_correct_password_must_be_provided_to_update_password(): void
@@ -202,19 +208,19 @@ class ProfileTest extends TestCase
             'enable_service_reminders' => false,
         ]);
 
-        $vehicle = \App\Models\Vehicle::create([
+        $vehicle = Vehicle::create([
             'user_id' => $owner->id,
             'plate_number' => 'B 7777 AAA',
             'brand' => 'Honda',
             'model' => 'Spacy',
             'year' => 2021,
             'is_active' => true,
-            'next_service_date' => \Carbon\Carbon::yesterday()->toDateString(),
+            'next_service_date' => Carbon::yesterday()->toDateString(),
             'current_odometer' => 9500,
             'next_service_odometer' => 10000,
         ]);
 
-        $service = new \App\Services\ServiceReminderService();
+        $service = new ServiceReminderService;
         $result = $service->sendServiceReminders();
 
         $this->assertEquals(0, $result['time_reminders_sent']);

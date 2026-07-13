@@ -18,13 +18,13 @@ class VehicleController extends Controller
 
         $query = Vehicle::query()->with('owner');
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('chassis_number', 'like', "%{$search}%")
-                  ->orWhere('plate_number', 'like', "%{$search}%")
-                  ->orWhereHas('owner', function ($uq) use ($search) {
-                      $uq->where('name', 'like', "%{$search}%");
-                  });
+                    ->orWhere('plate_number', 'like', "%{$search}%")
+                    ->orWhereHas('owner', function ($uq) use ($search) {
+                        $uq->where('name', 'like', "%{$search}%");
+                    });
             });
         }
 

@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Workshop;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreServiceRecordRequest;
+use App\Models\AuditLog;
 use App\Models\Notification;
 use App\Models\ServiceRecord;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Models\Workshop;
 use App\Services\VehicleHealthService;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -120,7 +122,7 @@ class ServiceRecordController extends Controller
         $workshop = $user->workshop ?? $user->workshopStaff?->workshop;
 
         // Authorize
-        if (!$workshop || $serviceRecord->workshop_id !== $workshop->id) {
+        if (! $workshop || $serviceRecord->workshop_id !== $workshop->id) {
             abort(403, 'Unauthorized.');
         }
 
@@ -154,7 +156,7 @@ class ServiceRecordController extends Controller
         $workshop = $user->workshop ?? $user->workshopStaff?->workshop;
 
         // Authorize
-        if (!$workshop || $serviceRecord->workshop_id !== $workshop->id) {
+        if (! $workshop || $serviceRecord->workshop_id !== $workshop->id) {
             abort(403, 'Unauthorized.');
         }
 
@@ -173,7 +175,7 @@ class ServiceRecordController extends Controller
             'odometer_at_service',
             'mechanic_notes',
             'status',
-            'total_cost'
+            'total_cost',
         ]);
 
         // Update service record
@@ -192,21 +194,21 @@ class ServiceRecordController extends Controller
             'odometer_at_service',
             'mechanic_notes',
             'status',
-            'total_cost'
+            'total_cost',
         ]);
 
         // Determine changes
         $changes = [];
         foreach ($newData as $key => $val) {
             if ($oldData[$key] != $val) {
-                if ($oldData[$key] instanceof \Carbon\Carbon && $val instanceof \Carbon\Carbon) {
+                if ($oldData[$key] instanceof Carbon && $val instanceof Carbon) {
                     if ($oldData[$key]->equalTo($val)) {
                         continue;
                     }
                 }
                 $changes[$key] = [
-                    'old' => $oldData[$key] instanceof \Carbon\Carbon ? $oldData[$key]->toDateTimeString() : $oldData[$key],
-                    'new' => $val instanceof \Carbon\Carbon ? $val->toDateTimeString() : $val
+                    'old' => $oldData[$key] instanceof Carbon ? $oldData[$key]->toDateTimeString() : $oldData[$key],
+                    'new' => $val instanceof Carbon ? $val->toDateTimeString() : $val,
                 ];
             }
         }
@@ -237,7 +239,7 @@ class ServiceRecordController extends Controller
         }
 
         // Log audit trail
-        \App\Models\AuditLog::create([
+        AuditLog::create([
             'actor_user_id' => $user->id,
             'action' => 'service_record.updated',
             'entity_type' => 'ServiceRecord',

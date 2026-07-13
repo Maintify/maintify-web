@@ -26,7 +26,7 @@ class ReportController extends Controller
         $user = $request->user();
         $workshop = $user->workshop;
 
-        if (!$workshop) {
+        if (! $workshop) {
             abort(403, 'Hanya admin bengkel yang dapat mengakses laporan operasional.');
         }
 
@@ -78,13 +78,13 @@ class ReportController extends Controller
                 'label' => ServiceRecord::SERVICE_TYPES[$row->service_type] ?? $row->service_type,
                 'count' => $row->count,
                 'revenue' => (float) $row->revenue,
-                'revenue_formatted' => 'Rp ' . number_format((float) $row->revenue, 0, ',', '.'),
+                'revenue_formatted' => 'Rp '.number_format((float) $row->revenue, 0, ',', '.'),
             ]);
 
         // ─── Daily Timeline ───────────────────────────────────────────────────
         $daily = $baseQuery()
             ->select(
-                DB::raw("DATE(service_date) as date"),
+                DB::raw('DATE(service_date) as date'),
                 DB::raw('COUNT(*) as count'),
                 DB::raw('SUM(total_cost) as revenue')
             )
@@ -95,7 +95,7 @@ class ReportController extends Controller
                 'date' => $row->date,
                 'count' => $row->count,
                 'revenue' => (float) $row->revenue,
-                'revenue_formatted' => 'Rp ' . number_format((float) $row->revenue, 0, ',', '.'),
+                'revenue_formatted' => 'Rp '.number_format((float) $row->revenue, 0, ',', '.'),
             ]);
 
         // ─── Top 10 Spareparts ────────────────────────────────────────────────
@@ -113,14 +113,14 @@ class ReportController extends Controller
             ->get();
 
         return [
-            'period_label' => $start->format('d M Y') . ' – ' . $end->format('d M Y'),
+            'period_label' => $start->format('d M Y').' – '.$end->format('d M Y'),
             'start_date' => $start->toDateString(),
             'end_date' => $end->toDateString(),
             'total_services' => $totalServices,
             'total_revenue' => $totalRevenue,
-            'total_revenue_formatted' => 'Rp ' . number_format($totalRevenue, 0, ',', '.'),
+            'total_revenue_formatted' => 'Rp '.number_format($totalRevenue, 0, ',', '.'),
             'avg_revenue' => $avgRevenue,
-            'avg_revenue_formatted' => 'Rp ' . number_format($avgRevenue, 0, ',', '.'),
+            'avg_revenue_formatted' => 'Rp '.number_format($avgRevenue, 0, ',', '.'),
             'by_type' => $typeBreakdown,
             'daily' => $daily,
             'top_parts' => $topParts,
@@ -148,7 +148,7 @@ class ReportController extends Controller
         [$start, $end] = $this->parseDateRange($request);
         $report = $this->buildReportData($workshop, $start, $end);
 
-        $filename = 'laporan-' . str($workshop->name)->slug() . '-' . $start->format('Ymd') . '-' . $end->format('Ymd') . '.csv';
+        $filename = 'laporan-'.str($workshop->name)->slug().'-'.$start->format('Ymd').'-'.$end->format('Ymd').'.csv';
 
         return $this->exportService->downloadCsv($report, $filename);
     }

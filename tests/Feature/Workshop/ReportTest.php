@@ -5,9 +5,9 @@ namespace Tests\Feature\Workshop;
 use App\Models\ServicePart;
 use App\Models\ServiceRecord;
 use App\Models\User;
+use App\Models\Vehicle;
 use App\Models\Workshop;
 use App\Models\WorkshopStaff;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -44,12 +44,12 @@ class ReportTest extends TestCase
     {
         // Create a vehicle owner and a vehicle if not provided in overrides
         $vehicleOwnerId = $overrides['vehicle_owner_user_id'] ?? null;
-        if (!$vehicleOwnerId) {
+        if (! $vehicleOwnerId) {
             $vehicleOwner = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
             $vehicleOwnerId = $vehicleOwner->id;
         }
 
-        $vehicle = \App\Models\Vehicle::factory()->create(['user_id' => $vehicleOwnerId]);
+        $vehicle = Vehicle::factory()->create(['user_id' => $vehicleOwnerId]);
 
         unset($overrides['vehicle_owner_user_id']);
 

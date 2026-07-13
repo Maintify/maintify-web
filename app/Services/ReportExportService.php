@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Collection;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ReportExportService
 {
@@ -10,8 +10,7 @@ class ReportExportService
      * Generate and stream a CSV report as a downloadable response.
      *
      * @param  array  $reportData  Aggregated report data from the ReportController.
-     * @param  string  $filename
-     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     * @return StreamedResponse
      */
     public function downloadCsv(array $reportData, string $filename = 'laporan-operasional.csv')
     {
@@ -19,7 +18,7 @@ class ReportExportService
             $out = fopen('php://output', 'w');
 
             // BOM for Excel UTF-8 compatibility
-            fputs($out, "\xEF\xBB\xBF");
+            fwrite($out, "\xEF\xBB\xBF");
 
             // ─── Section 1: Summary ───────────────────────────────────────────
             fputcsv($out, ['=== RINGKASAN LAPORAN ===']);
@@ -36,7 +35,7 @@ class ReportExportService
                 fputcsv($out, [
                     $row['label'],
                     $row['count'],
-                    'Rp ' . number_format($row['revenue'], 0, ',', '.'),
+                    'Rp '.number_format($row['revenue'], 0, ',', '.'),
                 ]);
             }
             fputcsv($out, []);
@@ -48,7 +47,7 @@ class ReportExportService
                 fputcsv($out, [
                     $day['date'],
                     $day['count'],
-                    'Rp ' . number_format($day['revenue'], 0, ',', '.'),
+                    'Rp '.number_format($day['revenue'], 0, ',', '.'),
                 ]);
             }
             fputcsv($out, []);
@@ -60,14 +59,14 @@ class ReportExportService
                 fputcsv($out, [
                     $part->part_name,
                     $part->total_qty,
-                    'Rp ' . number_format($part->total_value, 0, ',', '.'),
+                    'Rp '.number_format($part->total_value, 0, ',', '.'),
                 ]);
             }
 
             fclose($out);
         }, $filename, [
             'Content-Type' => 'text/csv; charset=UTF-8',
-            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Content-Disposition' => 'attachment; filename="'.$filename.'"',
         ]);
     }
 }

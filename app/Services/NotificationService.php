@@ -3,14 +3,15 @@
 namespace App\Services;
 
 use App\Models\Notification;
+use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class NotificationService
 {
     public function send(int $userId, string $type, string $title, string $message): ?Notification
     {
-        $user = \App\Models\User::find($userId);
-        if ($user && $type === 'service_reminder' && !$user->enable_service_reminders) {
+        $user = User::find($userId);
+        if ($user && $type === 'service_reminder' && ! $user->enable_service_reminders) {
             return null;
         }
 
@@ -25,20 +26,17 @@ class NotificationService
 
     /**
      * Tandai notifikasi tertentu sebagai sudah dibaca.
-     *
-     * @param  Notification  $notification
-     * @return Notification
      */
     public function markAsRead(Notification $notification): Notification
     {
         $notification->update(['is_read' => true]);
+
         return $notification;
     }
 
     /**
      * Tandai seluruh notifikasi unread milik seorang user sebagai sudah dibaca.
      *
-     * @param  int  $userId
      * @return int Jumlah baris yang diperbarui
      */
     public function markAllAsRead(int $userId): int
@@ -50,9 +48,6 @@ class NotificationService
 
     /**
      * Dapatkan jumlah notifikasi unread milik seorang user.
-     *
-     * @param  int  $userId
-     * @return int
      */
     public function getUnreadCount(int $userId): int
     {
@@ -63,10 +58,6 @@ class NotificationService
 
     /**
      * Ambil notifikasi terpaginasi milik seorang user.
-     *
-     * @param  int  $userId
-     * @param  int  $perPage
-     * @return LengthAwarePaginator
      */
     public function getNotifications(int $userId, int $perPage = 15): LengthAwarePaginator
     {

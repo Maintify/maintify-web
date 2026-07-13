@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\SuperAdmin;
 
+use App\Models\OwnershipTransfer;
 use App\Models\ServiceRecord;
 use App\Models\Setting;
 use App\Models\User;
@@ -48,7 +49,7 @@ class GlobalSettingsTest extends TestCase
         ]);
 
         $response->assertRedirect();
-        
+
         $this->assertEquals('90', Setting::get('service_reminder_interval'));
         $this->assertEquals('8000', Setting::get('service_reminder_mileage'));
         $this->assertEquals('15', Setting::get('transfer_expiry_days'));
@@ -128,13 +129,13 @@ class GlobalSettingsTest extends TestCase
         ]);
 
         // 3. Process calculations
-        $service = new VehicleHealthService();
+        $service = new VehicleHealthService;
         $service->updateAfterService($vehicle, $serviceRecord);
 
         // 4. Assert vehicle values updated based on settings
         $vehicle->refresh();
         $this->assertEquals(1500 + 7500, $vehicle->next_service_odometer);
-        
+
         $expectedDate = now()->addDays(60)->toDateString();
         $this->assertEquals($expectedDate, $vehicle->next_service_date->toDateString());
     }
@@ -172,7 +173,7 @@ class GlobalSettingsTest extends TestCase
             'to_user_id' => $recipient->id,
         ]);
 
-        $transfer = \App\Models\OwnershipTransfer::where('vehicle_id', $vehicle->id)->latest()->first();
+        $transfer = OwnershipTransfer::where('vehicle_id', $vehicle->id)->latest()->first();
         $this->assertNotNull($transfer);
 
         $expectedExpiry = Carbon::now()->addDays(12)->toDateString();

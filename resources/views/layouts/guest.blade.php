@@ -60,10 +60,10 @@
                     {{-- Feature Pills --}}
                     <div style="display:flex;flex-wrap:wrap;gap:8px;">
                         @foreach([
-                            ['icon' => '🔖', 'label' => 'QR Code Unik'],
-                            ['icon' => '📋', 'label' => 'Histori Service'],
-                            ['icon' => '❤️', 'label' => 'Health Monitoring'],
-                            ['icon' => '🏪', 'label' => 'Multi Bengkel'],
+                            ['icon' => '', 'label' => 'QR Code Unik'],
+                            ['icon' => '', 'label' => 'Histori Service'],
+                            ['icon' => '', 'label' => 'Health Monitoring'],
+                            ['icon' => '', 'label' => 'Multi Bengkel'],
                         ] as $feature)
                             <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);border-radius:100px;font-size:12px;font-weight:500;color:rgba(255,255,255,0.9);backdrop-filter:blur(8px);">
                                 <span>{{ $feature['icon'] }}</span>

@@ -25,9 +25,9 @@ class CustomerDirectoryTest extends TestCase
         $workshop = Workshop::create([
             'user_id' => $user->id,
             'name' => $name,
-            'phone' => '0812' . rand(10000000, 99999999),
+            'phone' => '0812'.rand(10000000, 99999999),
             'email' => $email,
-            'address' => 'Jl. Jalan No. ' . rand(1, 100),
+            'address' => 'Jl. Jalan No. '.rand(1, 100),
             'is_active' => true,
             'status' => Workshop::STATUS_APPROVED,
         ]);
@@ -97,7 +97,7 @@ class CustomerDirectoryTest extends TestCase
         $response->assertViewIs('workshop.customers.index');
         $response->assertSee('Andi Pelanggan');
         $response->assertSee('B 1111 AAA');
-        
+
         // Workshop 2's customer should not be seen
         $response->assertDontSee('Budi Pelanggan');
         $response->assertDontSee('B 2222 BBB');

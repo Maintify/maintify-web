@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\ServiceRecord;
 use App\Models\Vehicle;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use Carbon\Carbon;
 
 class ServiceHistoryController extends Controller
 {

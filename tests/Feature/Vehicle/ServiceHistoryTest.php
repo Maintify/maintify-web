@@ -28,7 +28,7 @@ class ServiceHistoryTest extends TestCase
 
         $vehicle = Vehicle::create([
             'user_id' => $owner->id,
-            'plate_number' => 'B ' . rand(1000, 9999) . ' XYZ',
+            'plate_number' => 'B '.rand(1000, 9999).' XYZ',
             'brand' => 'Honda',
             'model' => 'PCX 160',
             'year' => 2023,
@@ -44,7 +44,7 @@ class ServiceHistoryTest extends TestCase
     public function vehicle_owner_can_view_own_vehicle_service_history_and_stats()
     {
         [$owner, $vehicle] = $this->createVehicleWithOwner();
-        
+
         $workshopUser = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
         $workshop = Workshop::create([
             'user_id' => $workshopUser->id,
@@ -123,7 +123,7 @@ class ServiceHistoryTest extends TestCase
     public function vehicle_owner_can_filter_history_by_service_type_and_date_range()
     {
         [$owner, $vehicle] = $this->createVehicleWithOwner();
-        
+
         $workshopUser = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
         $workshop = Workshop::create([
             'user_id' => $workshopUser->id,
@@ -160,7 +160,7 @@ class ServiceHistoryTest extends TestCase
         // Filter by service type
         $responseType = $this->actingAs($owner)
             ->get(route('vehicles.service-history', [$vehicle, 'service_type' => 'oil_change']));
-        
+
         $recordsType = $responseType->original->getData()['serviceRecords'];
         $this->assertCount(1, $recordsType);
         $this->assertEquals('oil_change', $recordsType->first()->service_type);
@@ -170,7 +170,7 @@ class ServiceHistoryTest extends TestCase
             ->get(route('vehicles.service-history', [
                 $vehicle,
                 'start_date' => '2026-06-10',
-                'end_date' => '2026-06-20'
+                'end_date' => '2026-06-20',
             ]));
 
         $recordsDate = $responseDate->original->getData()['serviceRecords'];

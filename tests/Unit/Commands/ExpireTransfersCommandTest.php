@@ -61,7 +61,7 @@ class ExpireTransfersCommandTest extends TestCase
             'user_id' => $owner->id,
             'type' => 'transfer_expired',
         ]);
-        
+
         $this->assertDatabaseHas('notifications', [
             'user_id' => $recipient->id,
             'type' => 'transfer_expired',

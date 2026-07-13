@@ -86,7 +86,7 @@ class NotificationTest extends TestCase
         $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertStatus(200);
-        
+
         // Assert unread count badge is rendered (3)
         $response->assertSee('3');
         $response->assertSee('Unread 1');

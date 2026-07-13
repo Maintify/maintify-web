@@ -35,7 +35,7 @@ class OwnershipTransferService
                 'user_id' => $transfer->from_user_id,
                 'type' => 'transfer_approved',
                 'title' => 'Permintaan Transfer Disetujui',
-                'message' => $recipient->name . ' telah menyetujui permintaan transfer kendaraan Anda. Silakan selesaikan proses konfirmasi.',
+                'message' => $recipient->name.' telah menyetujui permintaan transfer kendaraan Anda. Silakan selesaikan proses konfirmasi.',
                 'is_read' => false,
             ]);
 
@@ -74,7 +74,7 @@ class OwnershipTransferService
                 'user_id' => $transfer->from_user_id,
                 'type' => 'transfer_rejected',
                 'title' => 'Permintaan Transfer Ditolak',
-                'message' => $recipient->name . ' menolak permintaan transfer kendaraan Anda.',
+                'message' => $recipient->name.' menolak permintaan transfer kendaraan Anda.',
                 'is_read' => false,
             ]);
 
@@ -126,7 +126,7 @@ class OwnershipTransferService
                 'user_id' => $transfer->to_user_id,
                 'type' => 'transfer_completed',
                 'title' => 'Transfer Kendaraan Berhasil',
-                'message' => 'Kendaraan ' . $vehicle->brand . ' ' . $vehicle->model . ' (' . $vehicle->plate_number . ') kini resmi menjadi milik Anda.',
+                'message' => 'Kendaraan '.$vehicle->brand.' '.$vehicle->model.' ('.$vehicle->plate_number.') kini resmi menjadi milik Anda.',
                 'is_read' => false,
             ]);
 

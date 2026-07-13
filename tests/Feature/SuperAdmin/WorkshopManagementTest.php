@@ -22,7 +22,7 @@ class WorkshopManagementTest extends TestCase
     public function super_admin_can_view_workshops_list()
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
-        
+
         $wsUser1 = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
         $wsUser2 = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
 
@@ -49,7 +49,7 @@ class WorkshopManagementTest extends TestCase
     public function super_admin_can_filter_workshops_by_status()
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
-        
+
         $wsUser1 = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
         $wsUser2 = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
 
@@ -76,7 +76,7 @@ class WorkshopManagementTest extends TestCase
     public function super_admin_can_search_workshops_by_name_city_or_email()
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
-        
+
         $wsUser1 = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
         $wsUser2 = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
 
@@ -159,7 +159,7 @@ class WorkshopManagementTest extends TestCase
         ]);
 
         $response->assertRedirect();
-        
+
         $workshop->refresh();
         $this->assertEquals(Workshop::STATUS_REJECTED, $workshop->status);
         $this->assertEquals('Dokumen legalitas KTP kabur.', $workshop->rejection_reason);
@@ -192,7 +192,7 @@ class WorkshopManagementTest extends TestCase
         ]);
 
         $response->assertRedirect();
-        
+
         $workshop->refresh();
         $this->assertEquals(Workshop::STATUS_APPROVED, $workshop->status);
         $this->assertTrue($workshop->is_active);

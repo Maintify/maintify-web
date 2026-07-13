@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Services\FileUploadService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +22,7 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function update(ProfileUpdateRequest $request, \App\Services\FileUploadService $fileUploadService): RedirectResponse
+    public function update(ProfileUpdateRequest $request, FileUploadService $fileUploadService): RedirectResponse
     {
         $user = $request->user();
 

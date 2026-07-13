@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\SuperAdmin;
 
-use App\Models\AuditLog;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -88,7 +87,7 @@ class UserManagementTest extends TestCase
         ]);
 
         $response->assertRedirect();
-        
+
         // Assert updated in DB
         $user->refresh();
         $this->assertFalse($user->is_active);
@@ -129,7 +128,7 @@ class UserManagementTest extends TestCase
         ]);
 
         $response->assertRedirect();
-        
+
         // Assert updated in DB
         $user->refresh();
         $this->assertTrue($user->is_active);

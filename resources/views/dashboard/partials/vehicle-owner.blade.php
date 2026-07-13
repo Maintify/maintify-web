@@ -10,7 +10,7 @@
                 <span style="font-size:11px;font-weight:600;color:#ff9aa4;letter-spacing:0.04em;">DASHBOARD KENDARAAN</span>
             </div>
             <h1 style="font-size:22px;font-weight:800;color:#F4F4F5;margin:0 0 4px;letter-spacing:-0.02em;">
-                Halo, {{ Auth::user()->name }} 👋
+                Halo, {{ Auth::user()->name }} 
             </h1>
             <p style="font-size:13px;color:#A1A1AA;margin:0;">Pantau kondisi kendaraan Anda hari ini</p>
         </div>

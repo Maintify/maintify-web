@@ -27,7 +27,7 @@ class SendServiceRemindersCommand extends Command
     public function handle(ServiceReminderService $serviceReminderService): int
     {
         $this->info('Memulai pemeriksaan dan pengiriman pengingat servis berkala...');
-        
+
         $result = $serviceReminderService->sendServiceReminders();
 
         $this->info("Proses selesai. Terkirim: {$result['time_reminders_sent']} pengingat batas waktu, {$result['mileage_reminders_sent']} pengingat batas odometer.");

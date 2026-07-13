@@ -35,9 +35,9 @@ Route::middleware(['auth', 'verified', 'workshop.approved'])->group(function () 
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // Notifications
-    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
-    Route::post('/notifications/{notification}/read', [App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
-    Route::post('/notifications/read-all', [App\Http\Controllers\NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
 });
 
 use App\Http\Controllers\OwnershipTransferController;
@@ -59,7 +59,7 @@ Route::middleware(['auth', 'verified', 'role:vehicle_owner'])->group(function ()
     // Ownership Transfer
     Route::get('vehicles/{vehicle}/transfer', [OwnershipTransferController::class, 'create'])->name('vehicles.transfer.create');
     Route::post('vehicles/{vehicle}/transfer', [OwnershipTransferController::class, 'store'])->name('vehicles.transfer.store');
-    
+
     Route::post('transfers/{transfer}/approve', [OwnershipTransferController::class, 'approve'])->name('transfers.approve');
     Route::post('transfers/{transfer}/reject', [OwnershipTransferController::class, 'reject'])->name('transfers.reject');
     Route::get('transfers/{transfer}/review', [OwnershipTransferController::class, 'review'])->name('transfers.review');
@@ -76,13 +76,19 @@ Route::get('/workshop/pending', [WorkshopPendingController::class, 'show'])
     ->middleware('auth')
     ->name('workshop.pending');
 
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\SuperAdmin\AuditLogController;
+use App\Http\Controllers\SuperAdmin\SettingController;
+use App\Http\Controllers\SuperAdmin\UserController;
+use App\Http\Controllers\SuperAdmin\WorkshopController;
+use App\Http\Controllers\SuperAdmin\WorkshopVerificationController;
+use App\Http\Controllers\Workshop\CustomerController;
+use App\Http\Controllers\Workshop\ProfileController as WorkshopProfileController;
+use App\Http\Controllers\Workshop\ReportController;
 use App\Http\Controllers\Workshop\ScanController;
 use App\Http\Controllers\Workshop\ServiceRecordController;
 use App\Http\Controllers\Workshop\SparepartController;
-use App\Http\Controllers\Workshop\CustomerController;
 use App\Http\Controllers\Workshop\StaffController;
-use App\Http\Controllers\Workshop\ProfileController as WorkshopProfileController;
-use App\Http\Controllers\Workshop\ReportController;
 
 // Workshop Routes
 Route::middleware(['auth', 'verified', 'role:workshop', 'workshop.approved'])->prefix('workshop')->name('workshop.')->group(function () {
@@ -115,27 +121,27 @@ Route::middleware(['auth', 'verified', 'role:workshop', 'workshop.approved'])->p
 
 // Super Admin Routes
 Route::middleware(['auth', 'verified', 'role:super_admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/workshops/pending', [App\Http\Controllers\SuperAdmin\WorkshopVerificationController::class, 'index'])->name('workshops.pending');
-    Route::get('/workshops/{workshop}/review', [App\Http\Controllers\SuperAdmin\WorkshopVerificationController::class, 'show'])->name('workshops.review');
-    Route::post('/workshops/{workshop}/approve', [App\Http\Controllers\SuperAdmin\WorkshopVerificationController::class, 'approve'])->name('workshops.approve');
-    Route::post('/workshops/{workshop}/reject', [App\Http\Controllers\SuperAdmin\WorkshopVerificationController::class, 'reject'])->name('workshops.reject');
-    Route::post('/workshops/{workshop}/revision', [App\Http\Controllers\SuperAdmin\WorkshopVerificationController::class, 'requestRevision'])->name('workshops.revision');
+    Route::get('/workshops/pending', [WorkshopVerificationController::class, 'index'])->name('workshops.pending');
+    Route::get('/workshops/{workshop}/review', [WorkshopVerificationController::class, 'show'])->name('workshops.review');
+    Route::post('/workshops/{workshop}/approve', [WorkshopVerificationController::class, 'approve'])->name('workshops.approve');
+    Route::post('/workshops/{workshop}/reject', [WorkshopVerificationController::class, 'reject'])->name('workshops.reject');
+    Route::post('/workshops/{workshop}/revision', [WorkshopVerificationController::class, 'requestRevision'])->name('workshops.revision');
 
     // User Management
-    Route::resource('users', App\Http\Controllers\SuperAdmin\UserController::class)->only(['index', 'show', 'update']);
+    Route::resource('users', UserController::class)->only(['index', 'show', 'update']);
 
     // Vehicle Monitoring
     Route::resource('vehicles', App\Http\Controllers\SuperAdmin\VehicleController::class)->only(['index', 'show']);
 
     // Workshop Management
-    Route::resource('workshops', App\Http\Controllers\SuperAdmin\WorkshopController::class)->only(['index', 'show', 'update']);
+    Route::resource('workshops', WorkshopController::class)->only(['index', 'show', 'update']);
 
     // Audit Logs
-    Route::resource('audit-logs', App\Http\Controllers\SuperAdmin\AuditLogController::class)->only(['index', 'show']);
+    Route::resource('audit-logs', AuditLogController::class)->only(['index', 'show']);
 
     // Global Settings
-    Route::get('/settings', [App\Http\Controllers\SuperAdmin\SettingController::class, 'index'])->name('settings.index');
-    Route::put('/settings', [App\Http\Controllers\SuperAdmin\SettingController::class, 'update'])->name('settings.update');
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
 });
 
 require __DIR__.'/auth.php';

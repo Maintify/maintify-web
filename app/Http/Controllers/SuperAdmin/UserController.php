@@ -21,15 +21,15 @@ class UserController extends Controller
 
         $query = User::query();
 
-        if (!empty($search)) {
+        if (! empty($search)) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('phone_number', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone_number', 'like', "%{$search}%");
             });
         }
 
-        if (!empty($role)) {
+        if (! empty($role)) {
             $query->where('role', $role);
         }
 
@@ -61,7 +61,7 @@ class UserController extends Controller
         $isActive = (bool) $request->input('is_active');
 
         // Cegah Super Admin menonaktifkan akun sendiri
-        if ($user->id === auth()->id() && !$isActive) {
+        if ($user->id === auth()->id() && ! $isActive) {
             return redirect()->back()->withErrors([
                 'is_active' => 'Anda tidak dapat menonaktifkan akun Anda sendiri.',
             ]);
@@ -85,6 +85,7 @@ class UserController extends Controller
         );
 
         $statusMsg = $isActive ? 'diaktifkan' : 'dinonaktifkan';
+
         return redirect()->back()->with('success', "Akun pengguna '{$user->name}' berhasil {$statusMsg}.");
     }
 }

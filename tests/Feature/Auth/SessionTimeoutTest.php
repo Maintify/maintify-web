@@ -64,7 +64,7 @@ class SessionTimeoutTest extends TestCase
         $this->assertAuthenticatedAs($user);
         $response->assertStatus(200);
     }
-    
+
     public function test_admin_session_is_maintained_with_activity(): void
     {
         $admin = User::factory()->create([

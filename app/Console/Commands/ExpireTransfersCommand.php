@@ -35,6 +35,7 @@ class ExpireTransfersCommand extends Command
 
         if ($expiredTransfers->isEmpty()) {
             $this->info('No pending transfers to expire.');
+
             return self::SUCCESS;
         }
 
@@ -51,7 +52,7 @@ class ExpireTransfersCommand extends Command
                     'user_id' => $transfer->from_user_id,
                     'type' => 'transfer_expired',
                     'title' => 'Permintaan Transfer Kedaluwarsa',
-                    'message' => 'Permintaan transfer kendaraan ' . ($transfer->vehicle->plate_number ?? '') . ' ke ' . ($transfer->toUser->name ?? '') . ' telah kedaluwarsa karena tidak ada respons.',
+                    'message' => 'Permintaan transfer kendaraan '.($transfer->vehicle->plate_number ?? '').' ke '.($transfer->toUser->name ?? '').' telah kedaluwarsa karena tidak ada respons.',
                     'is_read' => false,
                 ]);
 
@@ -60,7 +61,7 @@ class ExpireTransfersCommand extends Command
                     'user_id' => $transfer->to_user_id,
                     'type' => 'transfer_expired',
                     'title' => 'Permintaan Transfer Kedaluwarsa',
-                    'message' => 'Permintaan transfer kendaraan ' . ($transfer->vehicle->plate_number ?? '') . ' dari ' . ($transfer->fromUser->name ?? '') . ' telah kedaluwarsa.',
+                    'message' => 'Permintaan transfer kendaraan '.($transfer->vehicle->plate_number ?? '').' dari '.($transfer->fromUser->name ?? '').' telah kedaluwarsa.',
                     'is_read' => false,
                 ]);
 
@@ -80,6 +81,7 @@ class ExpireTransfersCommand extends Command
         }
 
         $this->info("Successfully expired {$count} transfer(s).");
+
         return self::SUCCESS;
     }
 }

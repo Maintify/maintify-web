@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Sparepart;
 use App\Models\User;
 use App\Models\Workshop;
 use App\Models\WorkshopVerification;
@@ -120,7 +121,7 @@ class WorkshopSeeder extends Seeder
         ];
 
         foreach ($spareparts as $part) {
-            \App\Models\Sparepart::firstOrCreate(
+            Sparepart::firstOrCreate(
                 [
                     'workshop_id' => $workshop1->id,
                     'name' => $part['name'],

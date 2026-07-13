@@ -19,6 +19,7 @@ class SparepartController extends Controller
     {
         /** @var User $user */
         $user = $request->user();
+
         return $user->workshop ?? $user->workshopStaff?->workshop;
     }
 
@@ -28,7 +29,7 @@ class SparepartController extends Controller
     public function index(Request $request): View
     {
         $workshop = $this->getWorkshop($request);
-        if (!$workshop) {
+        if (! $workshop) {
             abort(403, 'Unauthorized.');
         }
 
@@ -38,7 +39,7 @@ class SparepartController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('category', 'like', "%{$search}%");
+                    ->orWhere('category', 'like', "%{$search}%");
             });
         }
 
@@ -53,7 +54,7 @@ class SparepartController extends Controller
     public function create(Request $request): View
     {
         $workshop = $this->getWorkshop($request);
-        if (!$workshop) {
+        if (! $workshop) {
             abort(403, 'Unauthorized.');
         }
 
@@ -66,7 +67,7 @@ class SparepartController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $workshop = $this->getWorkshop($request);
-        if (!$workshop) {
+        if (! $workshop) {
             abort(403, 'Unauthorized.');
         }
 
@@ -95,7 +96,7 @@ class SparepartController extends Controller
     public function edit(Request $request, Sparepart $sparepart): View
     {
         $workshop = $this->getWorkshop($request);
-        if (!$workshop || $sparepart->workshop_id !== $workshop->id) {
+        if (! $workshop || $sparepart->workshop_id !== $workshop->id) {
             abort(403, 'Unauthorized.');
         }
 
@@ -108,7 +109,7 @@ class SparepartController extends Controller
     public function update(Request $request, Sparepart $sparepart): RedirectResponse
     {
         $workshop = $this->getWorkshop($request);
-        if (!$workshop || $sparepart->workshop_id !== $workshop->id) {
+        if (! $workshop || $sparepart->workshop_id !== $workshop->id) {
             abort(403, 'Unauthorized.');
         }
 
@@ -137,7 +138,7 @@ class SparepartController extends Controller
     public function destroy(Request $request, Sparepart $sparepart): RedirectResponse
     {
         $workshop = $this->getWorkshop($request);
-        if (!$workshop || $sparepart->workshop_id !== $workshop->id) {
+        if (! $workshop || $sparepart->workshop_id !== $workshop->id) {
             abort(403, 'Unauthorized.');
         }
 

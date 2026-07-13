@@ -23,28 +23,28 @@ class AuditLogController extends Controller
         $query = AuditLog::query()->with('actor');
 
         // Filter: Nama / Email Aktor
-        if (!empty($actorSearch)) {
+        if (! empty($actorSearch)) {
             $query->whereHas('actor', function ($q) use ($actorSearch) {
                 $q->where('name', 'like', "%{$actorSearch}%")
-                  ->orWhere('email', 'like', "%{$actorSearch}%");
+                    ->orWhere('email', 'like', "%{$actorSearch}%");
             });
         }
 
         // Filter: Action Type
-        if (!empty($actionFilter)) {
+        if (! empty($actionFilter)) {
             $query->where('action', $actionFilter);
         }
 
         // Filter: Entity Type
-        if (!empty($entityFilter)) {
+        if (! empty($entityFilter)) {
             $query->where('entity_type', $entityFilter);
         }
 
         // Filter: Date Range
-        if (!empty($startDate)) {
+        if (! empty($startDate)) {
             $query->whereDate('created_at', '>=', $startDate);
         }
-        if (!empty($endDate)) {
+        if (! empty($endDate)) {
             $query->whereDate('created_at', '<=', $endDate);
         }
 

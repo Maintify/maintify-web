@@ -20,7 +20,7 @@ class ProfileController extends Controller
         $user = $request->user();
         $workshop = $user->workshop;
 
-        if (!$workshop) {
+        if (! $workshop) {
             abort(403, 'Hanya admin bengkel yang dapat mengelola profil bengkel.');
         }
 

@@ -21,9 +21,9 @@ class AuditLogTest extends TestCase
     public function super_admin_can_view_audit_logs_list()
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
-        
+
         $user = User::factory()->create(['name' => 'John Doe']);
-        
+
         // Seed logs using AuditLog::create directly to avoid using auth() if needed,
         // or record with actingAs
         $this->actingAs($superAdmin);
@@ -59,7 +59,7 @@ class AuditLogTest extends TestCase
     public function super_admin_can_filter_audit_logs()
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
-        
+
         $andi = User::factory()->create(['name' => 'Andi Susanto', 'email' => 'andi@susanto.com']);
         $budi = User::factory()->create(['name' => 'Budi Handoko', 'email' => 'budi@handoko.com']);
 
@@ -112,7 +112,7 @@ class AuditLogTest extends TestCase
     public function super_admin_can_view_detailed_log_metadata()
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
-        
+
         $log = AuditLog::create([
             'actor_user_id' => $superAdmin->id,
             'action' => 'user_deactivate',
@@ -138,7 +138,7 @@ class AuditLogTest extends TestCase
     public function super_admin_has_read_only_access_to_logs()
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
-        
+
         $log = AuditLog::create([
             'actor_user_id' => $superAdmin->id,
             'action' => 'user_deactivate',
@@ -157,13 +157,13 @@ class AuditLogTest extends TestCase
         $this->assertTrue($responseStore->status() === 404 || $responseStore->status() === 405);
 
         // PUT (Update) -> should be 404 or 405
-        $responseUpdate = $this->put('/admin/audit-logs/' . $log->id, [
+        $responseUpdate = $this->put('/admin/audit-logs/'.$log->id, [
             'action' => 'modified_action',
         ]);
         $this->assertTrue($responseUpdate->status() === 404 || $responseUpdate->status() === 405);
 
         // DELETE (Destroy) -> should be 404 or 405
-        $responseDelete = $this->delete('/admin/audit-logs/' . $log->id);
+        $responseDelete = $this->delete('/admin/audit-logs/'.$log->id);
         $this->assertTrue($responseDelete->status() === 404 || $responseDelete->status() === 405);
     }
 
@@ -171,7 +171,7 @@ class AuditLogTest extends TestCase
     public function non_super_admin_cannot_access_audit_logs()
     {
         $regularUser = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
-        
+
         $log = AuditLog::create([
             'actor_user_id' => $regularUser->id,
             'action' => 'user_deactivate',

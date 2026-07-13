@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\OwnershipTransfer;
 use App\Models\ServiceRecord;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
@@ -57,8 +58,8 @@ class DashboardController extends Controller
 
         $totalServices = ServiceRecord::whereIn('vehicle_id', $vehicleIds)->count();
 
-        $pendingTransfers = \App\Models\OwnershipTransfer::where('to_user_id', $user->id)
-            ->where('status', \App\Models\OwnershipTransfer::STATUS_PENDING_RECIPIENT)
+        $pendingTransfers = OwnershipTransfer::where('to_user_id', $user->id)
+            ->where('status', OwnershipTransfer::STATUS_PENDING_RECIPIENT)
             ->with(['vehicle', 'fromUser'])
             ->get();
 

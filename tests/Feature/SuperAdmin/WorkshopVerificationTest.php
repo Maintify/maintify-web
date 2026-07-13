@@ -24,7 +24,7 @@ class WorkshopVerificationTest extends TestCase
     public function super_admin_can_view_pending_workshops_list()
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
-        
+
         $pendingWorkshop = Workshop::create([
             'user_id' => User::factory()->create(['role' => User::ROLE_WORKSHOP])->id,
             'name' => 'Pending Garage',
@@ -56,7 +56,7 @@ class WorkshopVerificationTest extends TestCase
     public function super_admin_can_view_workshop_review_details()
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
-        
+
         $workshop = Workshop::create([
             'user_id' => User::factory()->create(['role' => User::ROLE_WORKSHOP])->id,
             'name' => 'Signature Garage',
@@ -82,7 +82,7 @@ class WorkshopVerificationTest extends TestCase
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
         $owner = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
-        
+
         $workshop = Workshop::create([
             'user_id' => $owner->id,
             'name' => 'Signature Garage',
@@ -132,7 +132,7 @@ class WorkshopVerificationTest extends TestCase
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
         $owner = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
-        
+
         $workshop = Workshop::create([
             'user_id' => $owner->id,
             'name' => 'Signature Garage',
@@ -185,7 +185,7 @@ class WorkshopVerificationTest extends TestCase
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
         $owner = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
-        
+
         $workshop = Workshop::create([
             'user_id' => $owner->id,
             'name' => 'Signature Garage',
@@ -209,7 +209,7 @@ class WorkshopVerificationTest extends TestCase
     {
         $superAdmin = User::factory()->create(['role' => User::ROLE_SUPER_ADMIN]);
         $owner = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
-        
+
         $workshop = Workshop::create([
             'user_id' => $owner->id,
             'name' => 'Signature Garage',
@@ -261,7 +261,7 @@ class WorkshopVerificationTest extends TestCase
     public function non_super_admin_cannot_access_verification_endpoints()
     {
         $regularUser = User::factory()->create(['role' => User::ROLE_VEHICLE_OWNER]);
-        
+
         $workshop = Workshop::create([
             'user_id' => User::factory()->create(['role' => User::ROLE_WORKSHOP])->id,
             'name' => 'Signature Garage',
