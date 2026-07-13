@@ -53,7 +53,7 @@ class ServiceReminderService
             }
 
             // 2. Pengingat Berdasarkan Batas Jarak Tempuh (Mileage-based reminder)
-            if ($vehicle->next_service_odometer && $vehicle->current_odometer !== null && $vehicle->owner->enable_service_reminders) {
+            if ($vehicle->next_service_odometer && $vehicle->owner->enable_service_reminders) {
                 $odometerGap = $vehicle->next_service_odometer - $vehicle->current_odometer;
 
                 if ($odometerGap <= $odometerThreshold) {

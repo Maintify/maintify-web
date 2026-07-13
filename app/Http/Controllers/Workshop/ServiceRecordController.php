@@ -33,9 +33,18 @@ class ServiceRecordController extends Controller
         $vehicle = Vehicle::findOrFail($request->query('vehicle_id'));
         /** @var User $user */
         $user = $request->user();
-        /** @var Workshop $workshop */
-        $workshop = $user->workshop ?? $user->workshopStaff?->workshop;
-        $spareparts = $workshop ? $workshop->spareparts()->active()->get(['name', 'category', 'price']) : collect();
+
+        $workshopModel = $user->workshop;
+        /** @var Workshop|null $workshop */
+        $workshop = $workshopModel instanceof Workshop ? $workshopModel : null;
+        if (! $workshop) {
+            $staffWorkshop = $user->workshopStaff?->workshop;
+            $workshop = $staffWorkshop instanceof Workshop ? $staffWorkshop : null;
+        }
+
+        $spareparts = $workshop
+            ? $workshop->spareparts()->where('is_active', true)->get(['name', 'category', 'price'])
+            : collect();
 
         return view('workshop.service-records.create', [
             'vehicle' => $vehicle->load(['owner', 'serviceRecords' => function ($q) {
@@ -59,9 +68,15 @@ class ServiceRecordController extends Controller
         /** @var User $user */
         $user = $request->user();
 
+        $workshopModel = $user->workshop;
         /** @var Workshop $workshop */
-        $workshop = $user->workshop ?? $user->workshopStaff?->workshop;
+        $workshop = $workshopModel instanceof Workshop ? $workshopModel : $user->workshopStaff?->workshop;
 
+        if (! $workshop) {
+            abort(403, 'Workshop tidak ditemukan.');
+        }
+
+        /** @var Vehicle $vehicle */
         $vehicle = Vehicle::findOrFail($request->validated('vehicle_id'));
 
         // Create the service record
@@ -118,8 +133,13 @@ class ServiceRecordController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        /** @var Workshop $workshop */
-        $workshop = $user->workshop ?? $user->workshopStaff?->workshop;
+        $workshopModel = $user->workshop;
+        /** @var Workshop|null $workshop */
+        $workshop = $workshopModel instanceof Workshop ? $workshopModel : null;
+        if (! $workshop) {
+            $staffWorkshop = $user->workshopStaff?->workshop;
+            $workshop = $staffWorkshop instanceof Workshop ? $staffWorkshop : null;
+        }
 
         // Authorize
         if (! $workshop || $serviceRecord->workshop_id !== $workshop->id) {
@@ -134,7 +154,7 @@ class ServiceRecordController extends Controller
                 ->with('error', "Batas waktu mengubah riwayat service telah habis ({$limitHours} jam).");
         }
 
-        $spareparts = $workshop->spareparts()->active()->get(['name', 'category', 'price']);
+        $spareparts = $workshop->spareparts()->where('is_active', true)->get(['name', 'category', 'price']);
 
         return view('workshop.service-records.edit', [
             'serviceRecord' => $serviceRecord->load('parts'),
@@ -152,8 +172,13 @@ class ServiceRecordController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        /** @var Workshop $workshop */
-        $workshop = $user->workshop ?? $user->workshopStaff?->workshop;
+        $workshopModel = $user->workshop;
+        /** @var Workshop|null $workshop */
+        $workshop = $workshopModel instanceof Workshop ? $workshopModel : null;
+        if (! $workshop) {
+            $staffWorkshop = $user->workshopStaff?->workshop;
+            $workshop = $staffWorkshop instanceof Workshop ? $staffWorkshop : null;
+        }
 
         // Authorize
         if (! $workshop || $serviceRecord->workshop_id !== $workshop->id) {
@@ -228,13 +253,16 @@ class ServiceRecordController extends Controller
         }
 
         // Recalculate vehicle health and odometer
+        /** @var Vehicle $vehicle */
         $vehicle = $serviceRecord->vehicle;
         $maxOdometerRecord = $vehicle->serviceRecords()->orderBy('odometer_at_service', 'desc')->first();
-        $vehicle->current_odometer = $maxOdometerRecord ? $maxOdometerRecord->odometer_at_service : $vehicle->initial_odometer;
+        $vehicle->current_odometer = $maxOdometerRecord
+            ? $maxOdometerRecord->odometer_at_service
+            : ($vehicle->getAttribute('initial_odometer') ?? 0);
         $vehicle->save();
 
         $latestRecord = $vehicle->serviceRecords()->latest('service_date')->first();
-        if ($latestRecord) {
+        if ($latestRecord instanceof ServiceRecord) {
             $this->healthService->updateAfterService($vehicle, $latestRecord);
         }
 
@@ -243,10 +271,10 @@ class ServiceRecordController extends Controller
             'actor_user_id' => $user->id,
             'action' => 'service_record.updated',
             'entity_type' => 'ServiceRecord',
-            'entity_id' => $serviceRecord->id,
+            'entity_id' => $serviceRecord->getKey(),
             'metadata' => [
                 'changes' => $changes,
-                'vehicle_id' => $vehicle->id,
+                'vehicle_id' => $vehicle->getKey(),
             ],
             'ip_address' => $request->ip(),
         ]);

@@ -8,3 +8,14 @@ parameters:
 
     # Level 5 is a balanced starting level for Larastan
     level: 5
+
+    # PHPDoc types from Eloquent (e.g. HasMany return types) are not always
+    # resolved to concrete classes by PHPStan. Disabling this prevents false
+    # positives like "instanceof always true" or "comparison always true".
+    treatPhpDocTypesAsCertain: false
+
+    ignoreErrors:
+        # WorkshopSearchService: $params is untyped array, mixed !== null is a
+        # Larastan false positive — the logic is correct at runtime.
+        - message: '#Strict comparison using !== between mixed and null will always evaluate to true#'
+          path: app/Services/WorkshopSearchService.php

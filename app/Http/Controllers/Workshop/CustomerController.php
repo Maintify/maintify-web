@@ -19,7 +19,14 @@ class CustomerController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        return $user->workshop ?? $user->workshopStaff?->workshop;
+        $workshop = $user->workshop;
+        if ($workshop instanceof Workshop) {
+            return $workshop;
+        }
+
+        $staffWorkshop = $user->workshopStaff?->workshop;
+
+        return $staffWorkshop instanceof Workshop ? $staffWorkshop : null;
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Models\AuditLog;
 use App\Models\Notification;
 use App\Models\OwnershipTransfer;
 use App\Models\User;
+use App\Models\Vehicle;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -103,8 +104,9 @@ class OwnershipTransferService
             throw new Exception('Transfer harus disetujui penerima terlebih dahulu sebelum dapat dikonfirmasi.');
         }
 
+        /** @var Vehicle|null $vehicle */
         $vehicle = $transfer->vehicle;
-        if (! $vehicle) {
+        if ($vehicle === null) {
             throw new Exception('Kendaraan tidak ditemukan.');
         }
 
@@ -134,9 +136,9 @@ class OwnershipTransferService
             AuditLog::record(
                 'transfer_completed_confirmed',
                 'OwnershipTransfer',
-                $transfer->id,
+                $transfer->getKey(),
                 [
-                    'vehicle_id' => $vehicle->id,
+                    'vehicle_id' => $vehicle->getKey(),
                     'from_user_id' => $transfer->from_user_id,
                     'to_user_id' => $transfer->to_user_id,
                     'disclaimer' => $disclaimerText,

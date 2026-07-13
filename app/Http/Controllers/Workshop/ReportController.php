@@ -73,13 +73,16 @@ class ReportController extends Controller
             ->select('service_type', DB::raw('COUNT(*) as count'), DB::raw('SUM(total_cost) as revenue'))
             ->groupBy('service_type')
             ->get()
-            ->map(fn ($row) => [
-                'type' => $row->service_type,
-                'label' => ServiceRecord::SERVICE_TYPES[$row->service_type] ?? $row->service_type,
-                'count' => $row->count,
-                'revenue' => (float) $row->revenue,
-                'revenue_formatted' => 'Rp '.number_format((float) $row->revenue, 0, ',', '.'),
-            ]);
+            ->map(function ($row) {
+                /** @var object{service_type: string, count: int|string, revenue: float|string|null} $row */
+                return [
+                    'type' => $row->service_type,
+                    'label' => ServiceRecord::SERVICE_TYPES[$row->service_type] ?? $row->service_type,
+                    'count' => (int) $row->count,
+                    'revenue' => (float) ($row->revenue ?? 0),
+                    'revenue_formatted' => 'Rp '.number_format((float) ($row->revenue ?? 0), 0, ',', '.'),
+                ];
+            });
 
         // ─── Daily Timeline ───────────────────────────────────────────────────
         $daily = $baseQuery()
@@ -91,12 +94,15 @@ class ReportController extends Controller
             ->groupBy(DB::raw('DATE(service_date)'))
             ->orderBy('date')
             ->get()
-            ->map(fn ($row) => [
-                'date' => $row->date,
-                'count' => $row->count,
-                'revenue' => (float) $row->revenue,
-                'revenue_formatted' => 'Rp '.number_format((float) $row->revenue, 0, ',', '.'),
-            ]);
+            ->map(function ($row) {
+                /** @var object{date: string, count: int|string, revenue: float|string|null} $row */
+                return [
+                    'date' => $row->date,
+                    'count' => (int) $row->count,
+                    'revenue' => (float) ($row->revenue ?? 0),
+                    'revenue_formatted' => 'Rp '.number_format((float) ($row->revenue ?? 0), 0, ',', '.'),
+                ];
+            });
 
         // ─── Top 10 Spareparts ────────────────────────────────────────────────
         $serviceRecordIds = $baseQuery()->pluck('id');

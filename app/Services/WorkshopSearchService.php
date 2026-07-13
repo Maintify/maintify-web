@@ -14,8 +14,10 @@ class WorkshopSearchService
      */
     public function search(array $params): Collection
     {
-        $latitude = $params['latitude'] ?? null;
-        $longitude = $params['longitude'] ?? null;
+        /** @var float|null $latitude */
+        $latitude = isset($params['latitude']) ? (float) $params['latitude'] : null;
+        /** @var float|null $longitude */
+        $longitude = isset($params['longitude']) ? (float) $params['longitude'] : null;
         $radius = $params['radius'] ?? 10; // default 10 km
 
         $minRating = $params['rating'] ?? null;
@@ -74,9 +76,11 @@ class WorkshopSearchService
 
         if ($latitude !== null && $longitude !== null) {
             $results = $results->filter(function ($workshop) use ($radius) {
-                $workshop->distance = (float) $workshop->distance;
+                /** @var Workshop $workshop */
+                $distance = (float) ($workshop->getAttribute('distance') ?? PHP_INT_MAX);
+                $workshop->setAttribute('distance', $distance);
 
-                return $workshop->distance <= $radius;
+                return $distance <= $radius;
             })->values();
         }
 
