@@ -5,6 +5,9 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Alpine.js: sembunyikan elemen ber-x-cloak sampai Alpine selesai init */
+[x-cloak] { display: none !important; }
+
 /* ============================================================
    MAINTIFY DESIGN SYSTEM - Global CSS
    ============================================================ */

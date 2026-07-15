@@ -103,19 +103,23 @@
         </div>
 
         {{-- Remember Me --}}
-        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;">
-            <div style="position:relative;width:36px;height:20px;" x-data="{ checked: false }">
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;"
+               x-data="{ checked: {{ old('remember') ? 'true' : 'false' }} }">
+            <div style="position:relative;width:18px;height:18px;flex-shrink:0;">
                 <input
                     id="remember_me"
                     type="checkbox"
                     name="remember"
-                    @change="checked = $event.target.checked"
+                    @if(old('remember')) checked @endif
+                    x-model="checked"
                     style="opacity:0;position:absolute;width:100%;height:100%;cursor:pointer;margin:0;"
                 />
-                <div :style="checked ? 'background-color:#410008;' : 'background-color:#2E3030;'"
-                     style="width:36px;height:20px;border-radius:100px;transition:background-color 200ms;border:1px solid rgba(255,255,255,0.1);"></div>
-                <div :style="checked ? 'transform:translateX(16px);' : 'transform:translateX(2px);'"
-                     style="position:absolute;top:2px;width:14px;height:14px;border-radius:50%;background:white;transition:transform 200ms;box-shadow:0 1px 3px rgba(0,0,0,0.4);"></div>
+                <div :style="checked ? 'background-color:#410008;border-color:#410008;' : 'background-color:transparent;border-color:#52565A;'"
+                     style="width:18px;height:18px;border-radius:5px;border:1.5px solid;transition:background-color 150ms,border-color 150ms;display:flex;align-items:center;justify-content:center;">
+                    <svg x-show="checked" x-cloak style="width:12px;height:12px;color:#ff9aa4;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+                    </svg>
+                </div>
             </div>
             <span style="font-size:13px;color:#A1A1AA;">Ingat saya di perangkat ini</span>
         </label>
