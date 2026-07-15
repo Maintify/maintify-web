@@ -427,6 +427,18 @@
 
     .form-input::placeholder { color: var(--color-text-muted); }
 
+    /* Keep dark background on browser autofill (Chrome/Safari) */
+    .form-input:-webkit-autofill,
+    .form-input:-webkit-autofill:hover,
+    .form-input:-webkit-autofill:focus,
+    .form-input:-webkit-autofill:active {
+        -webkit-text-fill-color: var(--color-text-primary);
+        -webkit-box-shadow: 0 0 0 1000px var(--color-surface) inset;
+        box-shadow: 0 0 0 1000px var(--color-surface) inset;
+        caret-color: var(--color-text-primary);
+        transition: background-color 9999s ease-in-out 0s;
+    }
+
     .form-input:focus {
         border-color: var(--color-primary);
         box-shadow: 0 0 0 3px rgba(65,0,8,0.2);
