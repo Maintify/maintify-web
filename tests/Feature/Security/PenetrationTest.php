@@ -8,7 +8,12 @@ use App\Models\ServiceRecord;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Models\Workshop;
+use App\Providers\AppServiceProvider;
+use App\Services\FileUploadService;
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 /**
@@ -242,11 +247,11 @@ class PenetrationTest extends TestCase
      */
     public function csrf_middleware_is_registered_on_the_web_group(): void
     {
-        $kernel = $this->app->make(\Illuminate\Contracts\Http\Kernel::class);
+        $kernel = $this->app->make(Kernel::class);
         $webMiddleware = $kernel->getMiddlewareGroups()['web'] ?? [];
 
         $this->assertContains(
-            \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
+            ValidateCsrfToken::class,
             $webMiddleware,
             'CSRF protection must be enabled on all web routes.'
         );
@@ -260,12 +265,12 @@ class PenetrationTest extends TestCase
      */
     public function no_web_routes_are_excluded_from_csrf_protection(): void
     {
-        $reflection = new \ReflectionClass(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+        $reflection = new \ReflectionClass(ValidateCsrfToken::class);
         $property = $reflection->getProperty('except');
         $property->setAccessible(true);
 
-        /** @var \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken $instance */
-        $instance = $this->app->make(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class);
+        /** @var ValidateCsrfToken $instance */
+        $instance = $this->app->make(ValidateCsrfToken::class);
 
         $this->assertEmpty(
             $property->getValue($instance),
@@ -408,7 +413,7 @@ class PenetrationTest extends TestCase
         $this->app['config']->set('session.secure', null);
         $this->app['config']->set('session.http_only', false);
 
-        (new \App\Providers\AppServiceProvider($this->app))->boot();
+        (new AppServiceProvider($this->app))->boot();
     }
 
     /**
@@ -453,11 +458,11 @@ class PenetrationTest extends TestCase
      */
     public function disguised_php_script_upload_is_rejected(): void
     {
-        $service = new \App\Services\FileUploadService;
+        $service = new FileUploadService;
 
         // A .jpg extension but a real MIME of text/x-php. The service checks the
         // real MIME type via getMimeType(), so the disguised script is rejected.
-        $malicious = \Illuminate\Http\UploadedFile::fake()->create('shell.jpg', 1, 'text/x-php');
+        $malicious = UploadedFile::fake()->create('shell.jpg', 1, 'text/x-php');
 
         $this->expectException(\InvalidArgumentException::class);
         $service->uploadVehiclePhoto($malicious);
@@ -471,9 +476,9 @@ class PenetrationTest extends TestCase
      */
     public function upload_with_non_image_mime_is_rejected(): void
     {
-        $service = new \App\Services\FileUploadService;
+        $service = new FileUploadService;
 
-        $pdf = \Illuminate\Http\UploadedFile::fake()->create('document.png', 1, 'application/pdf');
+        $pdf = UploadedFile::fake()->create('document.png', 1, 'application/pdf');
 
         $this->expectException(\InvalidArgumentException::class);
         $service->uploadVehiclePhoto($pdf);
@@ -497,7 +502,7 @@ class PenetrationTest extends TestCase
             'fuel_type' => 'gasoline',
             'chassis_number' => 'ABCDEFGH12345678X',
             'current_odometer' => 100,
-            'photo' => \Illuminate\Http\UploadedFile::fake()->createWithContent(
+            'photo' => UploadedFile::fake()->createWithContent(
                 'evil.php',
                 "<?php echo 'pwned'; ?>"
             ),
