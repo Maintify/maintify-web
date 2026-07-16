@@ -1694,7 +1694,7 @@
   - `tests/Unit/Services/*.php`
 - **Suggested Commit Message:** `test: add comprehensive unit tests for all service classes`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1744,9 +1744,9 @@
 
 | Status | Count |
 |---|---|
-| `[x]` Done | 17 |
+| `[x]` Done | 18 |
 | `[/]` In Progress | 0 |
-| `[ ]` To Do | 37 |
+| `[ ]` To Do | 36 |
 | **Total Tasks** | **54** |
 
 > **Note:** Subtasks are counted separately within their parent tasks. The 54 count reflects top-level tasks only. This task list is a living document and will be updated as development progresses.

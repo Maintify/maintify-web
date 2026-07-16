@@ -11,7 +11,11 @@ class NotificationService
     public function send(int $userId, string $type, string $title, string $message): ?Notification
     {
         $user = User::find($userId);
-        if ($user && $type === 'service_reminder' && ! $user->enable_service_reminders) {
+        if (! $user) {
+            return null;
+        }
+
+        if ($type === 'service_reminder' && ! $user->enable_service_reminders) {
             return null;
         }
 
