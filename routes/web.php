@@ -2,10 +2,14 @@
 
 use App\Http\Controllers\Auth\WorkshopRegistrationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\OwnershipTransferController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QrCodeController;
+use App\Http\Controllers\ServiceHistoryController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\Workshop\WorkshopPendingController;
+use App\Http\Controllers\WorkshopSearchController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -40,10 +44,6 @@ Route::middleware(['auth', 'verified', 'workshop.approved'])->group(function () 
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.read-all');
 });
 
-use App\Http\Controllers\OwnershipTransferController;
-use App\Http\Controllers\ServiceHistoryController;
-use App\Http\Controllers\WorkshopSearchController;
-
 // Vehicle Owner Routes
 Route::middleware(['auth', 'verified', 'role:vehicle_owner'])->group(function () {
     Route::resource('vehicles', VehicleController::class);
@@ -76,7 +76,6 @@ Route::get('/workshop/pending', [WorkshopPendingController::class, 'show'])
     ->middleware('auth')
     ->name('workshop.pending');
 
-use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\SuperAdmin\AuditLogController;
 use App\Http\Controllers\SuperAdmin\SettingController;
 use App\Http\Controllers\SuperAdmin\UserController;

@@ -1713,7 +1713,7 @@
   - `tests/Feature/**/*.php`
 - **Suggested Commit Message:** `test: add comprehensive feature tests for all routes`
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1744,9 +1744,9 @@
 
 | Status | Count |
 |---|---|
-| `[x]` Done | 18 |
+| `[x]` Done | 19 |
 | `[/]` In Progress | 0 |
-| `[ ]` To Do | 36 |
+| `[ ]` To Do | 35 |
 | **Total Tasks** | **54** |
 
 > **Note:** Subtasks are counted separately within their parent tasks. The 54 count reflects top-level tasks only. This task list is a living document and will be updated as development progresses.
