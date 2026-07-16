@@ -18,9 +18,23 @@ class FileUploadServiceTest extends TestCase
         Storage::fake('public');
     }
 
+    /**
+     * UploadedFile::fake()->image() needs the GD extension to synthesise a real
+     * image. Skip (don't fail) when GD is absent so CI on minimal PHP builds
+     * reports honestly instead of a misleading red.
+     */
+    private function requireGd(): void
+    {
+        if (! \function_exists('imagecreatetruecolor')) {
+            $this->markTestSkipped('GD extension not installed; cannot generate a real fake image.');
+        }
+    }
+
     /** @test */
     public function it_can_upload_a_valid_vehicle_photo()
     {
+        $this->requireGd();
+
         // 1. Create a fake uploaded file (100 KB, JPG)
         $file = UploadedFile::fake()->image('vehicle_photo.jpg', 800, 600)->size(100);
 
@@ -52,6 +66,8 @@ class FileUploadServiceTest extends TestCase
     /** @test */
     public function it_throws_exception_if_file_size_exceeds_five_megabytes()
     {
+        $this->requireGd();
+
         // 1. Create a fake file larger than 5MB (e.g., 5.1 MB = 5222 KB)
         $file = UploadedFile::fake()->image('huge_photo.png', 2000, 2000)->size(5222);
 
@@ -66,6 +82,8 @@ class FileUploadServiceTest extends TestCase
     /** @test */
     public function it_can_delete_an_uploaded_file()
     {
+        $this->requireGd();
+
         // 1. Upload a file first
         $file = UploadedFile::fake()->image('to_delete.png')->size(50);
         $publicUrl = $this->service->uploadVehiclePhoto($file);

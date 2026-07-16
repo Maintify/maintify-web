@@ -1735,8 +1735,12 @@
 - **Files Expected:**
   - Security audit report document
 - **Suggested Commit Message:** `security: resolve findings from penetration testing`
+- **Artefak:**
+  - `docs/security-audit-report.md` — laporan audit lengkap.
+  - `tests/Feature/Security/PenetrationTest.php` — 25 tes penetration (RBAC, IDOR, CSRF, SQLi, XSS, priv-esc, file upload, production hardening).
+  - Hardening tambahan: `AppServiceProvider` memaksa `APP_DEBUG=false` + secure cookie + HTTPS di production; validasi upload MIME-type diverifikasi.
 
-**Status:** `[ ]` To Do
+**Status:** `[x]` Done
 
 ---
 
@@ -1744,9 +1748,9 @@
 
 | Status | Count |
 |---|---|
-| `[x]` Done | 19 |
+| `[x]` Done | 20 |
 | `[/]` In Progress | 0 |
-| `[ ]` To Do | 35 |
+| `[ ]` To Do | 34 |
 | **Total Tasks** | **54** |
 
 > **Note:** Subtasks are counted separately within their parent tasks. The 54 count reflects top-level tasks only. This task list is a living document and will be updated as development progresses.
