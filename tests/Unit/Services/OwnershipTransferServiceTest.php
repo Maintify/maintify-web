@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Services;
 
-use App\Models\AuditLog;
 use App\Models\Notification;
 use App\Models\OwnershipTransfer;
 use App\Models\User;
