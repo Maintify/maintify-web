@@ -1,10 +1,10 @@
 <section>
     <header>
-        <h2 class="text-lg font-medium text-gray-900">
+        <h2 class="text-lg font-medium" style="color: var(--color-text-primary);">
             {{ __('Profile Information') }}
         </h2>
 
-        <p class="mt-1 text-sm text-gray-600">
+        <p class="mt-1 text-sm" style="color: var(--color-text-secondary);">
             {{ __("Update your account's profile information and email address.") }}
         </p>
     </header>
@@ -22,10 +22,10 @@
             <x-input-label for="photo" :value="__('Foto Profil')" />
             @if($user->photo_url)
                 <div class="my-2">
-                    <img src="{{ $user->photo_url }}" alt="Avatar Preview" class="w-16 h-16 rounded-full object-cover border border-gray-300">
+                    <img src="{{ $user->photo_url }}" alt="Avatar Preview" class="w-16 h-16 rounded-full object-cover" style="border: 1px solid var(--color-border);">
                 </div>
             @endif
-            <input id="photo" name="photo" type="file" class="mt-1 block w-full text-sm text-gray-900 border border-gray-350 rounded-lg cursor-pointer bg-gray-50 focus:outline-none" accept="image/png, image/jpeg, image/jpg" />
+            <input id="photo" name="photo" type="file" class="mt-1 block w-full text-sm rounded-lg cursor-pointer focus:outline-none" style="color: var(--color-text-primary); background-color: var(--color-surface); border: 1px solid var(--color-border);" accept="image/png, image/jpeg, image/jpg" />
             <x-input-error class="mt-2" :messages="$errors->get('photo')" />
         </div>
 
@@ -48,10 +48,10 @@
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
                 <div>
-                    <p class="text-sm mt-2 text-gray-800">
+                    <p class="text-sm mt-2" style="color: var(--color-text-secondary);">
                         {{ __('Your email address is unverified.') }}
 
-                        <button form="send-verification" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <button form="send-verification" class="underline text-sm rounded-md focus:outline-none" style="color: var(--color-text-muted);">
                             {{ __('Click here to re-send the verification email.') }}
                         </button>
                     </p>
@@ -74,7 +74,8 @@
                     x-show="show"
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600"
+                    class="text-sm"
+                    style="color: var(--color-text-secondary);"
                 >{{ __('Saved.') }}</p>
             @endif
         </div>
