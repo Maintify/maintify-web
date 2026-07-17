@@ -73,7 +73,7 @@
 
                                 <a href="{{ route('vehicles.index') }}"
                                    id="nav-vehicles"
-                                   class="sidebar-nav-item {{ request()->routeIs('vehicles*') ? 'active' : '' }}">
+                                   class="sidebar-nav-item {{ request()->routeIs('vehicles.index', 'vehicles.show', 'vehicles.create', 'vehicles.edit') ? 'active' : '' }}">
                                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2 2h8l2-2zM8 6h4l2 4H6l2-4z"/>
@@ -440,7 +440,7 @@
 
                         <a href="{{ route('vehicles.index') }}"
                            id="bottom-nav-vehicle"
-                           class="bottom-nav-item {{ request()->routeIs('vehicles*') ? 'active' : '' }}"
+                           class="bottom-nav-item {{ request()->routeIs('vehicles.index') || request()->routeIs('vehicles.show') || request()->routeIs('vehicles.create') || request()->routeIs('vehicles.edit') ? 'active' : '' }}"
                            aria-label="My Vehicle">
                             <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/>
