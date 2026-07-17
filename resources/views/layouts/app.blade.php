@@ -81,7 +81,7 @@
                                     <span>Kendaraan Saya</span>
                                 </a>
 
-                                <a href="{{ route('vehicles.index') }}"
+                                <a href="{{ $firstVehicle ? route('vehicles.qr.show', $firstVehicle) : route('vehicles.index') }}"
                                    id="nav-qr"
                                    class="sidebar-nav-item {{ request()->routeIs('vehicles.qr*') ? 'active' : '' }}">
                                     <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -449,9 +449,9 @@
                             <span>Kendaraan</span>
                         </a>
 
-                        <a href="#"
+                        <a href="{{ $firstVehicle ? route('vehicles.qr.show', $firstVehicle) : route('vehicles.index') }}"
                            id="bottom-nav-qr"
-                           class="bottom-nav-item {{ request()->routeIs('qr*') ? 'active' : '' }}"
+                           class="bottom-nav-item {{ request()->routeIs('vehicles.qr*') ? 'active' : '' }}"
                            aria-label="QR Code">
                             <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3z"/>

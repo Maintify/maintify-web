@@ -274,9 +274,10 @@
             <div class="section-title"><h3>Akses Cepat</h3></div>
             <div style="display:flex;flex-direction:column;gap:8px;">
                 @php
+                    $firstVehicle = $recentVehicles->first();
                     $quickActions = [
                         ['icon' => 'M12 4v16m8-8H4', 'label' => 'Tambah Kendaraan', 'desc' => 'Daftarkan kendaraan baru', 'color' => '#ff9aa4', 'bg' => 'rgba(65,0,8,0.15)', 'border' => 'rgba(65,0,8,0.3)', 'route' => route('vehicles.create')],
-                        ['icon' => 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3z', 'label' => 'Lihat QR Code', 'desc' => 'Identitas digital kendaraan', 'color' => '#4ade80', 'bg' => 'rgba(34,197,94,0.08)', 'border' => 'rgba(34,197,94,0.2)', 'route' => route('vehicles.index')],
+                        ['icon' => 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3z', 'label' => 'Lihat QR Code', 'desc' => 'Identitas digital kendaraan', 'color' => '#4ade80', 'bg' => 'rgba(34,197,94,0.08)', 'border' => 'rgba(34,197,94,0.2)', 'route' => $firstVehicle ? route('vehicles.qr.show', $firstVehicle) : route('vehicles.index')],
                         ['icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', 'label' => 'Riwayat Service', 'desc' => 'Lihat semua histori', 'color' => '#60a5fa', 'bg' => 'rgba(59,130,246,0.08)', 'border' => 'rgba(59,130,246,0.2)', 'route' => route('vehicles.index')],
                         ['icon' => 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z', 'label' => 'Cari Bengkel', 'desc' => 'Bengkel terdekat dari Anda', 'color' => '#fbbf24', 'bg' => 'rgba(245,158,11,0.08)', 'border' => 'rgba(245,158,11,0.2)', 'route' => '#'],
                     ];

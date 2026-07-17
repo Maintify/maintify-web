@@ -10,7 +10,7 @@
                 </svg>
                 Kembali ke Detail Kendaraan
             </a>
-            <h1 style="font-size: 24px; font-weight: 800; color: #F4F4F5; letter-spacing: -0.02em; margin-top: 12px; margin-bottom: 6px;">Digital ID QR Code 🪪</h1>
+            <h1 style="font-size: 24px; font-weight: 800; color: #F4F4F5; letter-spacing: -0.02em; margin-top: 12px; margin-bottom: 6px;">Digital ID QR Code </h1>
             <p style="color: #A1A1AA; font-size: 14px; margin: 0;">Identitas digital untuk keperluan verifikasi dan histori servis di jaringan bengkel mitra Maintify.</p>
         </div>
 
