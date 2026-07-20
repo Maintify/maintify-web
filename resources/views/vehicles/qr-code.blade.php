@@ -39,7 +39,7 @@
             {{-- Actual QR Code Image --}}
             <div style="background: white; border-radius: 16px; padding: 16px; width: 220px; height: 220px; margin: 0 auto 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px rgba(0,0,0,0.2);">
                 @if($vehicle->qr_code_url)
-                    <img src="{{ $vehicle->qr_code_url }}" alt="QR Code {{ $vehicle->plate_number }}" style="width: 100%; height: 100%; object-fit: contain;">
+                    <img src="{{ asset($vehicle->qr_code_url) }}" alt="QR Code {{ $vehicle->plate_number }}" style="width: 100%; height: 100%; object-fit: contain;">
                 @else
                     <div style="color: #F87171; font-size: 13px; font-weight: 600;">QR Code Tidak Tersedia</div>
                 @endif

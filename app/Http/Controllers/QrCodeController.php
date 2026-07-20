@@ -14,11 +14,16 @@ class QrCodeController extends Controller
     /**
      * Display the vehicle's QR Code page.
      */
-    public function show(Vehicle $vehicle): View
+    public function show(Vehicle $vehicle, QrCodeService $qrCodeService): View
     {
         // Ensure only the owner can view
         if ($vehicle->user_id !== auth()->id()) {
             abort(403, 'Anda tidak memiliki akses ke halaman QR Code ini.');
+        }
+
+        if (empty($vehicle->qr_code_url) || !Storage::disk('public')->exists(str_replace('/storage/', '', $vehicle->qr_code_url))) {
+            $qrCodeService->generateForVehicle($vehicle);
+            $vehicle->refresh();
         }
 
         return view('vehicles.qr-code', compact('vehicle'));

@@ -89,6 +89,11 @@ class VehicleController extends Controller
             abort(403, 'Anda tidak memiliki akses ke kendaraan ini.');
         }
 
+        if (empty($vehicle->qr_code_url) || !\Illuminate\Support\Facades\Storage::disk('public')->exists(str_replace('/storage/', '', $vehicle->qr_code_url))) {
+            $this->qrCodeService->generateForVehicle($vehicle);
+            $vehicle->refresh();
+        }
+
         $serviceRecords = $vehicle->serviceRecords()
             ->with(['workshop', 'parts', 'performedBy'])
             ->orderBy('service_date', 'desc')

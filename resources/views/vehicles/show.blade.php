@@ -207,22 +207,13 @@
                         Digital ID QR Code
                     </span>
 
-                    {{-- QR Code Image Placeholder / Representation --}}
-                    <div style="background: white; border-radius: 12px; padding: 12px; width: 140px; height: 140px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
-                        <div style="border: 3px solid #121414; width: 110px; height: 110px; position: relative; background-image: radial-gradient(#121414 20%, transparent 20%), radial-gradient(#121414 20%, transparent 20%); background-size: 8px 8px; background-position: 0 0, 4px 4px;">
-                            {{-- Top-left corner --}}
-                            <div style="position: absolute; top: 0; left: 0; width: 28px; height: 28px; border: 4px solid #121414; background: white; box-sizing: border-box;">
-                                <div style="position: absolute; inset: 3px; background: #121414;"></div>
-                            </div>
-                            {{-- Top-right corner --}}
-                            <div style="position: absolute; top: 0; right: 0; width: 28px; height: 28px; border: 4px solid #121414; background: white; box-sizing: border-box;">
-                                <div style="position: absolute; inset: 3px; background: #121414;"></div>
-                            </div>
-                            {{-- Bottom-left corner --}}
-                            <div style="position: absolute; bottom: 0; left: 0; width: 28px; height: 28px; border: 4px solid #121414; background: white; box-sizing: border-box;">
-                                <div style="position: absolute; inset: 3px; background: #121414;"></div>
-                            </div>
-                        </div>
+                    {{-- QR Code Image --}}
+                    <div style="background: white; border-radius: 12px; padding: 12px; width: 140px; height: 140px; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                        @if($vehicle->qr_code_url)
+                            <img src="{{ asset($vehicle->qr_code_url) }}" alt="QR Code {{ $vehicle->plate_number }}" style="width: 100%; height: 100%; object-fit: contain;">
+                        @else
+                            <div style="color: #F87171; font-size: 11px; font-weight: 600;">QR Code Tidak Tersedia</div>
+                        @endif
                     </div>
 
                     <h4 style="font-size: 15px; font-weight: 800; color: #F4F4F5; margin: 0 0 4px; font-family: monospace; letter-spacing: 0.05em;">{{ $vehicle->qr_code }}</h4>
