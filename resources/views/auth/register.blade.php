@@ -10,11 +10,13 @@
         <p style="color:#71717A;font-size:13px;line-height:1.6;">Daftarkan diri dan mulai kelola histori service kendaraan Anda secara digital</p>
     </div>
 
-    <form method="POST" action="{{ route('register') }}" style="display:flex;flex-direction:column;gap:16px;">
+    <form method="POST" action="{{ route('register') }}" style="display:flex;flex-direction:column;gap:16px;" 
+          x-data="{ selected: '{{ old('role', 'vehicle_owner') }}' }"
+          @submit="if (selected === 'workshop') { $event.preventDefault(); window.location.href = '{{ route('register.workshop') }}'; }">
         @csrf
 
         {{-- Role Selection — FIRST so user understands context --}}
-        <div x-data="{ selected: '{{ old('role', 'vehicle_owner') }}' }">
+        <div>
             <label style="font-size:13px;font-weight:600;color:#F4F4F5;letter-spacing:0.01em;display:block;margin-bottom:10px;">
                 Saya mendaftar sebagai
             </label>
@@ -78,14 +80,14 @@
         </div>
 
         {{-- Divider --}}
-        <div style="display:flex;align-items:center;gap:12px;">
+        <div x-show="selected === 'vehicle_owner'" style="display:flex;align-items:center;gap:12px;">
             <div style="flex:1;height:1px;background:#2E3030;"></div>
             <span style="font-size:11px;color:#3A3D3D;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">Data Akun</span>
             <div style="flex:1;height:1px;background:#2E3030;"></div>
         </div>
 
         {{-- Name --}}
-        <div class="form-group">
+        <div x-show="selected === 'vehicle_owner'" class="form-group">
             <label for="name" style="font-size:13px;font-weight:600;color:#F4F4F5;letter-spacing:0.01em;">Nama Lengkap</label>
             <div style="position:relative;">
                 <svg style="width:16px;height:16px;position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#71717A;pointer-events:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,7 +98,8 @@
                     type="text"
                     name="name"
                     value="{{ old('name') }}"
-                    required
+                    :required="selected === 'vehicle_owner'"
+                    :disabled="selected === 'workshop'"
                     autofocus
                     autocomplete="name"
                     placeholder="Nama lengkap Anda"
@@ -110,7 +113,7 @@
         </div>
 
         {{-- Email --}}
-        <div class="form-group">
+        <div x-show="selected === 'vehicle_owner'" class="form-group">
             <label for="email" style="font-size:13px;font-weight:600;color:#F4F4F5;letter-spacing:0.01em;">Alamat Email</label>
             <div style="position:relative;">
                 <svg style="width:16px;height:16px;position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#71717A;pointer-events:none;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,7 +124,8 @@
                     type="email"
                     name="email"
                     value="{{ old('email') }}"
-                    required
+                    :required="selected === 'vehicle_owner'"
+                    :disabled="selected === 'workshop'"
                     autocomplete="username"
                     placeholder="nama@email.com"
                     style="padding-left:42px;"
@@ -134,7 +138,7 @@
         </div>
 
         {{-- Password + Confirm in 2 cols on desktop --}}
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div x-show="selected === 'vehicle_owner'" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
 
             {{-- Password --}}
             <div class="form-group" x-data="{ show: false }">
@@ -147,7 +151,8 @@
                         id="password"
                         :type="show ? 'text' : 'password'"
                         name="password"
-                        required
+                        :required="selected === 'vehicle_owner'"
+                        :disabled="selected === 'workshop'"
                         autocomplete="new-password"
                         placeholder="Min. 8 karakter"
                         style="padding-left:36px;padding-right:36px;font-size:13px;"
@@ -179,7 +184,8 @@
                         id="password_confirmation"
                         :type="show ? 'text' : 'password'"
                         name="password_confirmation"
-                        required
+                        :required="selected === 'vehicle_owner'"
+                        :disabled="selected === 'workshop'"
                         autocomplete="new-password"
                         placeholder="Ulangi password"
                         style="padding-left:36px;padding-right:36px;font-size:13px;"
@@ -210,7 +216,7 @@
         </p>
 
         {{-- Submit --}}
-        <button type="submit"
+        <button x-show="selected === 'vehicle_owner'" type="submit"
                 id="btn-register"
                 class="btn-primary"
                 style="width:100%;justify-content:center;padding:13px;font-size:14px;letter-spacing:0.01em;border-radius:12px;">
@@ -218,6 +224,17 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
             </svg>
             Buat Akun Sekarang
+        </button>
+
+        <button x-show="selected === 'workshop'" type="button"
+                @click="window.location.href = '{{ route('register.workshop') }}'"
+                id="btn-register-workshop"
+                class="btn-primary"
+                style="display:none; width:100%;justify-content:center;padding:13px;font-size:14px;letter-spacing:0.01em;border-radius:12px;">
+            Lanjutkan Pendaftaran Bengkel
+            <svg style="width:16px;height:16px;margin-left:6px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
         </button>
 
         {{-- Login link --}}
