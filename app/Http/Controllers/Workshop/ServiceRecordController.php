@@ -23,6 +23,64 @@ class ServiceRecordController extends Controller
     ) {}
 
     /**
+     * Resolve the workshop for the authenticated user (owner or staff).
+     */
+    private function resolveWorkshop(Request $request): ?Workshop
+    {
+        /** @var User $user */
+        $user = $request->user();
+
+        $workshopModel = $user->workshop;
+        if ($workshopModel instanceof Workshop) {
+            return $workshopModel;
+        }
+
+        $staffWorkshop = $user->workshopStaff?->workshop;
+
+        return $staffWorkshop instanceof Workshop ? $staffWorkshop : null;
+    }
+
+    /**
+     * Display a listing of the workshop's service records.
+     */
+    public function index(Request $request): View
+    {
+        $workshop = $this->resolveWorkshop($request);
+        if (! $workshop) {
+            abort(403, 'Workshop tidak ditemukan.');
+        }
+
+        $search = $request->input('search');
+        $type = $request->input('type');
+
+        $query = $workshop->serviceRecords()
+            ->with(['vehicle', 'vehicle.owner', 'performedBy'])
+            ->latest('service_date');
+
+        if ($search) {
+            $query->whereHas('vehicle', function ($q) use ($search) {
+                $q->where('plate_number', 'like', "%{$search}%")
+                    ->orWhere('brand', 'like', "%{$search}%")
+                    ->orWhere('model', 'like', "%{$search}%");
+            });
+        }
+
+        if ($type && array_key_exists($type, ServiceRecord::SERVICE_TYPES)) {
+            $query->where('service_type', $type);
+        }
+
+        $serviceRecords = $query->paginate(15)->withQueryString();
+
+        return view('workshop.service-records.index', [
+            'serviceRecords' => $serviceRecords,
+            'serviceTypes' => ServiceRecord::SERVICE_TYPES,
+            'search' => $search,
+            'type' => $type,
+            'editLimitHours' => config('maintify.service_records.edit_limit_hours', 24),
+        ]);
+    }
+
+    /**
      * Show the form to create a new service record for a given vehicle.
      *
      * Accessible after a successful QR scan (FR-091).

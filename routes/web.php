@@ -108,6 +108,7 @@ Route::middleware(['auth', 'verified', 'role:workshop', 'workshop.approved'])->p
     Route::put('/profile-bengkel', [WorkshopProfileController::class, 'update'])->name('profile.update');
 
     // Service Records
+    Route::get('/service-records', [ServiceRecordController::class, 'index'])->name('service-records.index');
     Route::get('/service-records/create', [ServiceRecordController::class, 'create'])->name('service-records.create');
     Route::post('/service-records', [ServiceRecordController::class, 'store'])->name('service-records.store');
     Route::get('/service-records/{service_record}/edit', [ServiceRecordController::class, 'edit'])->name('service-records.edit');
