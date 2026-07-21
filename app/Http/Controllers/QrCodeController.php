@@ -21,7 +21,7 @@ class QrCodeController extends Controller
             abort(403, 'Anda tidak memiliki akses ke halaman QR Code ini.');
         }
 
-        if (empty($vehicle->qr_code_url) || !Storage::disk('public')->exists(str_replace('/storage/', '', $vehicle->qr_code_url))) {
+        if (empty($vehicle->qr_code_url) || ! Storage::disk('public')->exists(str_replace('/storage/', '', $vehicle->qr_code_url))) {
             $qrCodeService->generateForVehicle($vehicle);
             $vehicle->refresh();
         }
