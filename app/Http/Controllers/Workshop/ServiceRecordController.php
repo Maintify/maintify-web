@@ -338,7 +338,7 @@ class ServiceRecordController extends Controller
         ]);
 
         return redirect()
-            ->route('workshop.scan')
+            ->route('workshop.service-records.index')
             ->with('success', 'Service record berhasil diperbarui.');
     }
 }
