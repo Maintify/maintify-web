@@ -170,7 +170,7 @@
                 <h3 class="card-title">Akses Cepat</h3>
             </div>
             <div style="display: flex; flex-direction: column; gap: 10px;">
-                <a href="{{ route('workshop.scan') }}" class="btn btn-primary" style="justify-content: flex-start; text-align: left;">
+                <a href="{{ route('workshop.scan') }}" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
                     <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8H3a2 2 0 00-2 2v6a2 2 0 002 2h2m2-12V4a2 2 0 012-2h4a2 2 0 012 2v1"/>
                     </svg>
