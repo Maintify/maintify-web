@@ -47,14 +47,20 @@ class DashboardController extends Controller
         $activeStaffCount = $workshop->staff()->where('is_active', true)->count();
 
         // 3. Chart: Vehicles served over time (last 7 days including today)
+        $startDate = now()->subDays(6)->startOfDay();
+        $dailyCounts = $workshop->serviceRecords()
+            ->where('service_date', '>=', $startDate)
+            ->selectRaw('DATE(service_date) as date_val, COUNT(*) as aggregate_count')
+            ->groupBy('date_val')
+            ->pluck('aggregate_count', 'date_val');
+
         $chartLabels = [];
         $chartValues = [];
         for ($i = 6; $i >= 0; $i--) {
             $day = now()->subDays($i);
+            $dateStr = $day->toDateString();
             $chartLabels[] = $day->translatedFormat('d M');
-            $chartValues[] = $workshop->serviceRecords()
-                ->whereDate('service_date', $day->toDateString())
-                ->count();
+            $chartValues[] = (int) ($dailyCounts[$dateStr] ?? 0);
         }
 
         // 4. Top spareparts summary (top 5 spareparts by total quantity)
