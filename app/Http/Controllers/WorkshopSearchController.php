@@ -33,8 +33,8 @@ class WorkshopSearchController extends Controller
     public function search(Request $request): JsonResponse
     {
         $request->validate([
-            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
-            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
+            'latitude' => ['nullable', 'numeric', 'min:-90', 'max:90'],
+            'longitude' => ['nullable', 'numeric', 'min:-180', 'max:180'],
             'radius' => ['nullable', 'numeric', 'min:0'],
             'rating' => ['nullable', 'numeric', 'between:0,5'],
             'service_type' => ['nullable', 'string'],
