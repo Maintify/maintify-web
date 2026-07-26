@@ -199,7 +199,7 @@
                                        id="latitude"
                                        name="latitude"
                                        value="{{ old('latitude', $workshop->latitude) }}"
-                                       step="0.00000001"
+                                       step="any"
                                        placeholder="Contoh: -6.2088"
                                        class="w-full bg-zinc-900 border border-zinc-700 text-zinc-100 placeholder-zinc-650 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all">
                                 @error('latitude')
@@ -216,7 +216,7 @@
                                        id="longitude"
                                        name="longitude"
                                        value="{{ old('longitude', $workshop->longitude) }}"
-                                       step="0.00000001"
+                                       step="any"
                                        placeholder="Contoh: 106.8456"
                                        class="w-full bg-zinc-900 border border-zinc-700 text-zinc-100 placeholder-zinc-650 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all">
                                 @error('longitude')
