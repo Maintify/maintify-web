@@ -89,23 +89,16 @@ use App\Http\Controllers\Workshop\ServiceRecordController;
 use App\Http\Controllers\Workshop\SparepartController;
 use App\Http\Controllers\Workshop\StaffController;
 
-// Workshop Routes
-Route::middleware(['auth', 'verified', 'role:workshop', 'workshop.approved'])->prefix('workshop')->name('workshop.')->group(function () {
+// Workshop Routes (Shared for Workshop Owner & Workshop Staff)
+Route::middleware(['auth', 'verified', 'role:workshop,workshop_staff', 'workshop.approved'])->prefix('workshop')->name('workshop.')->group(function () {
     Route::get('/scan', [ScanController::class, 'show'])->name('scan');
     Route::post('/scan/resolve', [ScanController::class, 'resolve'])->name('scan.resolve');
 
-    // Spareparts
-    Route::resource('spareparts', SparepartController::class)->except(['show']);
-
-    // Staff Management
-    Route::resource('staff', StaffController::class)->except(['show']);
+    // Spareparts Catalog (View Only for Staff)
+    Route::get('/spareparts', [SparepartController::class, 'index'])->name('spareparts.index');
 
     // Customers
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
-
-    // Workshop Profile Edit
-    Route::get('/profile-bengkel', [WorkshopProfileController::class, 'edit'])->name('profile.edit');
-    Route::put('/profile-bengkel', [WorkshopProfileController::class, 'update'])->name('profile.update');
 
     // Service Records
     Route::get('/service-records', [ServiceRecordController::class, 'index'])->name('service-records.index');
@@ -113,6 +106,19 @@ Route::middleware(['auth', 'verified', 'role:workshop', 'workshop.approved'])->p
     Route::post('/service-records', [ServiceRecordController::class, 'store'])->name('service-records.store');
     Route::get('/service-records/{service_record}/edit', [ServiceRecordController::class, 'edit'])->name('service-records.edit');
     Route::put('/service-records/{service_record}', [ServiceRecordController::class, 'update'])->name('service-records.update');
+});
+
+// Workshop Owner Only Routes
+Route::middleware(['auth', 'verified', 'role:workshop', 'workshop.approved'])->prefix('workshop')->name('workshop.')->group(function () {
+    // Sparepart Management (Create/Edit/Delete)
+    Route::resource('spareparts', SparepartController::class)->except(['index', 'show']);
+
+    // Staff Management
+    Route::resource('staff', StaffController::class)->except(['show']);
+
+    // Workshop Profile Edit
+    Route::get('/profile-bengkel', [WorkshopProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile-bengkel', [WorkshopProfileController::class, 'update'])->name('profile.update');
 
     // Reports
     Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');

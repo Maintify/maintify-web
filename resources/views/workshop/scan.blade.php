@@ -101,6 +101,26 @@
                     </button>
                 </div>
             </div>
+
+            {{-- Manual Code Input Option --}}
+            <div class="w-full max-w-md mt-6 pt-6 border-t border-[#2E3030]">
+                <p class="text-xs text-zinc-400 text-center mb-3 font-medium">Atau masukkan Token QR / Plat Nomor secara manual:</p>
+                <form id="manual-scan-form" class="flex gap-2">
+                    <input type="text" 
+                           id="manual-qr-input" 
+                           placeholder="Contoh: QR-XXXXX atau B 1234 ABC" 
+                           class="flex-1 bg-zinc-900 border border-zinc-700 text-zinc-100 placeholder-zinc-500 text-sm rounded-lg px-4 py-2.5 focus:outline-none focus:border-red-500 transition-colors uppercase"
+                           required>
+                    <button type="submit" 
+                            id="manual-submit-btn"
+                            class="px-5 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold text-sm rounded-lg border border-zinc-700 transition-all flex items-center gap-1.5 whitespace-nowrap">
+                        <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 0 0114 0z"/>
+                        </svg>
+                        Cari
+                    </button>
+                </form>
+            </div>
         </div>
 
         {{-- Verification Result Modal --}}

@@ -19,8 +19,8 @@ class SessionTimeoutMiddleware
         if (Auth::check()) {
             $user = Auth::user();
 
-            // Apply timeout only for super_admin and workshop roles
-            if (in_array($user->role, ['super_admin', 'workshop'])) {
+            // Apply timeout for super_admin, workshop, and workshop_staff roles
+            if (in_array($user->role, ['super_admin', 'workshop', 'workshop_staff'])) {
                 $timeout = 1800; // 30 minutes in seconds
                 $lastActivity = session('last_activity_time');
 

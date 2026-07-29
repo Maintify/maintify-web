@@ -121,7 +121,7 @@ class StaffManagementTest extends TestCase
             'name' => 'Candra Mekanik',
             'email' => 'candra@bengkel.com',
             'phone_number' => '081233333333',
-            'role' => User::ROLE_WORKSHOP,
+            'role' => User::ROLE_WORKSHOP_STAFF,
         ]);
 
         $user = User::where('email', 'candra@bengkel.com')->first();
@@ -314,7 +314,7 @@ class StaffManagementTest extends TestCase
         $staffUser = User::factory()->create([
             'name' => 'Irfan Mekanik',
             'email' => 'irfan@bengkel.com',
-            'role' => User::ROLE_WORKSHOP,
+            'role' => User::ROLE_WORKSHOP_STAFF,
         ]);
 
         $staff = WorkshopStaff::create([

@@ -26,6 +26,8 @@ class User extends Authenticatable
 
     const ROLE_WORKSHOP = 'workshop';
 
+    const ROLE_WORKSHOP_STAFF = 'workshop_staff';
+
     const ROLE_VEHICLE_OWNER = 'vehicle_owner';
 
     /**
@@ -34,6 +36,7 @@ class User extends Authenticatable
     const ROLES = [
         self::ROLE_SUPER_ADMIN => 'Super Admin',
         self::ROLE_WORKSHOP => 'Bengkel Mitra',
+        self::ROLE_WORKSHOP_STAFF => 'Staf Bengkel',
         self::ROLE_VEHICLE_OWNER => 'Pemilik Kendaraan',
     ];
 
@@ -102,6 +105,22 @@ class User extends Authenticatable
     public function isWorkshop(): bool
     {
         return $this->role === self::ROLE_WORKSHOP;
+    }
+
+    /**
+     * Check if the user is a Workshop Staff (Staf Bengkel).
+     */
+    public function isWorkshopStaff(): bool
+    {
+        return $this->role === self::ROLE_WORKSHOP_STAFF;
+    }
+
+    /**
+     * Get active workshop for either workshop owner or workshop staff.
+     */
+    public function getActiveWorkshopAttribute(): ?Workshop
+    {
+        return $this->workshop ?? $this->workshopStaff?->workshop;
     }
 
     /**

@@ -49,8 +49,21 @@ class ScanController extends Controller
             ], 403);
         }
 
-        // Find the QR Code record by token
+        // Find the QR Code record by token or by vehicle plate number / vin
         $qrCode = QrCode::where('qr_token', $token)->first();
+
+        if (! $qrCode) {
+            $cleanToken = strtoupper(str_replace(' ', '', $token));
+            $vehicleByPlate = Vehicle::whereRaw("UPPER(REPLACE(plate_number, ' ', '')) = ?", [$cleanToken])
+                ->orWhere('vin', $token)
+                ->first();
+
+            if ($vehicleByPlate) {
+                $qrCode = QrCode::where('vehicle_id', $vehicleByPlate->id)
+                    ->where('status', QrCode::STATUS_ACTIVE)
+                    ->first();
+            }
+        }
 
         // 1. If QR Code is invalid (not found in database)
         if (! $qrCode) {

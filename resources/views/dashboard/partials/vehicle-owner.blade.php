@@ -62,6 +62,7 @@
 
 {{-- ── KPI Stats ── --}}
 @php
+    $healthStatus = $healthStatus ?? 'none';
     $healthColor = match($healthStatus) { 'good' => '#4ade80', 'warning' => '#fbbf24', 'critical' => '#f87171', default => '#71717A' };
     $healthBg    = match($healthStatus) { 'good' => 'rgba(74,222,128,0.1)', 'warning' => 'rgba(251,191,36,0.1)', 'critical' => 'rgba(248,113,113,0.1)', default => 'rgba(113,113,122,0.08)' };
     $healthLabel = match($healthStatus) { 'good' => 'Baik', 'warning' => 'Perlu Perhatian', 'critical' => 'Kritis', default => 'Belum ada data' };

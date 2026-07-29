@@ -111,7 +111,7 @@
                                 </a>
                             </div>
 
-                        @elseif($userRole === 'workshop')
+                        @elseif($userRole === 'workshop' || $userRole === 'workshop_staff')
                             {{-- Workshop Navigation --}}
                             <div class="sidebar-nav-section">
                                 <p class="sidebar-nav-label">Workshop</p>
@@ -148,7 +148,7 @@
                                      <span>Daftar Pelanggan</span>
                                  </a>
 
-                                 @if(Auth::user()->workshop)
+                                 @if(Auth::user()->isWorkshop())
                                      <a href="{{ route('workshop.staff.index') }}" id="nav-ws-staff"
                                         class="sidebar-nav-item {{ request()->routeIs('workshop.staff*') ? 'active' : '' }}">
                                          <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">

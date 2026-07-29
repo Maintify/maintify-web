@@ -195,4 +195,32 @@ class DashboardTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewIs('workshop.reports.index');
     }
+
+    /** @test */
+    public function workshop_staff_can_access_dashboard()
+    {
+        $owner = User::factory()->create(['role' => User::ROLE_WORKSHOP]);
+        $workshop = Workshop::create([
+            'user_id' => $owner->id,
+            'name' => 'Bengkel Sejahtera',
+            'phone' => '081234567890',
+            'email' => 'sejahtera@bengkel.com',
+            'address' => 'Jl. Sejahtera No. 10',
+            'is_active' => true,
+            'status' => Workshop::STATUS_APPROVED,
+        ]);
+
+        $staffUser = User::factory()->create(['role' => User::ROLE_WORKSHOP_STAFF]);
+        WorkshopStaff::create([
+            'workshop_id' => $workshop->id,
+            'user_id' => $staffUser->id,
+            'position' => WorkshopStaff::POSITION_MECHANIC,
+            'is_active' => true,
+            'joined_at' => now(),
+        ]);
+
+        $response = $this->actingAs($staffUser)->get('/dashboard');
+        $response->assertStatus(200);
+        $response->assertViewIs('dashboard');
+    }
 }

@@ -16,7 +16,7 @@ class WorkshopApprovedMiddleware
     {
         $user = $request->user();
 
-        if ($user && $user->isWorkshop()) {
+        if ($user && ($user->isWorkshop() || $user->isWorkshopStaff())) {
             // Check if user is staff and deactivated
             if ($user->workshopStaff && ! $user->workshopStaff->is_active) {
                 auth()->logout();

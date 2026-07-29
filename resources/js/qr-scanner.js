@@ -211,4 +211,17 @@ document.addEventListener('DOMContentLoaded', () => {
             stopBtn.classList.add('hidden');
         });
     }
+
+    const manualForm = document.getElementById('manual-scan-form');
+    const manualInput = document.getElementById('manual-qr-input');
+
+    if (manualForm && manualInput) {
+        manualForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const val = manualInput.value.trim();
+            if (val) {
+                handleScanSuccess(val);
+            }
+        });
+    }
 });

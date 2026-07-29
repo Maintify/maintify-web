@@ -251,4 +251,46 @@ class SparepartCrudTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('Autofill Part');
     }
+
+    /** @test */
+    public function workshop_staff_can_view_spareparts_catalog_but_cannot_create_or_edit()
+    {
+        [$owner, $workshop] = $this->createApprovedWorkshop();
+
+        $staffUser = User::factory()->create(['role' => User::ROLE_WORKSHOP_STAFF]);
+        \App\Models\WorkshopStaff::create([
+            'workshop_id' => $workshop->id,
+            'user_id' => $staffUser->id,
+            'position' => \App\Models\WorkshopStaff::POSITION_MECHANIC,
+            'is_active' => true,
+        ]);
+
+        $part = Sparepart::create([
+            'workshop_id' => $workshop->id,
+            'name' => 'Oli Castrol',
+            'category' => 'Oli',
+            'price' => 75000,
+            'is_active' => true,
+        ]);
+
+        // Staff can view spareparts index
+        $responseView = $this->actingAs($staffUser)->get(route('workshop.spareparts.index'));
+        $responseView->assertStatus(200);
+        $responseView->assertSee('Oli Castrol');
+        $responseView->assertDontSee('Tambah Sparepart');
+
+        // Staff cannot access create form or store
+        $responseCreate = $this->actingAs($staffUser)->get(route('workshop.spareparts.create'));
+        $responseCreate->assertStatus(403);
+
+        $responseStore = $this->actingAs($staffUser)->post(route('workshop.spareparts.store'), [
+            'name' => 'Illegal Part',
+            'price' => 10000,
+        ]);
+        $responseStore->assertStatus(403);
+
+        // Staff cannot access edit form or update
+        $responseEdit = $this->actingAs($staffUser)->get(route('workshop.spareparts.edit', $part));
+        $responseEdit->assertStatus(403);
+    }
 }

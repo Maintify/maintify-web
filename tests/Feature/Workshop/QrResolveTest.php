@@ -379,4 +379,46 @@ class QrResolveTest extends TestCase
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['qr_token']);
     }
+
+    /** @test */
+    public function workshop_staff_role_user_can_resolve_qr_token()
+    {
+        [$owner, $workshop] = $this->createApprovedWorkshop();
+        $staffUser = User::factory()->create(['role' => User::ROLE_WORKSHOP_STAFF]);
+        \App\Models\WorkshopStaff::create([
+            'workshop_id' => $workshop->id,
+            'user_id' => $staffUser->id,
+            'position' => \App\Models\WorkshopStaff::POSITION_MECHANIC,
+            'is_active' => true,
+        ]);
+
+        $this->createVehicleWithActiveQr('STAFF_TEST_TOKEN');
+
+        $response = $this->actingAs($staffUser)->postJson(route('workshop.scan.resolve'), [
+            'qr_token' => 'STAFF_TEST_TOKEN',
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson(['status' => 'success']);
+    }
+
+    /** @test */
+    public function resolve_endpoint_accepts_manual_input_by_plate_number()
+    {
+        [$user] = $this->createApprovedWorkshop();
+        $this->createVehicleWithActiveQr('PLATE_SEARCH_TOKEN');
+
+        // Test with plate number formatted with spaces and lowercase
+        $response = $this->actingAs($user)->postJson(route('workshop.scan.resolve'), [
+            'qr_token' => 'b 1234 abc',
+        ]);
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'status' => 'success',
+            'data' => [
+                'plate_number' => 'B 1234 ABC',
+            ],
+        ]);
+    }
 }

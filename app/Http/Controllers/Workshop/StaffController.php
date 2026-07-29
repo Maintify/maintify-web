@@ -87,7 +87,7 @@ class StaffController extends Controller
                 'email' => $validated['email'],
                 'phone_number' => $validated['phone_number'],
                 'password' => Hash::make($validated['password']),
-                'role' => User::ROLE_WORKSHOP,
+                'role' => User::ROLE_WORKSHOP_STAFF,
             ]);
 
             // Create workshop staff record

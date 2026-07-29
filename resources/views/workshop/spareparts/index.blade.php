@@ -18,15 +18,23 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <div>
                 <h1 class="text-2xl font-bold text-zinc-100 tracking-tight">Katalog Sparepart</h1>
-                <p class="text-sm text-zinc-500 mt-0.5">Kelola daftar sparepart yang tersedia di bengkel Anda</p>
+                <p class="text-sm text-zinc-500 mt-0.5">
+                    @if(Auth::user()->isWorkshop())
+                        Kelola daftar sparepart yang tersedia di bengkel Anda
+                    @else
+                        Daftar dan harga sparepart yang tersedia di bengkel
+                    @endif
+                </p>
             </div>
-            <a href="{{ route('workshop.spareparts.create') }}"
-               class="flex items-center justify-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg hover:shadow-red-900/30 transition-all text-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8H3a2 2 0 00-2 2v6a2 2 0 002 2h2m2-12V4a2 2 0 012-2h4a2 2 0 012 2v1"/>
-                </svg>
-                Tambah Sparepart
-            </a>
+            @if(Auth::user()->isWorkshop())
+                <a href="{{ route('workshop.spareparts.create') }}"
+                   class="flex items-center justify-center gap-2 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg hover:shadow-red-900/30 transition-all text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8H3a2 2 0 00-2 2v6a2 2 0 002 2h2m2-12V4a2 2 0 012-2h4a2 2 0 012 2v1"/>
+                    </svg>
+                    Tambah Sparepart
+                </a>
+            @endif
         </div>
 
         {{-- ── Search & Filter ── --}}
@@ -67,7 +75,9 @@
                             <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-400">Kategori</th>
                             <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-400 text-right">Harga</th>
                             <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-400 text-center">Status</th>
-                            <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-400 text-center">Aksi</th>
+                            @if(Auth::user()->isWorkshop())
+                                <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-400 text-center">Aksi</th>
+                            @endif
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-[#2E3030]">
@@ -101,35 +111,37 @@
                                         </span>
                                     @endif
                                 </td>
-                                <td class="px-6 py-4 text-center">
-                                    <div class="flex items-center justify-center gap-2">
-                                        {{-- Edit Button --}}
-                                        <a href="{{ route('workshop.spareparts.edit', $part) }}"
-                                           class="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-zinc-500 flex items-center justify-center text-zinc-400 hover:text-zinc-100 transition-colors"
-                                           title="Ubah">
-                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-                                            </svg>
-                                        </a>
-
-                                        {{-- Delete Button --}}
-                                        <form method="POST" action="{{ route('workshop.spareparts.destroy', $part) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus sparepart ini dari katalog?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit"
-                                                    class="w-8 h-8 rounded-lg bg-red-950/40 hover:bg-red-900/50 border border-red-900/30 hover:border-red-650 flex items-center justify-center text-red-400 hover:text-red-300 transition-colors"
-                                                    title="Hapus">
+                                @if(Auth::user()->isWorkshop())
+                                    <td class="px-6 py-4 text-center">
+                                        <div class="flex items-center justify-center gap-2">
+                                            {{-- Edit Button --}}
+                                            <a href="{{ route('workshop.spareparts.edit', $part) }}"
+                                               class="w-8 h-8 rounded-lg bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 hover:border-zinc-500 flex items-center justify-center text-zinc-400 hover:text-zinc-100 transition-colors"
+                                               title="Ubah">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                                                 </svg>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </td>
+                                            </a>
+
+                                            {{-- Delete Button --}}
+                                            <form method="POST" action="{{ route('workshop.spareparts.destroy', $part) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus sparepart ini dari katalog?')">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                        class="w-8 h-8 rounded-lg bg-red-950/40 hover:bg-red-900/50 border border-red-900/30 hover:border-red-650 flex items-center justify-center text-red-400 hover:text-red-300 transition-colors"
+                                                        title="Hapus">
+                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                                    </svg>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                @endif
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-6 py-12 text-center">
+                                <td colspan="{{ Auth::user()->isWorkshop() ? 5 : 4 }}" class="px-6 py-12 text-center">
                                     <svg class="w-12 h-12 text-zinc-700 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                                     </svg>
