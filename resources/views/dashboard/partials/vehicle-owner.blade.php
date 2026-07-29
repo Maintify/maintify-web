@@ -284,7 +284,7 @@
 
         {{-- Upcoming Service Alert --}}
         @if($upcomingService?->next_service_date)
-        @php $dLeft = now()->diffInDays($upcomingService->next_service_date, false); @endphp
+        @php $dLeft = (int) round(now()->startOfDay()->diffInDays($upcomingService->next_service_date->startOfDay(), false)); @endphp
         <div style="background:{{ $dLeft < 7 ? 'rgba(248,113,113,0.06)' : 'rgba(245,158,11,0.06)' }};border:1px solid {{ $dLeft < 7 ? 'rgba(248,113,113,0.25)' : 'rgba(245,158,11,0.25)' }};border-radius:16px;padding:16px;">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
                 <div style="width:32px;height:32px;border-radius:10px;background:{{ $dLeft < 7 ? 'rgba(248,113,113,0.12)' : 'rgba(245,158,11,0.12)' }};display:flex;align-items:center;justify-content:center;">
