@@ -91,20 +91,6 @@
                         <span class="font-bold text-zinc-200">{{ number_format($vehicle->current_odometer) }} Km</span>
                     </div>
 
-                    {{-- Engine Health Score --}}
-                    <div class="space-y-1.5 pt-2">
-                        <div class="flex justify-between items-center text-xs">
-                            <span class="text-zinc-500">Engine Health Score</span>
-                            <span class="font-semibold text-zinc-200">{{ $vehicle->health_score }}%</span>
-                        </div>
-                        <div class="w-full h-1.5 bg-zinc-950 rounded-full overflow-hidden">
-                            @php
-                                $healthColor = $vehicle->health_score >= 80 ? 'bg-emerald-500' : ($vehicle->health_score >= 50 ? 'bg-amber-500' : 'bg-red-500');
-                            @endphp
-                            <div class="h-full rounded-full {{ $healthColor }}" style="width: {{ $vehicle->health_score }}%;"></div>
-                        </div>
-                    </div>
-
                     {{-- Oil Life --}}
                     <div class="space-y-1.5 pt-2">
                         <div class="flex justify-between items-center text-xs">

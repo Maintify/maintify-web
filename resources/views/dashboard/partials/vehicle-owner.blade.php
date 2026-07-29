@@ -61,14 +61,7 @@
 @endif
 
 {{-- ── KPI Stats ── --}}
-@php
-    $healthStatus = $healthStatus ?? 'none';
-    $healthColor = match($healthStatus) { 'good' => '#4ade80', 'warning' => '#fbbf24', 'critical' => '#f87171', default => '#71717A' };
-    $healthBg    = match($healthStatus) { 'good' => 'rgba(74,222,128,0.1)', 'warning' => 'rgba(251,191,36,0.1)', 'critical' => 'rgba(248,113,113,0.1)', default => 'rgba(113,113,122,0.08)' };
-    $healthLabel = match($healthStatus) { 'good' => 'Baik', 'warning' => 'Perlu Perhatian', 'critical' => 'Kritis', default => 'Belum ada data' };
-@endphp
-
-<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
 
     {{-- Total Kendaraan --}}
     <div class="stat-card" style="position:relative;overflow:hidden;">
@@ -88,19 +81,6 @@
         @endif
     </div>
 
-    {{-- Health Score --}}
-    <div class="stat-card" style="position:relative;overflow:hidden;">
-        <div style="position:absolute;top:-10px;right:-10px;width:60px;height:60px;border-radius:50%;background:{{ $healthBg }};pointer-events:none;"></div>
-        <div class="stat-card-icon" style="background:{{ $healthBg }};color:{{ $healthColor }};">
-            <svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-            </svg>
-        </div>
-        <div class="stat-card-value" style="color:{{ $healthColor }};">{{ $avgHealthScore ? round($avgHealthScore) : '—' }}</div>
-        <div class="stat-card-label">Health Score</div>
-        <span style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;font-weight:500;padding:2px 8px;border-radius:6px;background:{{ $healthBg }};color:{{ $healthColor }};">{{ $healthLabel }}</span>
-    </div>
-
     {{-- Upcoming Service --}}
     <div class="stat-card">
         <div class="stat-card-icon" style="background:rgba(245,158,11,0.1);color:#fbbf24;">
@@ -117,7 +97,7 @@
         </div>
         <div class="stat-card-label">Service Berikutnya</div>
         @if($upcomingService?->next_service_date)
-            @php $daysLeft = now()->diffInDays($upcomingService->next_service_date, false); @endphp
+            @php $daysLeft = (int) round(now()->startOfDay()->diffInDays($upcomingService->next_service_date->startOfDay(), false)); @endphp
             <span style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;font-weight:500;padding:2px 8px;border-radius:6px;background:{{ $daysLeft < 7 ? 'rgba(248,113,113,0.1)' : 'rgba(245,158,11,0.1)' }};color:{{ $daysLeft < 7 ? '#f87171' : '#fbbf24' }};">
                 {{ $daysLeft >= 0 ? $daysLeft . ' hari lagi' : abs($daysLeft) . ' hari lewat' }}
             </span>

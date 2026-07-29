@@ -75,22 +75,6 @@
 
             <hr style="border: 0; border-top: 1px solid #2E3030; margin: 0;">
 
-            {{-- Health Indicator --}}
-            <div style="display: flex; flex-direction: column; gap: 4px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
-                    <span style="color: #71717A; font-weight: 500;">Kondisi Kendaraan</span>
-                    <span style="color: #F4F4F5; font-weight: 600;">{{ $vehicle->health_score }}%</span>
-                </div>
-                <div style="width: 100%; height: 6px; background-color: #1E2020; border-radius: 100px; overflow: hidden;">
-                    @php
-                        $healthColor = $vehicle->health_score >= 80 ? '#4ade80' : ($vehicle->health_score >= 50 ? '#fbbf24' : '#f87171');
-                    @endphp
-                    <div style="width: {{ $vehicle->health_score }}%; height: 100%; background-color: {{ $healthColor }}; border-radius: 100px;"></div>
-                </div>
-            </div>
-
-            <hr style="border: 0; border-top: 1px solid #2E3030; margin: 0;">
-
             {{-- Oil Life Indicator --}}
             <div style="display: flex; flex-direction: column; gap: 4px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
