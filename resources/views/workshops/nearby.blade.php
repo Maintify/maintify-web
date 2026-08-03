@@ -25,6 +25,17 @@
                     box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
                 }
             }
+            /* Leaflet Tile Visibility & Container fixes */
+            #map {
+                width: 100% !important;
+                height: 100% !important;
+                min-height: 400px;
+                background-color: #e5e3df !important;
+            }
+            .leaflet-tile-container img {
+                max-width: none !important;
+                max-height: none !important;
+            }
             /* Override Leaflet Popup Styles for Dark Theme Match */
             .leaflet-popup-content-wrapper {
                 background-color: #181a1a !important;

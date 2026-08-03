@@ -24,11 +24,11 @@ document.addEventListener('DOMContentLoaded', function () {
             zoomControl: false
         }).setView([lat, lng], zoom);
 
-        // Dark theme tiles (CartoDB Dark Matter)
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
-            subdomains: 'abcd',
-            maxZoom: 20
+        // Google Maps Standard Tile Layer (Tanpa API Key / tanpa CC)
+        L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: '&copy; <a href="https://maps.google.com">Google Maps</a>'
         }).addTo(map);
 
         L.control.zoom({
@@ -36,6 +36,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }).addTo(map);
 
         markersLayer.addTo(map);
+
+        // Ensure Leaflet recalculates container dimensions
+        setTimeout(function () {
+            map.invalidateSize();
+        }, 200);
 
         // Place User Marker
         const userIcon = L.divIcon({
