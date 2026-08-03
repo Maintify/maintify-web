@@ -29,7 +29,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email'    => ['required', 'string', 'email'],
+            'email' => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
             'login_as' => ['required', 'string', 'in:vehicle_owner,workshop,workshop_staff,super_admin'],
         ];
@@ -44,7 +44,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'login_as.required' => 'Silakan pilih tipe akun sebelum masuk.',
-            'login_as.in'       => 'Tipe akun tidak valid.',
+            'login_as.in' => 'Tipe akun tidak valid.',
         ];
     }
 
@@ -69,13 +69,13 @@ class LoginRequest extends FormRequest
 
         // Validate role match
         $selectedRole = $this->input('login_as');
-        $userRole     = $user?->role;
+        $userRole = $user?->role;
 
         // Map: workshop_staff is allowed when 'workshop' is selected too
         $roleMap = [
             'vehicle_owner' => ['vehicle_owner'],
-            'workshop'      => ['workshop', 'workshop_staff'],
-            'super_admin'   => ['super_admin'],
+            'workshop' => ['workshop', 'workshop_staff'],
+            'super_admin' => ['super_admin'],
         ];
 
         $allowedRoles = $roleMap[$selectedRole] ?? [];
@@ -86,9 +86,9 @@ class LoginRequest extends FormRequest
 
             $label = match ($selectedRole) {
                 'vehicle_owner' => 'Pelanggan',
-                'workshop'      => 'Bengkel',
-                'super_admin'   => 'Admin',
-                default         => 'yang dipilih',
+                'workshop' => 'Bengkel',
+                'super_admin' => 'Admin',
+                default => 'yang dipilih',
             };
 
             throw ValidationException::withMessages([
