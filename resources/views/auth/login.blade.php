@@ -34,6 +34,62 @@
     <form method="POST" action="{{ route('login') }}" style="display:flex;flex-direction:column;gap:18px;">
         @csrf
 
+        {{-- Login As Role Selector --}}
+        <div class="form-group">
+            <label style="font-size:13px;font-weight:600;color:#F4F4F5;letter-spacing:0.01em;display:block;margin-bottom:8px;">Masuk Sebagai</label>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;" role="group" aria-label="Pilih tipe akun">
+
+                {{-- Pelanggan --}}
+                <label id="role-pelanggan-label"
+                       style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:10px;border:1.5px solid;cursor:pointer;transition:all 150ms;
+                              {{ old('login_as', 'vehicle_owner') === 'vehicle_owner' ? 'border-color:#410008;background:rgba(65,0,8,0.15);' : 'border-color:#2E3030;background:rgba(255,255,255,0.02);' }}">
+                    <input type="radio" name="login_as" value="vehicle_owner"
+                           {{ old('login_as', 'vehicle_owner') === 'vehicle_owner' ? 'checked' : '' }}
+                           style="display:none;" onchange="updateRoleUI()"
+                    />
+                    <svg style="width:20px;height:20px;{{ old('login_as', 'vehicle_owner') === 'vehicle_owner' ? 'color:#ff9aa4;' : 'color:#52565A;' }}transition:color 150ms;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    <span style="font-size:11px;font-weight:600;letter-spacing:0.02em;text-align:center;
+                                 {{ old('login_as', 'vehicle_owner') === 'vehicle_owner' ? 'color:#ff9aa4;' : 'color:#71717A;' }}transition:color 150ms;">Pelanggan</span>
+                </label>
+
+                {{-- Bengkel --}}
+                <label id="role-bengkel-label"
+                       style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:10px;border:1.5px solid;cursor:pointer;transition:all 150ms;
+                              {{ old('login_as') === 'workshop' ? 'border-color:#410008;background:rgba(65,0,8,0.15);' : 'border-color:#2E3030;background:rgba(255,255,255,0.02);' }}">
+                    <input type="radio" name="login_as" value="workshop"
+                           {{ old('login_as') === 'workshop' ? 'checked' : '' }}
+                           style="display:none;" onchange="updateRoleUI()"
+                    />
+                    <svg style="width:20px;height:20px;{{ old('login_as') === 'workshop' ? 'color:#ff9aa4;' : 'color:#52565A;' }}transition:color 150ms;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                    <span style="font-size:11px;font-weight:600;letter-spacing:0.02em;text-align:center;
+                                 {{ old('login_as') === 'workshop' ? 'color:#ff9aa4;' : 'color:#71717A;' }}transition:color 150ms;">Bengkel</span>
+                </label>
+
+                {{-- Admin --}}
+                <label id="role-admin-label"
+                       style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:10px 8px;border-radius:10px;border:1.5px solid;cursor:pointer;transition:all 150ms;
+                              {{ old('login_as') === 'super_admin' ? 'border-color:#410008;background:rgba(65,0,8,0.15);' : 'border-color:#2E3030;background:rgba(255,255,255,0.02);' }}">
+                    <input type="radio" name="login_as" value="super_admin"
+                           {{ old('login_as') === 'super_admin' ? 'checked' : '' }}
+                           style="display:none;" onchange="updateRoleUI()"
+                    />
+                    <svg style="width:20px;height:20px;{{ old('login_as') === 'super_admin' ? 'color:#ff9aa4;' : 'color:#52565A;' }}transition:color 150ms;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                    <span style="font-size:11px;font-weight:600;letter-spacing:0.02em;text-align:center;
+                                 {{ old('login_as') === 'super_admin' ? 'color:#ff9aa4;' : 'color:#71717A;' }}transition:color 150ms;">Admin</span>
+                </label>
+            </div>
+            @error('login_as')
+                <p style="margin-top:6px;font-size:12px;color:#f87171;">{{ $message }}</p>
+            @enderror
+        </div>
+
+
         {{-- Email --}}
         <div class="form-group">
             <label for="email" class="form-label" style="font-size:13px;font-weight:600;letter-spacing:0.01em;">
@@ -165,4 +221,37 @@
             50% { opacity: 0.4; }
         }
     </style>
+
+    <script>
+        function updateRoleUI() {
+            const roles = [
+                { value: 'vehicle_owner', labelId: 'role-pelanggan-label' },
+                { value: 'workshop',      labelId: 'role-bengkel-label' },
+                { value: 'super_admin',   labelId: 'role-admin-label' },
+            ];
+
+            roles.forEach(function(role) {
+                const label = document.getElementById(role.labelId);
+                const radio = label ? label.querySelector('input[type="radio"]') : null;
+                const icon  = label ? label.querySelector('svg') : null;
+                const text  = label ? label.querySelector('span') : null;
+                if (!label || !radio) return;
+
+                if (radio.checked) {
+                    label.style.borderColor = '#410008';
+                    label.style.background  = 'rgba(65,0,8,0.15)';
+                    if (icon)  icon.style.color = '#ff9aa4';
+                    if (text)  text.style.color = '#ff9aa4';
+                } else {
+                    label.style.borderColor = '#2E3030';
+                    label.style.background  = 'rgba(255,255,255,0.02)';
+                    if (icon)  icon.style.color = '#52565A';
+                    if (text)  text.style.color = '#71717A';
+                }
+            });
+        }
+
+        // Run on load to sync state from server-side old() values
+        document.addEventListener('DOMContentLoaded', updateRoleUI);
+    </script>
 </x-guest-layout>

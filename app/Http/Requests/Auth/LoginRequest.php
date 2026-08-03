@@ -29,8 +29,22 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email'    => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
+            'login_as' => ['required', 'string', 'in:vehicle_owner,workshop,workshop_staff,super_admin'],
+        ];
+    }
+
+    /**
+     * Custom validation messages.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'login_as.required' => 'Silakan pilih tipe akun sebelum masuk.',
+            'login_as.in'       => 'Tipe akun tidak valid.',
         ];
     }
 
@@ -52,6 +66,38 @@ class LoginRequest extends FormRequest
         }
 
         $user = Auth::user();
+
+        // Validate role match
+        $selectedRole = $this->input('login_as');
+        $userRole     = $user?->role;
+
+        // Map: workshop_staff is allowed when 'workshop' is selected too
+        $roleMap = [
+            'vehicle_owner' => ['vehicle_owner'],
+            'workshop'      => ['workshop', 'workshop_staff'],
+            'super_admin'   => ['super_admin'],
+        ];
+
+        $allowedRoles = $roleMap[$selectedRole] ?? [];
+
+        if (! in_array($userRole, $allowedRoles, true)) {
+            Auth::logout();
+            RateLimiter::hit($this->throttleKey());
+
+            $label = match ($selectedRole) {
+                'vehicle_owner' => 'Pelanggan',
+                'workshop'      => 'Bengkel',
+                'super_admin'   => 'Admin',
+                default         => 'yang dipilih',
+            };
+
+            throw ValidationException::withMessages([
+                'login_as' => __('Akun ini bukan akun :role. Pastikan Anda memilih tipe akun yang sesuai.', [
+                    'role' => $label,
+                ]),
+            ]);
+        }
+
         if ($user && ! $user->is_active) {
             Auth::logout();
             throw ValidationException::withMessages([
