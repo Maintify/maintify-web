@@ -7,6 +7,7 @@ use App\Models\ServiceRecord;
 use App\Models\User;
 use App\Models\Vehicle;
 use App\Models\Workshop;
+use App\Models\WorkshopStaff;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -385,10 +386,10 @@ class QrResolveTest extends TestCase
     {
         [$owner, $workshop] = $this->createApprovedWorkshop();
         $staffUser = User::factory()->create(['role' => User::ROLE_WORKSHOP_STAFF]);
-        \App\Models\WorkshopStaff::create([
+        WorkshopStaff::create([
             'workshop_id' => $workshop->id,
             'user_id' => $staffUser->id,
-            'position' => \App\Models\WorkshopStaff::POSITION_MECHANIC,
+            'position' => WorkshopStaff::POSITION_MECHANIC,
             'is_active' => true,
         ]);
 

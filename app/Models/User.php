@@ -120,7 +120,9 @@ class User extends Authenticatable
      */
     public function getActiveWorkshopAttribute(): ?Workshop
     {
-        return $this->workshop ?? $this->workshopStaff?->workshop;
+        $workshop = $this->workshop ?? $this->workshopStaff?->workshop;
+
+        return $workshop instanceof Workshop ? $workshop : null;
     }
 
     /**
