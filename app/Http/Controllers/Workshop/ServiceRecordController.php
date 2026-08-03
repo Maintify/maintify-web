@@ -117,6 +117,7 @@ class ServiceRecordController extends Controller
      * Store a new service record.
      *
      * - Validates odometer (Edge Case #5)
+     * 
      * - Saves service record + spareparts
      * - Auto-updates vehicle health stats (FR-025, FR-026)
      * - Sends notification to vehicle owner (FR-111)
