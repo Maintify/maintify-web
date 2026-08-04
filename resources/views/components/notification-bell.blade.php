@@ -1,6 +1,12 @@
 @php
-    $unreadCount = auth()->check() ? auth()->user()->notifications()->unread()->count() : 0;
-    $recentNotifications = auth()->check() ? auth()->user()->notifications()->orderBy('created_at', 'desc')->take(5)->get() : collect();
+    if (auth()->check()) {
+        $userNotifications = auth()->user()->notifications()->orderBy('created_at', 'desc')->take(5)->get();
+        $unreadCount = $userNotifications->where('is_read', false)->count();
+        $recentNotifications = $userNotifications;
+    } else {
+        $unreadCount = 0;
+        $recentNotifications = collect();
+    }
 @endphp
 
 <div class="relative" x-data="{ open: false }" @click.outside="open = false" style="display: inline-block;">
