@@ -1,0 +1,29 @@
+{
+  "resources/css/app.css": {
+    "file": "assets/app-QF-2PgHt.css",
+    "src": "resources/css/app.css",
+    "isEntry": true,
+    "name": "app",
+    "names": [
+      "app.css"
+    ]
+  },
+  "resources/js/app.js": {
+    "file": "assets/app-BfpX1doZ.js",
+    "name": "app",
+    "src": "resources/js/app.js",
+    "isEntry": true
+  },
+  "resources/js/qr-scanner.js": {
+    "file": "assets/qr-scanner-BFaX4FMO.js",
+    "name": "qr-scanner",
+    "src": "resources/js/qr-scanner.js",
+    "isEntry": true
+  },
+  "resources/js/workshop-map.js": {
+    "file": "assets/workshop-map-CWepS5UO.js",
+    "name": "workshop-map",
+    "src": "resources/js/workshop-map.js",
+    "isEntry": true
+  }
+}
