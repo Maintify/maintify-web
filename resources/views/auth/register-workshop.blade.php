@@ -34,37 +34,40 @@
         }
     }">
         {{-- Stepper Progress --}}
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;position:relative;padding:0 8px;">
+        <div style="margin-bottom:28px;position:relative;padding:0 12px;">
             <!-- Line background -->
-            <div style="position:absolute;top:16px;left:24px;right:24px;height:2px;background:#2E3030;z-index:0;"></div>
+            <div style="position:absolute;top:18px;left:36px;right:36px;height:2px;background:#2E3030;z-index:0;"></div>
             <!-- Line active -->
-            <div :style="'width: ' + ((step - 1) * 50) + '%'" style="position:absolute;top:16px;left:24px;height:2px;background:#ff9aa4;z-index:0;transition:width 300ms;"></div>
+            <div :style="'width: calc(' + ((step - 1) * 50) + '% - ' + ((step - 1) * 18) + 'px)'" 
+                 style="position:absolute;top:18px;left:36px;height:2px;background:linear-gradient(90deg, #ff9aa4, #ff5f71);z-index:0;transition:width 300ms ease-in-out;"></div>
  
-            <!-- Step 1 -->
-            <div style="display:flex;flex-direction:column;align-items:center;z-index:1;cursor:pointer;" @click="step = 1">
-                <div :style="step >= 1 ? 'background-color:#410008;border-color:#ff9aa4;color:#ff9aa4;' : 'background-color:#121414;border-color:#2E3030;color:#71717A;'"
-                     style="width:32px;height:32px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:all 300ms;">
-                    1
+            <div style="display:flex;justify-content:space-between;align-items:center;position:relative;z-index:1;">
+                <!-- Step 1 -->
+                <div style="display:flex;flex-direction:column;align-items:center;cursor:pointer;flex:1;" @click="step = 1">
+                    <div :style="step >= 1 ? 'background:#410008;border-color:#ff9aa4;color:#ff9aa4;box-shadow:0 0 12px rgba(255,154,164,0.35);' : 'background:#1E2020;border-color:#2E3030;color:#71717A;'"
+                         style="width:36px;height:36px;min-width:36px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all 300ms ease;box-sizing:border-box;">
+                        1
+                    </div>
+                    <span style="font-size:12px;font-weight:600;margin-top:8px;letter-spacing:0.01em;white-space:nowrap;" :style="step >= 1 ? 'color:#F4F4F5;' : 'color:#71717A;'">Pemilik</span>
                 </div>
-                <span style="font-size:11px;font-weight:600;margin-top:6px;" :style="step >= 1 ? 'color:#F4F4F5;' : 'color:#71717A;'">Pemilik</span>
-            </div>
  
-            <!-- Step 2 -->
-            <div style="display:flex;flex-direction:column;align-items:center;z-index:1;cursor:pointer;" @click="if (validateStep1()) step = 2">
-                <div :style="step >= 2 ? 'background-color:#410008;border-color:#ff9aa4;color:#ff9aa4;' : 'background-color:#121414;border-color:#2E3030;color:#71717A;'"
-                     style="width:32px;height:32px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:all 300ms;">
-                    2
+                <!-- Step 2 -->
+                <div style="display:flex;flex-direction:column;align-items:center;cursor:pointer;flex:1;" @click="if (validateStep1()) step = 2">
+                    <div :style="step >= 2 ? 'background:#410008;border-color:#ff9aa4;color:#ff9aa4;box-shadow:0 0 12px rgba(255,154,164,0.35);' : 'background:#1E2020;border-color:#2E3030;color:#71717A;'"
+                         style="width:36px;height:36px;min-width:36px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all 300ms ease;box-sizing:border-box;">
+                        2
+                    </div>
+                    <span style="font-size:12px;font-weight:600;margin-top:8px;letter-spacing:0.01em;white-space:nowrap;" :style="step >= 2 ? 'color:#F4F4F5;' : 'color:#71717A;'">Bengkel</span>
                 </div>
-                <span style="font-size:11px;font-weight:600;margin-top:6px;" :style="step >= 2 ? 'color:#F4F4F5;' : 'color:#71717A;'">Bengkel</span>
-            </div>
  
-            <!-- Step 3 -->
-            <div style="display:flex;flex-direction:column;align-items:center;z-index:1;cursor:pointer;" @click="if (validateStep1() && validateStep2()) step = 3">
-                <div :style="step >= 3 ? 'background-color:#410008;border-color:#ff9aa4;color:#ff9aa4;' : 'background-color:#121414;border-color:#2E3030;color:#71717A;'"
-                     style="width:32px;height:32px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;transition:all 300ms;">
-                    3
+                <!-- Step 3 -->
+                <div style="display:flex;flex-direction:column;align-items:center;cursor:pointer;flex:1;" @click="if (validateStep1() && validateStep2()) step = 3">
+                    <div :style="step >= 3 ? 'background:#410008;border-color:#ff9aa4;color:#ff9aa4;box-shadow:0 0 12px rgba(255,154,164,0.35);' : 'background:#1E2020;border-color:#2E3030;color:#71717A;'"
+                         style="width:36px;height:36px;min-width:36px;border-radius:50%;border:2px solid;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all 300ms ease;box-sizing:border-box;">
+                        3
+                    </div>
+                    <span style="font-size:12px;font-weight:600;margin-top:8px;letter-spacing:0.01em;white-space:nowrap;" :style="step >= 3 ? 'color:#F4F4F5;' : 'color:#71717A;'">Dokumen</span>
                 </div>
-                <span style="font-size:11px;font-weight:600;margin-top:6px;" :style="step >= 3 ? 'color:#F4F4F5;' : 'color:#71717A;'">Dokumen</span>
             </div>
         </div>
  
