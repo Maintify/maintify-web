@@ -290,10 +290,14 @@
                 <div class="sidebar-footer">
                     <div class="flex items-center gap-3">
                         <div class="avatar-sm flex-shrink-0"
-                            style="background-color:#410008;border-radius:50%;display:flex;align-items:center;justify-content:center;width:36px;height:36px;">
-                            <span style="color:#fff;font-size:14px;font-weight:600;">
-                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                            </span>
+                            style="background-color:#410008;border-radius:50%;display:flex;align-items:center;justify-content:center;width:36px;height:36px;overflow:hidden;">
+                            @if(Auth::user()->photo_url)
+                                <img src="{{ Auth::user()->photo_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                            @else
+                                <span style="color:#fff;font-size:14px;font-weight:600;">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                </span>
+                            @endif
                         </div>
                         <div class="flex-1 min-w-0">
                             <p
@@ -363,11 +367,15 @@
                                 @mouseenter="$el.style.backgroundColor='#2A2D2D';$el.style.color='#F4F4F5'"
                                 @mouseleave="!open && ($el.style.backgroundColor='transparent') && ($el.style.color='#A1A1AA')"
                                 aria-expanded="false" aria-haspopup="true">
-                                <div class="avatar-sm"
-                                    style="background-color:#410008;border-radius:50%;display:flex;align-items:center;justify-content:center;width:32px;height:32px;">
-                                    <span style="color:#fff;font-size:13px;font-weight:600;">
-                                        {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                                    </span>
+                                <div class="avatar-sm flex-shrink-0"
+                                    style="background-color:#410008;border-radius:50%;display:flex;align-items:center;justify-content:center;width:32px;height:32px;overflow:hidden;">
+                                    @if(Auth::user()->photo_url)
+                                        <img src="{{ Auth::user()->photo_url }}" alt="{{ Auth::user()->name }}" class="w-full h-full object-cover" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+                                    @else
+                                        <span style="color:#fff;font-size:13px;font-weight:600;">
+                                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                        </span>
+                                    @endif
                                 </div>
                                 <svg style="width:14px;height:14px;" :class="{ 'rotate-180': open }" fill="none"
                                     stroke="currentColor" viewBox="0 0 24 24" class="transition-transform">
