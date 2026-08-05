@@ -5,15 +5,22 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Workshop;
+use App\Services\OtpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 
 class WorkshopRegistrationController extends Controller
 {
+    protected OtpService $otpService;
+
+    public function __construct(OtpService $otpService)
+    {
+        $this->otpService = $otpService;
+    }
+
     /**
      * Tampilkan form pendaftaran bengkel (multi-step).
      */
@@ -24,7 +31,7 @@ class WorkshopRegistrationController extends Controller
 
     /**
      * Proses pendaftaran bengkel baru.
-     * User & Workshop dibuat, status pending menunggu approval admin.
+     * User & Workshop dibuat, OTP dikirim ke email untuk verifikasi.
      */
     public function store(Request $request): RedirectResponse
     {
@@ -57,12 +64,13 @@ class WorkshopRegistrationController extends Controller
             $legalDocumentPath = $request->file('legal_document')->store('documents', 'public');
         }
 
-        // Buat user dengan role workshop
+        // Buat user dengan role workshop & email_verified_at = null
         $user = User::create([
             'name' => $request->owner_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => User::ROLE_WORKSHOP,
+            'email_verified_at' => null,
         ]);
 
         // Buat data bengkel dengan status pending
@@ -82,10 +90,13 @@ class WorkshopRegistrationController extends Controller
             'status' => Workshop::STATUS_PENDING,
         ]);
 
-        // Login otomatis
-        Auth::login($user);
+        // Generate & Send OTP code to workshop owner email
+        $this->otpService->generateAndSendOtp($user);
 
-        return redirect()->route('workshop.pending')
-            ->with('success', 'Pendaftaran berhasil! Akun Anda sedang menunggu verifikasi dari admin.');
+        // Put user ID into session for OTP verification
+        $request->session()->put('otp_user_id', $user->id);
+
+        return redirect()->route('auth.otp.verify')
+            ->with('status', 'Pendaftaran bengkel berhasil disubmit! Kode OTP verifikasi telah dikirim ke email Anda. Silakan verifikasi kode OTP untuk mengaktifkan akun.');
     }
 }

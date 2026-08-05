@@ -3,7 +3,7 @@
  
     {{-- Heading --}}
     <div style="margin-bottom:24px;">
-        <h2 style="font-size:22px;font-weight:700;color:#F4F4F5;letter-spacing:-0.02em;">Daftar Bengkel Mitra 🔧</h2>
+        <h2 style="font-size:22px;font-weight:700;color:#F4F4F5;letter-spacing:-0.02em;">Daftar Bengkel Mitra </h2>
         <p style="color:#71717A;font-size:14px;margin-top:4px;">Daftarkan bengkel Anda ke platform Maintify</p>
     </div>
  
@@ -87,7 +87,7 @@
  
                     {{-- Email Pemilik --}}
                     <div class="form-group" style="margin-bottom:12px;">
-                        <label for="email" class="form-label">Email Pemilik (Untuk Login)</label>
+                        <label for="email" class="form-label">Email Perusahaan / Pemilik </label>
                         <input id="email" type="email" name="email" x-model="email"
                             required placeholder="nama@email.com"
                             class="form-input {{ $errors->has('email') ? 'form-input-error' : '' }}" />

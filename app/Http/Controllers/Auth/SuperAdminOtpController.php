@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\AuditLog;
 use App\Models\User;
+use App\Models\Workshop;
 use App\Services\OtpService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -82,8 +83,13 @@ class SuperAdminOtpController extends Controller
             // Regenerate session for security
             $request->session()->regenerate();
 
-            if ($user->role === User::ROLE_WORKSHOP && ! $user->workshop && \Illuminate\Support\Facades\Route::has('register.workshop')) {
-                return redirect()->intended(route('register.workshop'));
+            if ($user->role === User::ROLE_WORKSHOP) {
+                if (! $user->workshop && \Illuminate\Support\Facades\Route::has('register.workshop')) {
+                    return redirect()->intended(route('register.workshop'));
+                }
+                if ($user->workshop && $user->workshop->status !== Workshop::STATUS_APPROVED) {
+                    return redirect()->intended(route('workshop.pending'));
+                }
             }
 
             return redirect()->intended(route('dashboard', absolute: false));

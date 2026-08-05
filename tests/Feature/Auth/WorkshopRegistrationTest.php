@@ -30,6 +30,7 @@ class WorkshopRegistrationTest extends TestCase
     public function test_new_workshop_can_register_successfully(): void
     {
         Storage::fake('public');
+        \Illuminate\Support\Facades\Mail::fake();
 
         $file = UploadedFile::fake()->create('nib_document.pdf', 2048, 'application/pdf');
 
@@ -51,21 +52,23 @@ class WorkshopRegistrationTest extends TestCase
             'password_confirmation' => 'password123',
         ]);
 
-        // 1. Harus redirect ke halaman pending
-        $response->assertRedirect(route('workshop.pending'));
+        // 1. Harus redirect ke halaman OTP verify
+        $response->assertRedirect(route('auth.otp.verify'));
 
-        // 2. User harus terautentikasi
-        $this->assertAuthenticated();
+        // 2. User belum terautentikasi (guest)
+        $this->assertGuest();
 
-        // 3. User & Workshop harus ada di database
+        // 3. User & Workshop harus ada di database dengan email_verified_at = null
         $this->assertDatabaseHas('users', [
             'name' => 'John Owner',
             'email' => 'owner@example.com',
             'role' => User::ROLE_WORKSHOP,
+            'email_verified_at' => null,
         ]);
 
         $user = User::where('email', 'owner@example.com')->first();
         $this->assertNotNull($user);
+        $this->assertEquals($user->id, session('otp_user_id'));
 
         $this->assertDatabaseHas('workshops', [
             'user_id' => $user->id,
@@ -83,6 +86,11 @@ class WorkshopRegistrationTest extends TestCase
         $workshop = Workshop::where('user_id', $user->id)->first();
         $this->assertNotNull($workshop->legal_document_url);
         Storage::disk('public')->assertExists($workshop->legal_document_url);
+
+        // 5. Email OTP harus terkirim
+        \Illuminate\Support\Facades\Mail::assertSent(\App\Mail\OtpMail::class, function ($mail) use ($user) {
+            return $mail->hasTo($user->email);
+        });
     }
 
     /**
