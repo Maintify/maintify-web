@@ -135,7 +135,7 @@ Route::middleware(['auth', 'verified', 'role:super_admin'])->prefix('admin')->na
     Route::post('/workshops/{workshop}/revision', [WorkshopVerificationController::class, 'requestRevision'])->name('workshops.revision');
 
     // User Management
-    Route::resource('users', UserController::class)->only(['index', 'show', 'update']);
+    Route::resource('users', UserController::class)->only(['index', 'show', 'update', 'destroy']);
 
     // Vehicle Monitoring
     Route::resource('vehicles', App\Http\Controllers\SuperAdmin\VehicleController::class)->only(['index', 'show']);

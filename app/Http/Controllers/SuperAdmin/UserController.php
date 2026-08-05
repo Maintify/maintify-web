@@ -88,4 +88,38 @@ class UserController extends Controller
 
         return redirect()->back()->with('success', "Akun pengguna '{$user->name}' berhasil {$statusMsg}.");
     }
+
+    /**
+     * Hapus akun pengguna.
+     */
+    public function destroy(User $user): RedirectResponse
+    {
+        // Cegah Super Admin menghapus akun sendiri
+        if ($user->id === auth()->id()) {
+            return redirect()->back()->withErrors([
+                'user' => 'Anda tidak dapat menghapus akun Anda sendiri.',
+            ]);
+        }
+
+        $userName = $user->name;
+        $userEmail = $user->email;
+        $userRole = $user->role;
+        $userId = $user->id;
+
+        $user->delete();
+
+        // Catat ke Audit Log
+        AuditLog::record(
+            'user_delete',
+            'users',
+            $userId,
+            [
+                'name' => $userName,
+                'email' => $userEmail,
+                'role' => $userRole,
+            ]
+        );
+
+        return redirect()->route('admin.users.index')->with('success', "Akun pengguna '{$userName}' berhasil dihapus.");
+    }
 }
