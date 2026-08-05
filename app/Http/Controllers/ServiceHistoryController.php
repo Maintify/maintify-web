@@ -11,18 +11,44 @@ use Illuminate\View\View;
 class ServiceHistoryController extends Controller
 {
     /**
-     * Display the service history timeline for a vehicle.
+     * Display the service history timeline for user's vehicle(s).
      */
-    public function index(Vehicle $vehicle, Request $request): View
+    public function index(Request $request, ?Vehicle $vehicle = null): View
     {
-        // Authorize: check if user owns the vehicle
-        if ($vehicle->user_id !== $request->user()->id) {
-            abort(403, 'Unauthorized.');
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+
+        // Check if route parameter vehicle is provided
+        $selectedVehicle = null;
+        if ($vehicle && $vehicle->exists) {
+            if ($vehicle->user_id !== $user->id) {
+                abort(403, 'Unauthorized.');
+            }
+            $selectedVehicle = $vehicle;
+        } else {
+            $filterVehicleId = $request->input('vehicle') ?? $request->input('vehicle_id');
+            if ($filterVehicleId) {
+                $requestedVehicle = Vehicle::find($filterVehicleId);
+                if ($requestedVehicle && $requestedVehicle->user_id !== $user->id) {
+                    abort(403, 'Unauthorized.');
+                }
+                $selectedVehicle = $requestedVehicle;
+            }
         }
 
-        // 1. Calculate General/Summary Statistics (on all records, unfiltered)
-        $allRecords = $vehicle->serviceRecords()->orderBy('service_date', 'asc')->get();
+        $userVehicles = $user->vehicles()->orderBy('brand')->get();
+        $userVehicleIds = $userVehicles->pluck('id');
+
+        // Determine target vehicle IDs to query
+        $targetVehicleIds = $selectedVehicle ? collect([$selectedVehicle->id]) : $userVehicleIds;
+
+        // 1. Calculate General/Summary Statistics (unfiltered for target vehicles)
+        $allRecords = ServiceRecord::whereIn('vehicle_id', $targetVehicleIds)
+            ->orderBy('service_date', 'asc')
+            ->get();
+
         $frequency = $allRecords->count();
+        $totalCostAll = $allRecords->sum('total_cost');
         $avgOdoInterval = null;
         $avgDaysInterval = null;
 
@@ -45,11 +71,14 @@ class ServiceHistoryController extends Controller
             $avgDaysInterval = round($totalDaysDiff / $intervalsCount);
         }
 
-        // 2. Query for filtered list (latest first for timeline layout)
-        $query = $vehicle->serviceRecords()->with(['workshop', 'parts'])->orderBy('service_date', 'desc');
+        // 2. Query for list (latest first for timeline layout)
+        $query = ServiceRecord::whereIn('vehicle_id', $targetVehicleIds)
+            ->with(['vehicle', 'workshop', 'parts'])
+            ->orderBy('service_date', 'desc');
 
         // Apply filters
         $filters = [
+            'vehicle_id' => $selectedVehicle?->id ?? $request->input('vehicle_id'),
             'service_type' => $request->input('service_type'),
             'start_date' => $request->input('start_date'),
             'end_date' => $request->input('end_date'),
@@ -70,10 +99,16 @@ class ServiceHistoryController extends Controller
         $serviceRecords = $query->paginate(10)->withQueryString();
         $serviceTypes = ServiceRecord::SERVICE_TYPES;
 
+        // For backward compatibility with existing views/tests expecting $vehicle
+        $vehicle = $selectedVehicle ?? ($userVehicles->first() ?? new Vehicle());
+
         return view('vehicles.service-history', compact(
             'vehicle',
+            'selectedVehicle',
+            'userVehicles',
             'serviceRecords',
             'frequency',
+            'totalCostAll',
             'avgOdoInterval',
             'avgDaysInterval',
             'serviceTypes',

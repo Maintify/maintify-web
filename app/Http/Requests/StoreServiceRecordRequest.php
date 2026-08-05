@@ -54,6 +54,7 @@ class StoreServiceRecordRequest extends FormRequest
                 },
             ],
             'mechanic_notes' => ['nullable', 'string', 'max:2000'],
+            'service_cost' => ['nullable', 'numeric', 'min:0'],
             'total_cost' => ['required', 'numeric', 'min:0'],
             'status' => ['required', 'string', 'in:completed,in_progress'],
 

@@ -87,7 +87,7 @@
                     </div>
                     <div class="text-sm">
                         <label for="is_active" class="font-medium text-zinc-300">Aktif</label>
-                        <p class="text-zinc-500 text-xs">Aktifkan agar sparepart ini muncul di formulir input service</p>
+                        <p class="text-zinc-500 text-xs">Aktifkan agar sparepart ini muncul di formulir input servis</p>
                     </div>
                 </div>
 

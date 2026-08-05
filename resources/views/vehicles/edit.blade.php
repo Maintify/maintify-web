@@ -10,7 +10,7 @@
                 </svg>
                 Kembali ke Detail Kendaraan
             </a>
-            <h1 style="font-size: 24px; font-weight: 800; color: #F4F4F5; letter-spacing: -0.02em; margin-top: 12px; margin-bottom: 6px;">Edit Data Kendaraan ✏️</h1>
+            <h1 style="font-size: 24px; font-weight: 800; color: #F4F4F5; letter-spacing: -0.02em; margin-top: 12px; margin-bottom: 6px;">Edit Data Kendaraan</h1>
             <p style="color: #71717A; font-size: 14px; margin: 0;">Perbarui informasi kendaraan. Plat nomor dan nomor rangka (VIN) tidak dapat diubah setelah terdaftar.</p>
         </div>
 

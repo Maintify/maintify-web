@@ -30,13 +30,55 @@
 
         {{-- ── Form Card ── --}}
         <div class="bg-[#181A1A] border border-[#2E3030] rounded-2xl p-6 shadow-xl">
-            <form method="POST" action="{{ route('workshop.profile.update') }}" class="space-y-6">
+            <form method="POST" action="{{ route('workshop.profile.update') }}" enctype="multipart/form-data" class="space-y-6">
                 @csrf
                 @method('PUT')
 
                 {{-- ── Section 1: Informasi Dasar ── --}}
                 <div>
                     <h3 class="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-4">Informasi Utama</h3>
+                    
+                    {{-- Logo Bengkel --}}
+                    <div class="mb-5" x-data="{ logoPreview: null }">
+                        <label class="block text-sm font-medium text-zinc-300 mb-2">Logo / Foto Bengkel</label>
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 rounded-xl overflow-hidden border border-zinc-700 bg-zinc-900 flex items-center justify-center flex-shrink-0">
+                                <template x-if="logoPreview">
+                                    <img :src="logoPreview" class="w-full h-full object-cover" />
+                                </template>
+                                <template x-if="!logoPreview">
+                                    @if($workshop->logo_url)
+                                        <img src="{{ asset($workshop->logo_url) }}" alt="{{ $workshop->name }}" class="w-full h-full object-cover" />
+                                    @else
+                                        <svg class="w-8 h-8 text-zinc-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                        </svg>
+                                    @endif
+                                </template>
+                            </div>
+
+                            <div>
+                                <input type="file"
+                                       id="logo"
+                                       name="logo"
+                                       accept="image/png, image/jpeg, image/jpg"
+                                       @change="
+                                           const file = $event.target.files[0];
+                                           if (file) {
+                                               const reader = new FileReader();
+                                               reader.onload = (e) => { logoPreview = e.target.result; };
+                                               reader.readAsDataURL(file);
+                                           }
+                                       "
+                                       class="block w-full text-xs text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-zinc-800 file:text-zinc-300 hover:file:bg-zinc-700 cursor-pointer" />
+                                <p class="text-xs text-zinc-500 mt-1">Format: JPG, JPEG, PNG (Maks 5MB)</p>
+                                @error('logo')
+                                    <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                         {{-- Name --}}
                         <div>

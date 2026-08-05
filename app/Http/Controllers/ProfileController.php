@@ -26,9 +26,14 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        $user->fill($request->safe()->except(['photo']));
+        $user->fill($request->safe()->except(['photo', 'remove_photo']));
 
-        if ($request->hasFile('photo')) {
+        if ($request->boolean('remove_photo')) {
+            if ($user->photo_url) {
+                $fileUploadService->delete($user->photo_url);
+                $user->photo_url = null;
+            }
+        } elseif ($request->hasFile('photo')) {
             // Hapus foto lama jika ada
             if ($user->photo_url) {
                 $fileUploadService->delete($user->photo_url);

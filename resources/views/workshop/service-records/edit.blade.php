@@ -1,6 +1,6 @@
 <x-app-layout>
-    @slot('pageTitle', 'Ubah Service Record')
-    @slot('breadcrumb', 'Workshop / Scan / Ubah Service')
+    @slot('pageTitle', 'Ubah Record Servis')
+    @slot('breadcrumb', 'Workshop / Scan / Ubah Servis')
 
     @push('head')
         <style>
@@ -30,8 +30,8 @@
                 </svg>
             </a>
             <div>
-                <h1 class="text-2xl font-bold text-zinc-100 tracking-tight">Ubah Service Record</h1>
-                <p class="text-sm text-zinc-500 mt-0.5">Perbarui detail service untuk kendaraan di bawah ini</p>
+                <h1 class="text-2xl font-bold text-zinc-100 tracking-tight">Ubah Record Servis</h1>
+                <p class="text-sm text-zinc-500 mt-0.5">Perbarui detail servis untuk kendaraan di bawah ini</p>
             </div>
         </div>
 
@@ -68,20 +68,20 @@
 
                     {{-- Service Type ── --}}
                     <div class="bg-[#181A1A] border border-[#2E3030] rounded-2xl p-5">
-                        <h2 class="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-4">Informasi Service</h2>
+                        <h2 class="text-sm font-semibold text-zinc-400 uppercase tracking-wider mb-4">Informasi Servis</h2>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {{-- Service Type --}}
                             <div class="sm:col-span-2">
                                 <label for="service_type" class="block text-sm font-medium text-zinc-300 mb-1.5">
-                                    Jenis Service <span class="text-red-500">*</span>
+                                    Jenis Servis <span class="text-red-500">*</span>
                                 </label>
                                 <select id="service_type"
                                         name="service_type"
                                         x-model="serviceType"
                                         required
                                         class="form-input w-full bg-zinc-900 border border-zinc-700 text-zinc-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors">
-                                    <option value="">-- Pilih Jenis Service --</option>
+                                    <option value="">-- Pilih Jenis Servis --</option>
                                     @foreach($serviceTypes as $key => $label)
                                         <option value="{{ $key }}">{{ $label }}</option>
                                     @endforeach
@@ -94,7 +94,7 @@
                             {{-- Service Date --}}
                             <div>
                                 <label for="service_date" class="block text-sm font-medium text-zinc-300 mb-1.5">
-                                    Tanggal Service <span class="text-red-500">*</span>
+                                    Tanggal Servis <span class="text-red-500">*</span>
                                 </label>
                                 <input type="date"
                                        id="service_date"
@@ -111,7 +111,7 @@
                             {{-- Odometer --}}
                             <div>
                                 <label for="odometer_at_service" class="block text-sm font-medium text-zinc-300 mb-1.5">
-                                    Odometer Saat Service (km) <span class="text-red-500">*</span>
+                                    Odometer Saat Servis (km) <span class="text-red-500">*</span>
                                 </label>
                                 <input type="number"
                                        id="odometer_at_service"
@@ -127,7 +127,7 @@
                             {{-- Status --}}
                             <div>
                                 <label for="status" class="block text-sm font-medium text-zinc-300 mb-1.5">
-                                    Status Service <span class="text-red-500">*</span>
+                                    Status Servis <span class="text-red-500">*</span>
                                 </label>
                                 <select id="status"
                                         name="status"
@@ -141,19 +141,25 @@
                                 @enderror
                             </div>
 
-                            {{-- Total Cost --}}
+                            {{-- Service Cost --}}
                             <div>
-                                <label for="total_cost" class="block text-sm font-medium text-zinc-300 mb-1.5">
-                                    Total Biaya (Rp) <span class="text-red-500">*</span>
+                                <label for="service_cost" class="block text-sm font-medium text-zinc-300 mb-1.5">
+                                    Biaya Servis (Rp) <span class="text-red-500">*</span>
                                 </label>
                                 <input type="number"
-                                       id="total_cost"
-                                       name="total_cost"
-                                       x-model.number="manualCost"
+                                       id="service_cost"
+                                       name="service_cost"
+                                       x-model.number="serviceCost"
                                        min="0"
                                        step="1000"
                                        required
+                                       placeholder="0"
                                        class="form-input w-full bg-zinc-900 border border-zinc-700 text-zinc-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors">
+                                <input type="hidden" name="total_cost" :value="totalCost">
+                                <p class="text-zinc-600 text-xs mt-1">Biaya jasa/pengerjaan servis (di luar sparepart)</p>
+                                @error('service_cost')
+                                    <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                                @enderror
                                 @error('total_cost')
                                     <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
                                 @enderror
@@ -202,7 +208,7 @@
                                        min="{{ $vehicle->current_odometer + 1 }}"
                                        placeholder="Misal: {{ $vehicle->current_odometer + 5000 }}"
                                        class="form-input w-full bg-zinc-900 border border-zinc-700 text-zinc-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors">
-                                <p class="text-zinc-600 text-xs mt-1">Harus lebih besar dari odometer saat service</p>
+                                <p class="text-zinc-600 text-xs mt-1">Harus lebih besar dari odometer saat servis</p>
                                 @error('next_service_odometer')
                                     <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
                                 @enderror
@@ -340,6 +346,12 @@
 
                             <div class="h-px bg-zinc-800"></div>
 
+                            {{-- Service Cost --}}
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-zinc-500">Biaya Servis</span>
+                                <span class="text-xs font-medium text-zinc-300" x-text="'Rp ' + (parseFloat(serviceCost) || 0).toLocaleString('id-ID')"></span>
+                            </div>
+
                             {{-- Spareparts Count --}}
                             <div class="flex justify-between items-center">
                                 <span class="text-xs text-zinc-500">Sparepart</span>
@@ -403,13 +415,26 @@
     @push('scripts')
     <script>
         function serviceRecordForm(vehicleId, currentOdometer, serviceRecord) {
+            const existingParts = @json(old('parts', null)) !== null
+                ? @json(old('parts'))
+                : (serviceRecord.parts || []);
+
+            const partsSubtotal = existingParts.reduce((sum, p) => {
+                const qty = parseFloat(p.quantity) || 0;
+                const price = parseFloat(p.unit_price) || 0;
+                return sum + (qty * price);
+            }, 0);
+
+            const initialTotalCost = parseFloat(serviceRecord.total_cost) || 0;
+            const initialServiceCost = Math.max(0, initialTotalCost - partsSubtotal);
+
             return {
                 vehicleId: vehicleId,
                 currentOdometer: currentOdometer,
                 serviceType: serviceRecord.service_type,
                 odometer: serviceRecord.odometer_at_service,
-                manualCost: parseFloat(serviceRecord.total_cost),
-                parts: serviceRecord.parts || [],
+                serviceCost: {{ old('service_cost', null) !== null ? old('service_cost') : 'initialServiceCost' }},
+                parts: existingParts,
                 catalog: @json($spareparts),
 
                 get serviceTypeLabel() {
@@ -418,11 +443,16 @@
                 },
 
                 get partsSubtotal() {
-                    return this.parts.reduce((sum, p) => sum + (parseFloat(p.quantity) * parseFloat(p.unit_price)), 0);
+                    return this.parts.reduce((sum, p) => {
+                        const qty = parseFloat(p.quantity) || 0;
+                        const price = parseFloat(p.unit_price) || 0;
+                        return sum + (qty * price);
+                    }, 0);
                 },
 
                 get totalCost() {
-                    return this.manualCost;
+                    const cost = parseFloat(this.serviceCost) || 0;
+                    return cost + this.partsSubtotal;
                 },
 
                 addPart() {
@@ -436,21 +466,19 @@
 
                 removePart(index) {
                     this.parts.splice(index, 1);
-                    this.recalcTotal();
                 },
 
                 autofillPart(index, val) {
-                    const matched = this.catalog.find(p => p.name.toLowerCase() === val.toLowerCase());
+                    const matched = this.catalog.find(p => p.name.toLowerCase() === (val || '').toLowerCase());
                     if (matched) {
                         this.parts[index].part_name = matched.name;
                         this.parts[index].unit_price = parseFloat(matched.price);
                         this.parts[index].part_category = matched.category || '';
-                        this.recalcTotal();
                     }
                 },
 
                 recalcTotal() {
-                    this.manualCost = this.partsSubtotal;
+                    // Reactive totalCost getter handles recalculation automatically
                 },
             };
         }

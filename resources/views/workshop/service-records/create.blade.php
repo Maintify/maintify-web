@@ -144,20 +144,26 @@
                                 @enderror
                             </div>
 
-                            {{-- Total Cost --}}
+                            {{-- Service Cost --}}
                             <div>
-                                <label for="total_cost" class="block text-sm font-medium text-zinc-300 mb-1.5">
-                                    Total Biaya (Rp) <span class="text-red-500">*</span>
+                                <label for="service_cost" class="block text-sm font-medium text-zinc-300 mb-1.5">
+                                    Biaya Servis (Rp) <span class="text-red-500">*</span>
                                 </label>
                                 <input type="number"
-                                       id="total_cost"
-                                       name="total_cost"
-                                       x-model.number="manualCost"
-                                       value="{{ old('total_cost', 0) }}"
+                                       id="service_cost"
+                                       name="service_cost"
+                                       x-model.number="serviceCost"
+                                       value="{{ old('service_cost', 0) }}"
                                        min="0"
                                        step="1000"
                                        required
+                                       placeholder="0"
                                        class="form-input w-full bg-zinc-900 border border-zinc-700 text-zinc-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors">
+                                <input type="hidden" name="total_cost" :value="totalCost">
+                                <p class="text-zinc-600 text-xs mt-1">Biaya jasa/pengerjaan service (di luar sparepart)</p>
+                                @error('service_cost')
+                                    <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                                @enderror
                                 @error('total_cost')
                                     <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
                                 @enderror
@@ -339,6 +345,12 @@
 
                             <div class="h-px bg-zinc-800"></div>
 
+                            {{-- Service Cost --}}
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-zinc-500">Biaya Servis</span>
+                                <span class="text-xs font-medium text-zinc-300" x-text="'Rp ' + (parseFloat(serviceCost) || 0).toLocaleString('id-ID')"></span>
+                            </div>
+
                             {{-- Spareparts Count --}}
                             <div class="flex justify-between items-center">
                                 <span class="text-xs text-zinc-500">Sparepart</span>
@@ -407,8 +419,8 @@
                 currentOdometer: currentOdometer,
                 serviceType: '{{ old("service_type", "") }}',
                 odometer: currentOdometer,
-                manualCost: {{ old('total_cost', 0) }},
-                parts: [],
+                serviceCost: {{ old('service_cost', 0) }},
+                parts: @json(old('parts', [])),
                 catalog: @json($spareparts),
 
                 get serviceTypeLabel() {
@@ -417,11 +429,16 @@
                 },
 
                 get partsSubtotal() {
-                    return this.parts.reduce((sum, p) => sum + (p.quantity * p.unit_price), 0);
+                    return this.parts.reduce((sum, p) => {
+                        const qty = parseFloat(p.quantity) || 0;
+                        const price = parseFloat(p.unit_price) || 0;
+                        return sum + (qty * price);
+                    }, 0);
                 },
 
                 get totalCost() {
-                    return this.manualCost;
+                    const cost = parseFloat(this.serviceCost) || 0;
+                    return cost + this.partsSubtotal;
                 },
 
                 addPart() {
@@ -435,21 +452,19 @@
 
                 removePart(index) {
                     this.parts.splice(index, 1);
-                    this.recalcTotal();
                 },
 
                 autofillPart(index, val) {
-                    const matched = this.catalog.find(p => p.name.toLowerCase() === val.toLowerCase());
+                    const matched = this.catalog.find(p => p.name.toLowerCase() === (val || '').toLowerCase());
                     if (matched) {
                         this.parts[index].part_name = matched.name;
                         this.parts[index].unit_price = parseFloat(matched.price);
                         this.parts[index].part_category = matched.category || '';
-                        this.recalcTotal();
                     }
                 },
 
                 recalcTotal() {
-                    this.manualCost = this.partsSubtotal;
+                    // Reactive totalCost getter handles recalculation automatically
                 },
             };
         }

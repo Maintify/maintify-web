@@ -94,6 +94,42 @@ class WorkshopRegistrationTest extends TestCase
     }
 
     /**
+     * Test pendaftaran menyimpan koordinat latitude dan longitude.
+     */
+    public function test_workshop_registration_stores_latitude_and_longitude(): void
+    {
+        Storage::fake('public');
+        \Illuminate\Support\Facades\Mail::fake();
+
+        $file = UploadedFile::fake()->create('nib_document.pdf', 2048, 'application/pdf');
+
+        $response = $this->post('/register/workshop', [
+            'owner_name' => 'Jane Owner',
+            'email' => 'jane.owner@example.com',
+            'owner_ktp_number' => '9876543210987654',
+            'workshop_name' => 'Jane Auto Tech',
+            'phone' => '08987654321',
+            'address' => 'Jl. Teknologi No. 45',
+            'city' => 'Bandung',
+            'province' => 'Jawa Barat',
+            'latitude' => -6.9175,
+            'longitude' => 107.6191,
+            'operational_hours' => 'Senin - Sabtu: 08:00 - 17:00',
+            'legal_document' => $file,
+            'password' => 'password123',
+            'password_confirmation' => 'password123',
+        ]);
+
+        $response->assertRedirect(route('auth.otp.verify'));
+
+        $this->assertDatabaseHas('workshops', [
+            'email' => 'jane.owner@example.com',
+            'latitude' => -6.9175,
+            'longitude' => 107.6191,
+        ]);
+    }
+
+    /**
      * Test form validation rules for required inputs.
      */
     public function test_workshop_registration_requires_mandatory_fields(): void

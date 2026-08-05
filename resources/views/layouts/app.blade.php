@@ -57,7 +57,7 @@
                     @php
                         $userRole = Auth::user()->role ?? 'vehicle_owner';
                         $firstVehicle = ($userRole === 'vehicle_owner') ? Auth::user()->vehicles()->select('id')->first() : null;
-                        $serviceHistoryUrl = $firstVehicle ? route('vehicles.service-history', $firstVehicle) : route('vehicles.index');
+                        $serviceHistoryUrl = route('vehicles.service-history.index');
                     @endphp
 
                     @if($userRole === 'vehicle_owner')

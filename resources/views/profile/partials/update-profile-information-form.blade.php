@@ -18,14 +18,56 @@
         @method('patch')
 
         {{-- Profile Photo --}}
-        <div>
+        <div x-data="{ photoPreview: null, removePhoto: false }">
             <x-input-label for="photo" :value="__('Foto Profil')" />
-            @if($user->photo_url)
-                <div class="my-2">
-                    <img src="{{ $user->photo_url }}" alt="Avatar Preview" class="w-16 h-16 rounded-full object-cover" style="border: 1px solid var(--color-border);">
+            
+            <div class="my-3 flex items-center gap-4">
+                {{-- Preview --}}
+                <div class="relative w-16 h-16 rounded-full overflow-hidden border border-zinc-700 bg-zinc-900 flex items-center justify-center flex-shrink-0">
+                    <template x-if="photoPreview && !removePhoto">
+                        <img :src="photoPreview" class="w-full h-full object-cover" />
+                    </template>
+                    <template x-if="!photoPreview && !removePhoto">
+                        @if($user->photo_url)
+                            <img src="{{ asset($user->photo_url) }}" alt="{{ $user->name }}" class="w-full h-full object-cover" />
+                        @else
+                            <span class="text-xl font-bold text-zinc-400">
+                                {{ strtoupper(substr($user->name, 0, 1)) }}
+                            </span>
+                        @endif
+                    </template>
+                    <template x-if="removePhoto">
+                        <span class="text-xl font-bold text-zinc-400">
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                        </span>
+                    </template>
                 </div>
-            @endif
-            <input id="photo" name="photo" type="file" class="mt-1 block w-full text-sm rounded-lg cursor-pointer focus:outline-none" style="color: var(--color-text-primary); background-color: var(--color-surface); border: 1px solid var(--color-border);" accept="image/png, image/jpeg, image/jpg" />
+
+                <div class="space-y-2">
+                    <input id="photo"
+                           name="photo"
+                           type="file"
+                           accept="image/png, image/jpeg, image/jpg"
+                           @change="
+                               removePhoto = false;
+                               const file = $event.target.files[0];
+                               if (file) {
+                                   const reader = new FileReader();
+                                   reader.onload = (e) => { photoPreview = e.target.result; };
+                                   reader.readAsDataURL(file);
+                               }
+                           "
+                           class="block w-full text-xs text-zinc-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-zinc-800 file:text-zinc-300 hover:file:bg-zinc-700 cursor-pointer" />
+                    
+                    @if($user->photo_url)
+                        <div class="flex items-center gap-2">
+                            <input type="checkbox" id="remove_photo" name="remove_photo" value="1" x-model="removePhoto" class="rounded border-zinc-700 text-red-600 focus:ring-red-500 bg-zinc-900">
+                            <label for="remove_photo" class="text-xs text-zinc-400">Hapus foto profil saat ini</label>
+                        </div>
+                    @endif
+                    <p class="text-xs text-zinc-500">Format: JPG, JPEG, PNG (Maks. 5MB)</p>
+                </div>
+            </div>
             <x-input-error class="mt-2" :messages="$errors->get('photo')" />
         </div>
 

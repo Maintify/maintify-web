@@ -56,7 +56,15 @@ class ProfileController extends Controller
             'operational_hours' => ['required', 'string', 'max:255'],
             'latitude' => ['nullable', 'numeric', 'min:-90', 'max:90'],
             'longitude' => ['nullable', 'numeric', 'min:-180', 'max:180'],
+            'logo' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:5120'],
         ]);
+
+        if ($request->hasFile('logo')) {
+            if ($workshop->logo_url) {
+                app(\App\Services\FileUploadService::class)->delete($workshop->logo_url);
+            }
+            $validated['logo_url'] = app(\App\Services\FileUploadService::class)->uploadVehiclePhoto($request->file('logo'), 'workshops/logos');
+        }
 
         $workshop->update($validated);
 

@@ -122,7 +122,7 @@
             @else —
             @endif
         </div>
-        <div class="stat-card-label">Service Berikutnya</div>
+        <div class="stat-card-label">Servis Berikutnya</div>
         @if($upcomingService?->next_service_date)
             @php $daysLeft = (int) round(now()->startOfDay()->diffInDays($upcomingService->next_service_date->startOfDay(), false)); @endphp
             <span
@@ -141,7 +141,7 @@
             </svg>
         </div>
         <div class="stat-card-value">{{ $totalServices }}</div>
-        <div class="stat-card-label">Total Service</div>
+        <div class="stat-card-label">Total Servis</div>
         <span
             style="display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;font-weight:500;padding:2px 8px;border-radius:6px;background:rgba(59,130,246,0.1);color:#60a5fa;">Riwayat
             tersimpan</span>
@@ -183,7 +183,7 @@
                         </svg>
                     </div>
                     <p class="empty-state-title">Belum ada kendaraan</p>
-                    <p class="empty-state-desc">Tambahkan kendaraan untuk mulai memantau histori service</p>
+                    <p class="empty-state-desc">Tambahkan kendaraan untuk mulai memantau histori servis</p>
                     <div style="margin-top:16px;">
                         <a href="{{ route('vehicles.create') }}" class="btn-primary btn-sm">
                             <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -234,7 +234,7 @@
         {{-- Recent Activity --}}
         <div class="card">
             <div class="section-title">
-                <h3>Aktivitas Service Terbaru</h3>
+                <h3>Aktivitas Servis Terbaru</h3>
                 <span style="font-size:11px;color:#71717A;">{{ $recentActivities->count() }} entri</span>
             </div>
             @if($recentActivities->isEmpty())
@@ -245,7 +245,7 @@
                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                     </div>
-                    <p class="empty-state-title" style="font-size:13px;">Belum ada riwayat service</p>
+                    <p class="empty-state-title" style="font-size:13px;">Belum ada riwayat servis</p>
                 </div>
             @else
                 <div>
@@ -301,7 +301,7 @@
                     $quickActions = [
                         ['icon' => 'M12 4v16m8-8H4', 'label' => 'Tambah Kendaraan', 'desc' => 'Daftarkan kendaraan baru', 'color' => '#ff9aa4', 'bg' => 'rgba(65,0,8,0.15)', 'border' => 'rgba(65,0,8,0.3)', 'route' => route('vehicles.create')],
                         ['icon' => 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3z', 'label' => 'Lihat QR Code', 'desc' => 'Identitas digital kendaraan', 'color' => '#4ade80', 'bg' => 'rgba(34,197,94,0.08)', 'border' => 'rgba(34,197,94,0.2)', 'route' => $firstVehicle ? route('vehicles.qr.show', $firstVehicle) : route('vehicles.index')],
-                        ['icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', 'label' => 'Riwayat Service', 'desc' => 'Lihat semua histori', 'color' => '#60a5fa', 'bg' => 'rgba(59,130,246,0.08)', 'border' => 'rgba(59,130,246,0.2)', 'route' => route('vehicles.index')],
+                        ['icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2', 'label' => 'Riwayat Servis', 'desc' => 'Lihat semua histori', 'color' => '#60a5fa', 'bg' => 'rgba(59,130,246,0.08)', 'border' => 'rgba(59,130,246,0.2)', 'route' => route('vehicles.service-history.index')],
                         ['icon' => 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z', 'label' => 'Cari Bengkel', 'desc' => 'Bengkel terdekat dari Anda', 'color' => '#fbbf24', 'bg' => 'rgba(245,158,11,0.08)', 'border' => 'rgba(245,158,11,0.2)', 'route' => '#'],
                     ];
                 @endphp

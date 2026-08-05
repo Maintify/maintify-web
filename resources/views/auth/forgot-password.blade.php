@@ -3,7 +3,7 @@
 
     {{-- Heading --}}
     <div style="margin-bottom:24px;">
-        <h2 style="font-size:22px;font-weight:700;color:#F4F4F5;letter-spacing:-0.02em;">Lupa Password? 🔑</h2>
+        <h2 style="font-size:22px;font-weight:700;color:#F4F4F5;letter-spacing:-0.02em;">Lupa Password?</h2>
         <p style="color:#71717A;font-size:14px;margin-top:4px;">
             Masukkan email Anda dan kami akan mengirimkan link reset password.
         </p>

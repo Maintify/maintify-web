@@ -47,6 +47,8 @@ class WorkshopRegistrationController extends Controller
             'address' => ['required', 'string', 'max:500'],
             'city' => ['required', 'string', 'max:100'],
             'province' => ['required', 'string', 'max:100'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
             'operational_hours' => ['required', 'string', 'max:255'],
 
             // Step 3: Dokumen Legalitas & Password
@@ -82,6 +84,8 @@ class WorkshopRegistrationController extends Controller
             'address' => $request->address,
             'city' => $request->city,
             'province' => $request->province,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
             'owner_name' => $request->owner_name,
             'owner_ktp_number' => $request->owner_ktp_number,
             'legal_document_url' => $legalDocumentPath,
