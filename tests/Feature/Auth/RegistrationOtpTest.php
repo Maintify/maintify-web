@@ -132,4 +132,28 @@ class RegistrationOtpTest extends TestCase
         $user->refresh();
         $this->assertNotNull($user->email_verified_at);
     }
+
+    public function test_unverified_user_cannot_login_without_otp_verification(): void
+    {
+        Mail::fake();
+
+        $user = User::factory()->create([
+            'email_verified_at' => null,
+            'password' => bcrypt('password123'),
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => $user->email,
+            'password' => 'password123',
+            'login_as' => 'vehicle_owner',
+        ]);
+
+        $this->assertGuest();
+        $response->assertRedirect(route('auth.otp.verify'));
+        $this->assertEquals($user->id, session('otp_user_id'));
+
+        Mail::assertSent(OtpMail::class, function ($mail) use ($user) {
+            return $mail->hasTo($user->email);
+        });
+    }
 }

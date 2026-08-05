@@ -74,6 +74,24 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('auth.otp.verify');
         }
 
+        // Block unverified users from logging in until OTP is verified
+        if (is_null($authenticatedUser->email_verified_at)) {
+            $otpService = app(OtpService::class);
+            $otpService->generateAndSendOtp($authenticatedUser);
+
+            $userId = $authenticatedUser->id;
+
+            // Log out immediately to prevent unauthorized access
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            session(['otp_user_id' => $userId]);
+
+            return redirect()->route('auth.otp.verify')
+                ->with('status', 'Akun Anda belum terverifikasi. Kode OTP baru telah dikirimkan ke email Anda.');
+        }
+
         $request->session()->regenerate();
 
         // Workshop users with pending/rejected status → go to pending page
