@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-QF-2PgHt.css",
+    "file": "assets/app-BEuKHSHp.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -15,7 +15,7 @@
     "isEntry": true
   },
   "resources/js/qr-scanner.js": {
-    "file": "assets/qr-scanner-BFaX4FMO.js",
+    "file": "assets/qr-scanner-BWNnu0eY.js",
     "name": "qr-scanner",
     "src": "resources/js/qr-scanner.js",
     "isEntry": true
