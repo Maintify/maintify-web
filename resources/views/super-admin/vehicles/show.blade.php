@@ -81,29 +81,14 @@
                     </div>
                 </div>
 
-                {{-- Health & Stats --}}
+                {{-- Odometer --}}
                 <div class="bg-[#181A1A] border border-[#2E3030] rounded-2xl p-6 shadow-lg space-y-4">
-                    <h3 class="text-sm font-bold text-zinc-200 border-b border-[#2E3030] pb-2">Status Kesehatan</h3>
+                    <h3 class="text-sm font-bold text-zinc-200 border-b border-[#2E3030] pb-2">Odometer</h3>
                     
                     {{-- Odometer --}}
                     <div class="flex justify-between items-center text-sm">
                         <span class="text-zinc-500">Odometer Saat Ini</span>
                         <span class="font-bold text-zinc-200">{{ number_format($vehicle->current_odometer) }} Km</span>
-                    </div>
-
-                    {{-- Oil Life --}}
-                    <div class="space-y-1.5 pt-2">
-                        <div class="flex justify-between items-center text-xs">
-                            <span class="text-zinc-500">Sisa Umur Oli (Oil Life)</span>
-                            <span class="font-semibold text-zinc-200">{{ $vehicle->oil_life_percentage ?? 100 }}%</span>
-                        </div>
-                        <div class="w-full h-1.5 bg-zinc-950 rounded-full overflow-hidden">
-                            @php
-                                $oilScore = $vehicle->oil_life_percentage ?? 100;
-                                $oilColor = $oilScore >= 40 ? 'bg-emerald-500' : ($oilScore >= 15 ? 'bg-amber-500' : 'bg-red-500');
-                            @endphp
-                            <div class="h-full rounded-full {{ $oilColor }}" style="width: {{ $oilScore }}%;"></div>
-                        </div>
                     </div>
                 </div>
 

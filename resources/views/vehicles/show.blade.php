@@ -149,23 +149,6 @@
                             </div>
                         </div>
 
-                        {{-- Health Overview Bar --}}
-                        <div style="display: flex; flex-direction: column; gap: 14px; padding: 16px; border: 1px solid #2E3030; border-radius: 12px;">
-                            {{-- Oil Life --}}
-                            <div style="display: flex; flex-direction: column; gap: 6px;">
-                                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;">
-                                    <span style="color: #71717A; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em;">Umur Oli (Oil Life)</span>
-                                    <span style="color: #F4F4F5; font-weight: 700;">{{ $vehicle->oil_life_percentage ?? 100 }}%</span>
-                                </div>
-                                <div style="width: 100%; height: 6px; background-color: #1E2020; border-radius: 100px; overflow: hidden;">
-                                    @php
-                                        $oilScore = $vehicle->oil_life_percentage ?? 100;
-                                        $oilColor = $oilScore >= 40 ? '#4ade80' : ($oilScore >= 15 ? '#fbbf24' : '#f87171');
-                                    @endphp
-                                    <div style="width: {{ $oilScore }}%; height: 100%; background-color: {{ $oilColor }}; border-radius: 100px;"></div>
-                                </div>
-                            </div>
-                        </div>
 
                         {{-- Technical Specification List --}}
                         <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">

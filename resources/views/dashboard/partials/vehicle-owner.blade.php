@@ -196,18 +196,13 @@
             @else
                 <div style="display:flex;flex-direction:column;">
                     @foreach($recentVehicles as $vehicle)
-                        @php
-                            $vc = match ($vehicle->health_status) { 'good' => '#4ade80', 'warning' => '#fbbf24', 'critical' => '#f87171', default => '#71717A'};
-                            $vbg = match ($vehicle->health_status) { 'good' => 'rgba(74,222,128,0.08)', 'warning' => 'rgba(251,191,36,0.08)', 'critical' => 'rgba(248,113,113,0.08)', default => 'rgba(113,113,122,0.06)'};
-                            $vlabel = match ($vehicle->health_status) { 'good' => 'Baik', 'warning' => 'Perlu Service', 'critical' => 'Kritis', default => 'Tidak Diketahui'};
-                        @endphp
                         <a href="{{ route('vehicles.show', $vehicle) }}"
                             style="display:flex;align-items:center;gap:14px;padding:14px 0;text-decoration:none;{{ !$loop->last ? 'border-bottom:1px solid #252828;' : '' }};transition:opacity 150ms;"
                             onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
                             {{-- Vehicle Icon --}}
                             <div
-                                style="width:46px;height:46px;border-radius:14px;background:{{ $vbg }};border:1px solid {{ $vc }}33;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                                <svg style="width:22px;height:22px;color:{{ $vc }};" fill="none" stroke="currentColor"
+                                style="width:46px;height:46px;border-radius:14px;background:rgba(113,113,122,0.06);border:1px solid rgba(113,113,122,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <svg style="width:22px;height:22px;color:#71717A;" fill="none" stroke="currentColor"
                                     viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
                                         d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -230,12 +225,6 @@
                                     @endif
                                 </p>
                             </div>
-                            {{-- Health Badge --}}
-                            <span
-                                style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;background:{{ $vbg }};color:{{ $vc }};border:1px solid {{ $vc }}33;white-space:nowrap;flex-shrink:0;">
-                                <span style="width:5px;height:5px;border-radius:50%;background:{{ $vc }};"></span>
-                                {{ $vlabel }}
-                            </span>
                         </a>
                     @endforeach
                 </div>

@@ -166,19 +166,8 @@
                             <span id="res-owner" class="text-sm font-semibold text-zinc-300">-</span>
                         </div>
                         <div>
-                            <span class="text-xs text-zinc-500 uppercase tracking-wider block mb-1">Status Kesehatan</span>
-                            <span id="res-health" class="inline-block">-</span>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
                             <span class="text-xs text-zinc-500 uppercase tracking-wider block mb-1">Odometer</span>
                             <span id="res-odometer" class="text-sm font-semibold text-zinc-300">-</span>
-                        </div>
-                        <div>
-                            <span class="text-xs text-zinc-500 uppercase tracking-wider block mb-1">Kondisi Oli</span>
-                            <span id="res-oil-life" class="text-sm font-semibold text-zinc-300">-</span>
                         </div>
                     </div>
                 </div>

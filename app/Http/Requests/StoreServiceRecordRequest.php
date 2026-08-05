@@ -57,6 +57,20 @@ class StoreServiceRecordRequest extends FormRequest
             'total_cost' => ['required', 'numeric', 'min:0'],
             'status' => ['required', 'string', 'in:completed,in_progress'],
 
+            // Jadwal servis berikutnya (input manual mekanik)
+            'next_service_odometer' => [
+                'nullable',
+                'integer',
+                'min:1',
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    $odometerAtService = (int) $this->input('odometer_at_service');
+                    if ($value !== null && (int) $value <= $odometerAtService) {
+                        $fail('Odometer target servis berikutnya harus lebih besar dari odometer saat service.');
+                    }
+                },
+            ],
+            'next_service_date' => ['nullable', 'date', 'after:today'],
+
             // Spareparts (optional, dynamic rows)
             'parts' => ['nullable', 'array'],
             'parts.*.part_name' => ['required_with:parts', 'string', 'max:255'],
@@ -84,6 +98,10 @@ class StoreServiceRecordRequest extends FormRequest
             'odometer_at_service.min' => 'Odometer tidak boleh negatif.',
             'total_cost.required' => 'Total biaya harus diisi.',
             'total_cost.min' => 'Total biaya tidak boleh negatif.',
+            'next_service_odometer.integer' => 'Odometer target harus berupa angka.',
+            'next_service_odometer.min' => 'Odometer target harus lebih dari 0.',
+            'next_service_date.date' => 'Tanggal target harus berupa tanggal yang valid.',
+            'next_service_date.after' => 'Tanggal target servis berikutnya harus di masa depan.',
             'parts.*.part_name.required_with' => 'Nama sparepart harus diisi.',
             'parts.*.quantity.required_with' => 'Jumlah sparepart harus diisi.',
             'parts.*.unit_price.required_with' => 'Harga satuan sparepart harus diisi.',

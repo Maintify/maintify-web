@@ -210,21 +210,7 @@ class CreateServiceRecordTest extends TestCase
     // Test: Vehicle Health Auto-Update (FR-025, FR-026)
     // =========================================================
 
-    /** @test */
-    public function oil_change_resets_oil_life_to_100()
-    {
-        [$user, $workshop] = $this->createApprovedWorkshop();
-        [$owner, $vehicle] = $this->createVehicleWithOwner();
 
-        $payload = array_merge($this->validPayload($vehicle->id), [
-            'service_type' => ServiceRecord::TYPE_OIL_CHANGE,
-        ]);
-
-        $this->actingAs($user)->post(route('workshop.service-records.store'), $payload);
-
-        $vehicle->refresh();
-        $this->assertEquals(100, $vehicle->oil_life_percentage);
-    }
 
     /** @test */
     public function vehicle_odometer_updated_after_service_if_higher()
@@ -240,17 +226,7 @@ class CreateServiceRecordTest extends TestCase
         $this->assertEquals(15000, $vehicle->current_odometer);
     }
 
-    /** @test */
-    public function vehicle_health_status_updated_after_service()
-    {
-        [$user, $workshop] = $this->createApprovedWorkshop();
-        [$owner, $vehicle] = $this->createVehicleWithOwner();
 
-        $this->actingAs($user)->post(route('workshop.service-records.store'), $this->validPayload($vehicle->id));
-
-        $vehicle->refresh();
-        $this->assertContains($vehicle->health_status, ['good', 'warning', 'critical']);
-    }
 
     /** @test */
     public function next_service_odometer_set_after_service()

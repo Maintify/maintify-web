@@ -50,24 +50,6 @@
                     <span class="text-xs text-zinc-500">Odometer: <span class="text-zinc-300 font-medium">{{ number_format($vehicle->current_odometer) }} km</span></span>
                 </div>
             </div>
-            {{-- Health Badge --}}
-            <div class="flex-shrink-0">
-                @php
-                    $healthColor = match($vehicle->health_status) {
-                        'good'     => ['bg' => 'rgba(34,197,94,0.1)', 'border' => 'rgba(34,197,94,0.25)', 'text' => '#4ade80', 'dot' => '#22c55e'],
-                        'warning'  => ['bg' => 'rgba(245,158,11,0.1)', 'border' => 'rgba(245,158,11,0.25)', 'text' => '#fbbf24', 'dot' => '#f59e0b'],
-                        'critical' => ['bg' => 'rgba(239,68,68,0.1)',   'border' => 'rgba(239,68,68,0.25)',   'text' => '#f87171', 'dot' => '#ef4444'],
-                        default    => ['bg' => 'rgba(113,113,122,0.1)', 'border' => 'rgba(113,113,122,0.25)', 'text' => '#a1a1aa', 'dot' => '#71717a'],
-                    };
-                    $healthLabel = match($vehicle->health_status) {
-                        'good' => 'Baik', 'warning' => 'Peringatan', 'critical' => 'Kritis', default => ucfirst($vehicle->health_status ?? '-'),
-                    };
-                @endphp
-                <span style="display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:{{ $healthColor['bg'] }};border:1px solid {{ $healthColor['border'] }};border-radius:100px;font-size:12px;font-weight:600;color:{{ $healthColor['text'] }};">
-                    <span style="width:6px;height:6px;border-radius:50%;background:{{ $healthColor['dot'] }};"></span>
-                    {{ $healthLabel }}
-                </span>
-            </div>
         </div>
 
         {{-- ── Form ── --}}
@@ -294,6 +276,53 @@
                     </div>
                 </div>
 
+                    {{-- ── Jadwal Servis Berikutnya ── --}}
+                    <div class="bg-[#181A1A] border border-[#2E3030] rounded-2xl p-5">
+                        <div class="flex items-center gap-3 mb-4">
+                            <div>
+                                <h2 class="text-sm font-semibold text-zinc-400 uppercase tracking-wider">Jadwal Servis Berikutnya</h2>
+                                <p class="text-xs text-zinc-600 mt-0.5">Tentukan target odometer & tanggal servis selanjutnya</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {{-- Next Service Odometer --}}
+                            <div>
+                                <label for="next_service_odometer" class="block text-sm font-medium text-zinc-300 mb-1.5">
+                                    Odometer Target (km)
+                                </label>
+                                <input type="number"
+                                       id="next_service_odometer"
+                                       name="next_service_odometer"
+                                       value="{{ old('next_service_odometer') }}"
+                                       min="{{ $vehicle->current_odometer + 1 }}"
+                                       placeholder="Misal: {{ $vehicle->current_odometer + 5000 }}"
+                                       class="form-input w-full bg-zinc-900 border border-zinc-700 text-zinc-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors">
+                                <p class="text-zinc-600 text-xs mt-1">Harus lebih besar dari odometer saat service</p>
+                                @error('next_service_odometer')
+                                    <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            {{-- Next Service Date --}}
+                            <div>
+                                <label for="next_service_date" class="block text-sm font-medium text-zinc-300 mb-1.5">
+                                    Tanggal Target
+                                </label>
+                                <input type="date"
+                                       id="next_service_date"
+                                       name="next_service_date"
+                                       value="{{ old('next_service_date') }}"
+                                       min="{{ now()->addDay()->toDateString() }}"
+                                       class="form-input w-full bg-zinc-900 border border-zinc-700 text-zinc-100 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 transition-colors">
+                                <p class="text-zinc-600 text-xs mt-1">Tanggal servis berikutnya yang disarankan</p>
+                                @error('next_service_date')
+                                    <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+
                 {{-- ── RIGHT: Summary & Submit ── --}}
                 <div class="space-y-4">
 
@@ -307,16 +336,6 @@
                                 <span class="text-xs text-zinc-500">Jenis Service</span>
                                 <span class="text-xs font-medium text-zinc-300" x-text="serviceTypeLabel || '-'"></span>
                             </div>
-
-                            {{-- Oil Change Alert --}}
-                            <template x-if="serviceType === 'oil_change'">
-                                <div class="flex items-center gap-2 bg-emerald-950/30 border border-emerald-900/30 rounded-xl p-3">
-                                    <svg class="w-4 h-4 text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                                    </svg>
-                                    <p class="text-xs text-emerald-400">Kondisi oli akan di-reset ke 100%</p>
-                                </div>
-                            </template>
 
                             <div class="h-px bg-zinc-800"></div>
 

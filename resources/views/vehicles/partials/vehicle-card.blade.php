@@ -11,25 +11,7 @@
             </svg>
         @endif
 
-        {{-- Status Badge Overlay --}}
-        <div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
-            @if($vehicle->health_status === 'good')
-                <span class="badge-success" style="padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 100px; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
-                    <span class="badge-dot" style="background-color: #4ade80;"></span>
-                    Aktif
-                </span>
-            @elseif($vehicle->health_status === 'warning')
-                <span class="badge-warning" style="padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 100px; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
-                    <span class="badge-dot" style="background-color: #fbbf24;"></span>
-                    Perlu Service
-                </span>
-            @else
-                <span class="badge-danger" style="padding: 4px 10px; font-size: 11px; font-weight: 700; border-radius: 100px; display: inline-flex; align-items: center; gap: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
-                    <span class="badge-dot" style="background-color: #f87171;"></span>
-                    Bermasalah
-                </span>
-            @endif
-        </div>
+
 
         {{-- Fuel Type Overlay --}}
         <div style="position: absolute; bottom: 12px; left: 12px; z-index: 10;">
@@ -73,22 +55,7 @@
                 <span style="color: #F4F4F5; font-weight: 600;">{{ number_format($vehicle->current_odometer) }} Km</span>
             </div>
 
-            <hr style="border: 0; border-top: 1px solid #2E3030; margin: 0;">
 
-            {{-- Oil Life Indicator --}}
-            <div style="display: flex; flex-direction: column; gap: 4px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
-                    <span style="color: #71717A; font-weight: 500;">Umur Oli (Oil Life)</span>
-                    <span style="color: #F4F4F5; font-weight: 600;">{{ $vehicle->oil_life_percentage ?? 100 }}%</span>
-                </div>
-                <div style="width: 100%; height: 6px; background-color: #1E2020; border-radius: 100px; overflow: hidden;">
-                    @php
-                        $oilScore = $vehicle->oil_life_percentage ?? 100;
-                        $oilColor = $oilScore >= 40 ? '#4ade80' : ($oilScore >= 15 ? '#fbbf24' : '#f87171');
-                    @endphp
-                    <div style="width: {{ $oilScore }}%; height: 100%; background-color: {{ $oilColor }}; border-radius: 100px;"></div>
-                </div>
-            </div>
         </div>
 
         {{-- View Details Quick Action Link --}}

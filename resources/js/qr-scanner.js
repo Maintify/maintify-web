@@ -12,10 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resVin = document.getElementById('res-vin');
     const resOwner = document.getElementById('res-owner');
     const resOdometer = document.getElementById('res-odometer');
-    const resOilLife = document.getElementById('res-oil-life');
-    const resHealth = document.getElementById('res-health');
     const resActionBtn = document.getElementById('res-action-btn');
-
     let html5QrCode = null;
     let isScanning = false;
 
@@ -171,18 +168,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resVin.textContent = vehicle.vin || '-';
         resOwner.textContent = vehicle.owner_name;
         resOdometer.textContent = `${vehicle.current_odometer.toLocaleString('id-ID')} km`;
-        resOilLife.textContent = `${vehicle.oil_life_percentage}%`;
         
-        // Health Status badge styling
-        resHealth.textContent = vehicle.health_status.toUpperCase();
-        if (vehicle.health_status === 'good') {
-            resHealth.className = "px-2 py-0.5 rounded text-xs font-semibold bg-emerald-950 text-emerald-300 border border-emerald-800";
-        } else if (vehicle.health_status === 'needs_service') {
-            resHealth.className = "px-2 py-0.5 rounded text-xs font-semibold bg-amber-950 text-amber-300 border border-amber-800";
-        } else {
-            resHealth.className = "px-2 py-0.5 rounded text-xs font-semibold bg-rose-950 text-rose-300 border border-rose-800";
-        }
-
         // Set action button link to add service record
         resActionBtn.href = `/workshop/service-records/create?vehicle_id=${vehicle.vehicle_id}`;
 

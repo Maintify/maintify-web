@@ -165,7 +165,12 @@ class ServiceRecordController extends Controller
         }
 
         // Auto-update vehicle health stats (FR-025, FR-026)
-        $this->healthService->updateAfterService($vehicle, $serviceRecord);
+        $this->healthService->updateAfterService(
+            $vehicle,
+            $serviceRecord,
+            $request->validated('next_service_odometer') ? (int) $request->validated('next_service_odometer') : null,
+            $request->validated('next_service_date'),
+        );
 
         // Send notification to vehicle owner (FR-111)
         if ($vehicle->owner) {
@@ -322,7 +327,12 @@ class ServiceRecordController extends Controller
 
         $latestRecord = $vehicle->serviceRecords()->latest('service_date')->first();
         if ($latestRecord instanceof ServiceRecord) {
-            $this->healthService->updateAfterService($vehicle, $latestRecord);
+            $this->healthService->updateAfterService(
+                $vehicle,
+                $latestRecord,
+                $request->validated('next_service_odometer') ? (int) $request->validated('next_service_odometer') : null,
+                $request->validated('next_service_date'),
+            );
         }
 
         // Log audit trail

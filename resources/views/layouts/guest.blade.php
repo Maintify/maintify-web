@@ -59,7 +59,7 @@
                     style="font-size:clamp(28px,3vw,38px);font-weight:800;color:white;line-height:1.15;letter-spacing:-0.03em;margin-bottom:1rem;">
                     Platform Digital<br>
                     Histori Service<br>
-                    Kendaraan Motor
+                    Kendaraan
                 </h2>
                 <p style="color:rgba(255,255,255,0.65);font-size:15px;line-height:1.7;margin-bottom:2rem;">
                     Kelola, pantau, dan catat semua histori servis kendaraan Anda secara digital dengan QR Code unik.
@@ -93,7 +93,7 @@
                         style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;">
                         A</div>
                     <div>
-                        <p style="font-size:12px;font-weight:600;color:white;">Ahmad R.</p>
+                        <p style="font-size:12px;font-weight:600;color:white;">Maintifers</p>
                         <p style="font-size:11px;color:rgba(255,255,255,0.5);">Pengguna Maintify</p>
                     </div>
                 </div>

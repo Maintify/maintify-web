@@ -40,128 +40,34 @@ class VehicleHealthService
      *
      * @param  Vehicle  $vehicle  Kendaraan yang di-service
      * @param  ServiceRecord  $record  Service record yang baru dibuat
+     * @param  int|null  $nextServiceOdometer  Odometer target servis berikutnya (input mekanik)
+     * @param  string|null  $nextServiceDate  Tanggal target servis berikutnya (input mekanik)
      */
-    public function updateAfterService(Vehicle $vehicle, ServiceRecord $record): void
+    public function updateAfterService(Vehicle $vehicle, ServiceRecord $record, ?int $nextServiceOdometer = null, ?string $nextServiceDate = null): void
     {
         $updates = [];
 
-        // 1. Update oil_life_percentage jika ini adalah ganti oli
-        if ($record->service_type === ServiceRecord::TYPE_OIL_CHANGE) {
-            $updates['oil_life_percentage'] = 100;
-        } else {
-            // Kurangi oil life berdasarkan km yang ditempuh sejak last service
-            $updates['oil_life_percentage'] = $this->calculateOilLife($vehicle, $record);
-        }
-
-        // 2. Update current_odometer jika odometer service lebih besar dari saat ini
+        // Update current_odometer jika odometer service lebih besar dari saat ini
         if ($record->odometer_at_service > $vehicle->current_odometer) {
             $updates['current_odometer'] = $record->odometer_at_service;
         }
 
-        // 3. Kalkulasi health_status berdasarkan aturan bisnis
-        $updates['health_status'] = $this->calculateHealthStatus($vehicle, $record, $updates['oil_life_percentage']);
-
-        // 4. Update next_service_odometer
-        if ($record->odometer_at_service) {
+        // Update next_service_odometer (input manual mekanik dengan fallback otomatis)
+        if ($nextServiceOdometer !== null) {
+            $updates['next_service_odometer'] = $nextServiceOdometer;
+        } elseif ($record->odometer_at_service) {
             $odometerInterval = (int) Setting::get('service_reminder_mileage', self::DEFAULT_SERVICE_ODOMETER_INTERVAL);
             $updates['next_service_odometer'] = $record->odometer_at_service + $odometerInterval;
         }
 
-        // 5. Update next_service_date
-        $dayInterval = (int) Setting::get('service_reminder_interval', self::DEFAULT_SERVICE_DAY_INTERVAL);
-        $updates['next_service_date'] = now()->addDays($dayInterval)->toDateString();
+        // Update next_service_date (input manual mekanik dengan fallback otomatis)
+        if ($nextServiceDate !== null) {
+            $updates['next_service_date'] = $nextServiceDate;
+        } else {
+            $dayInterval = (int) Setting::get('service_reminder_interval', self::DEFAULT_SERVICE_DAY_INTERVAL);
+            $updates['next_service_date'] = now()->addDays($dayInterval)->toDateString();
+        }
 
         $vehicle->update($updates);
-    }
-
-    /**
-     * Hitung oil_life_percentage sisa berdasarkan km yang ditempuh sejak service terakhir.
-     *
-     * Kalkulasi sederhana:
-     * - Ambil odometer ganti oli terakhir
-     * - Hitung selisih dengan odometer service sekarang
-     * - Kurangi dari 100% berdasarkan persentase interval
-     *
-     * @return int 0–100
-     */
-    public function calculateOilLife(Vehicle $vehicle, ServiceRecord $record): int
-    {
-        // Cari ganti oli terakhir
-        $lastOilChange = $vehicle->serviceRecords()
-            ->where('service_type', ServiceRecord::TYPE_OIL_CHANGE)
-            ->where('status', ServiceRecord::STATUS_COMPLETED)
-            ->latest('service_date')
-            ->first();
-
-        if (! $lastOilChange || ! $lastOilChange->odometer_at_service) {
-            // Tidak ada data ganti oli sebelumnya — jaga nilai saat ini
-            return max(0, $vehicle->oil_life_percentage ?? 100);
-        }
-
-        $kmSinceOilChange = $record->odometer_at_service - $lastOilChange->odometer_at_service;
-
-        if ($kmSinceOilChange <= 0) {
-            return $vehicle->oil_life_percentage ?? 100;
-        }
-
-        $percentageUsed = ($kmSinceOilChange / self::DEFAULT_SERVICE_ODOMETER_INTERVAL) * 100;
-        $remaining = 100 - (int) $percentageUsed;
-
-        return max(0, min(100, $remaining));
-    }
-
-    /**
-     * Hitung health_status kendaraan.
-     *
-     * Rules:
-     * - 'critical' → oil_life <= 10% ATAU odometer melebihi interval service
-     * - 'warning'  → oil_life <= 30% ATAU odometer mendekati interval (80% tercapai)
-     * - 'good'     → kondisi normal
-     *
-     * @param  int  $newOilLife  Oil life yang baru dikalkulasi
-     * @return string 'good'|'warning'|'critical'
-     */
-    public function calculateHealthStatus(Vehicle $vehicle, ServiceRecord $record, int $newOilLife): string
-    {
-        // Cek oil life
-        if ($newOilLife <= 10) {
-            return 'critical';
-        }
-
-        if ($newOilLife <= 30) {
-            return 'warning';
-        }
-
-        // Cek odometer vs next_service_odometer (jika ada)
-        if ($vehicle->next_service_odometer && $record->odometer_at_service) {
-            $odometerGap = $vehicle->next_service_odometer - $record->odometer_at_service;
-            $totalInterval = self::DEFAULT_SERVICE_ODOMETER_INTERVAL;
-
-            if ($odometerGap <= 0) {
-                return 'critical';
-            }
-
-            $percentageRemaining = $odometerGap / $totalInterval;
-
-            if ($percentageRemaining <= self::WARNING_THRESHOLD_PERCENT) {
-                return 'warning';
-            }
-        }
-
-        // Cek waktu sejak service terakhir
-        $lastService = $vehicle->serviceRecords()
-            ->where('status', ServiceRecord::STATUS_COMPLETED)
-            ->latest('service_date')
-            ->first();
-
-        if ($lastService) {
-            $daysSince = (int) $lastService->service_date->diffInDays(now());
-
-            if ($daysSince >= self::DEFAULT_SERVICE_DAY_INTERVAL) {
-                return 'warning';
-            }
-        }
-
-        return 'good';
     }
 }

@@ -6,7 +6,7 @@
         <div style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:100px;background:rgba(65,0,8,0.2);border:1px solid rgba(255,154,164,0.2);margin-bottom:14px;">
             <span style="font-size:11px;font-weight:600;color:#ff9aa4;letter-spacing:0.04em;text-transform:uppercase;">Maintify · Bergabung Gratis</span>
         </div>
-        <h2 style="font-size:24px;font-weight:800;color:#F4F4F5;letter-spacing:-0.03em;line-height:1.2;margin-bottom:6px;">Buat Akun Baru 🚀</h2>
+        <h2 style="font-size:24px;font-weight:800;color:#F4F4F5;letter-spacing:-0.03em;line-height:1.2;margin-bottom:6px;">Buat Akun Baru</h2>
         <p style="color:#71717A;font-size:13px;line-height:1.6;">Daftarkan diri dan mulai kelola histori service kendaraan Anda secara digital</p>
     </div>
 
