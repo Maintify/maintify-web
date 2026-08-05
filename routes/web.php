@@ -46,6 +46,7 @@ Route::middleware(['auth', 'verified', 'workshop.approved'])->group(function () 
 
 // Vehicle Owner Routes
 Route::middleware(['auth', 'verified', 'role:vehicle_owner'])->group(function () {
+    Route::get('vehicles/qr', [QrCodeController::class, 'index'])->name('vehicles.qr.index');
     Route::resource('vehicles', VehicleController::class);
     Route::get('vehicles/{vehicle}/service-history', [ServiceHistoryController::class, 'index'])->name('vehicles.service-history');
     Route::get('workshops/nearby', [WorkshopSearchController::class, 'index'])->name('workshops.nearby');

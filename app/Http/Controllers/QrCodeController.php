@@ -12,6 +12,23 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class QrCodeController extends Controller
 {
     /**
+     * Redirect to the QR Code page of the first registered vehicle.
+     */
+    public function index(): RedirectResponse
+    {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        $userVehicles = $user->vehicles()->get();
+
+        if ($userVehicles->isEmpty()) {
+            return redirect()->route('vehicles.index')
+                ->with('warning', 'Anda belum memiliki kendaraan terdaftar.');
+        }
+
+        return redirect()->route('vehicles.qr.show', $userVehicles->first());
+    }
+
+    /**
      * Display the vehicle's QR Code page.
      */
     public function show(Vehicle $vehicle, QrCodeService $qrCodeService): View
@@ -26,7 +43,11 @@ class QrCodeController extends Controller
             $vehicle->refresh();
         }
 
-        return view('vehicles.qr-code', compact('vehicle'));
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        $userVehicles = $user->vehicles()->get();
+
+        return view('vehicles.qr-code', compact('vehicle', 'userVehicles'));
     }
 
     /**

@@ -140,4 +140,36 @@ class QrCodeFeatureTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    public function test_index_route_redirects_to_first_vehicle_qr(): void
+    {
+        $response = $this->actingAs($this->owner)
+            ->get(route('vehicles.qr.index'));
+
+        $response->assertRedirect(route('vehicles.qr.show', $this->vehicle));
+    }
+
+    public function test_owner_with_multiple_vehicles_can_see_tabs_and_navigate_between_qr_codes(): void
+    {
+        Storage::fake('public');
+
+        // Create a second vehicle for the same owner
+        $secondVehicle = Vehicle::factory()->create([
+            'user_id' => $this->owner->id,
+            'brand' => 'Honda',
+            'model' => 'Vario 160',
+            'plate_number' => 'B 9999 XYZ',
+        ]);
+
+        $this->qrService->generateForVehicle($this->vehicle);
+        $this->qrService->generateForVehicle($secondVehicle);
+
+        $response = $this->actingAs($this->owner)
+            ->get(route('vehicles.qr.show', $this->vehicle));
+
+        $response->assertStatus(200);
+        $response->assertSee($this->vehicle->plate_number);
+        $response->assertSee($secondVehicle->plate_number);
+        $response->assertSee($secondVehicle->model);
+    }
 }

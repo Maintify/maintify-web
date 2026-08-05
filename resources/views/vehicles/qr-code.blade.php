@@ -14,6 +14,26 @@
             <p style="color: #A1A1AA; font-size: 14px; margin: 0;">Identitas digital untuk keperluan verifikasi dan histori servis di jaringan bengkel mitra Maintify.</p>
         </div>
 
+        {{-- Vehicle Tab Selector (If user has multiple vehicles) --}}
+        @if(isset($userVehicles) && $userVehicles->count() > 1)
+            <div style="margin-bottom: 24px; display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px;">
+                @foreach($userVehicles as $v)
+                    @php $isCurrent = ($v->id === $vehicle->id); @endphp
+                    <a href="{{ route('vehicles.qr.show', $v) }}" 
+                       style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 12px; font-size: 13px; font-weight: 600; text-decoration: none; transition: all 150ms; white-space: nowrap; {{ $isCurrent ? 'background-color: #DC2626; color: #FFFFFF; box-shadow: 0 4px 14px rgba(220, 38, 38, 0.4);' : 'background-color: #181A1A; color: #A1A1AA; border: 1px solid #2E3030;' }}">
+                        <svg style="width: 16px; height: 16px; flex-shrink: 0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2 2h8l2-2zM8 6h4l2 4H6l2-4z"/>
+                        </svg>
+                        <span>{{ $v->brand }} {{ $v->model }}</span>
+                        <span style="font-size: 11px; font-weight: 700; opacity: 0.85; font-family: monospace; background-color: {{ $isCurrent ? 'rgba(0,0,0,0.2)' : '#2E3030' }}; padding: 2px 6px; border-radius: 4px;">
+                            {{ $v->plate_number }}
+                        </span>
+                    </a>
+                @endforeach
+            </div>
+        @endif
+
         {{-- Security Banner (FR-043) --}}
         <div style="background-color: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 12px; padding: 12px 16px; margin-bottom: 24px; display: flex; align-items: flex-start; gap: 12px;">
             <svg style="width: 20px; height: 20px; color: #F59E0B; flex-shrink: 0; margin-top: 2px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
