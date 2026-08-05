@@ -60,6 +60,11 @@ class SuperAdminOtpController extends Controller
         $result = $this->otpService->verifyOtp($user, $request->otp);
 
         if ($result['status'] === 'success') {
+            // Mark email as verified if not already verified
+            if (is_null($user->email_verified_at)) {
+                $user->forceFill(['email_verified_at' => now()])->save();
+            }
+
             // Authenticately login the user
             Auth::login($user);
 
@@ -76,6 +81,10 @@ class SuperAdminOtpController extends Controller
 
             // Regenerate session for security
             $request->session()->regenerate();
+
+            if ($user->role === User::ROLE_WORKSHOP && ! $user->workshop && \Illuminate\Support\Facades\Route::has('register.workshop')) {
+                return redirect()->intended(route('register.workshop'));
+            }
 
             return redirect()->intended(route('dashboard', absolute: false));
         }

@@ -79,13 +79,6 @@
             @enderror
         </div>
 
-        {{-- Divider --}}
-        <div x-show="selected === 'vehicle_owner'" style="display:flex;align-items:center;gap:12px;">
-            <div style="flex:1;height:1px;background:#2E3030;"></div>
-            <span style="font-size:11px;color:#3A3D3D;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">Data Akun</span>
-            <div style="flex:1;height:1px;background:#2E3030;"></div>
-        </div>
-
         {{-- Name --}}
         <div x-show="selected === 'vehicle_owner'" class="form-group">
             <label for="name" style="font-size:13px;font-weight:600;color:#F4F4F5;letter-spacing:0.01em;">Nama Lengkap</label>

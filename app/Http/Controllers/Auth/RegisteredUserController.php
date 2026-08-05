@@ -4,18 +4,24 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\OtpService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
 {
+    protected OtpService $otpService;
+
+    public function __construct(OtpService $otpService)
+    {
+        $this->otpService = $otpService;
+    }
+
     /**
      * Display the registration view.
      */
@@ -47,20 +53,18 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $role,
+            'email_verified_at' => null,
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
+        // Generate & Send 6-digit OTP code to user's registered email
+        $this->otpService->generateAndSendOtp($user);
 
-        if ($role === User::ROLE_WORKSHOP) {
-            if (Route::has('register.workshop')) {
-                return redirect()->route('register.workshop');
-            }
+        // Put user ID into session for OTP verification
+        $request->session()->put('otp_user_id', $user->id);
 
-            return redirect()->route('dashboard');
-        }
-
-        return redirect()->route('dashboard');
+        return redirect()->route('auth.otp.verify')
+            ->with('status', 'Kode OTP verifikasi akun telah dikirim ke email Anda. Silakan masukkan kode untuk mengaktifkan akun.');
     }
 }

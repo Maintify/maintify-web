@@ -5,10 +5,10 @@
     <div style="margin-bottom:32px;">
         <div style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:100px;background:rgba(65,0,8,0.2);border:1px solid rgba(255,154,164,0.2);margin-bottom:16px;">
             <span style="width:6px;height:6px;border-radius:50%;background:#ff9aa4;display:inline-block;animation:pulse 2s infinite;"></span>
-            <span style="font-size:11px;font-weight:600;color:#ff9aa4;letter-spacing:0.04em;text-transform:uppercase;">Keamanan Akun</span>
+            <span style="font-size:11px;font-weight:600;color:#ff9aa4;letter-spacing:0.04em;text-transform:uppercase;">Verifikasi Email</span>
         </div>
-        <h2 style="font-size:26px;font-weight:800;color:#F4F4F5;letter-spacing:-0.03em;line-height:1.2;margin-bottom:6px;">Verifikasi Dua Langkah</h2>
-        <p style="color:#71717A;font-size:14px;line-height:1.6;">Masukkan kode OTP 6-digit yang dikirimkan ke alamat email Anda.</p>
+        <h2 style="font-size:26px;font-weight:800;color:#F4F4F5;letter-spacing:-0.03em;line-height:1.2;margin-bottom:6px;">Verifikasi Kode OTP</h2>
+        <p style="color:#71717A;font-size:14px;line-height:1.6;">Masukkan 6-digit kode OTP yang dikirimkan ke alamat email Anda untuk mengaktifkan akun.</p>
     </div>
 
     {{-- Session Status --}}

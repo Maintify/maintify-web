@@ -37,12 +37,13 @@ class RegistrationTest extends TestCase
             'role' => 'vehicle_owner',
         ]);
 
-        $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard'));
+        $this->assertGuest();
+        $response->assertRedirect(route('auth.otp.verify'));
 
         $this->assertDatabaseHas('users', [
             'email' => 'test@example.com',
             'role' => 'vehicle_owner',
+            'email_verified_at' => null,
         ]);
     }
 
@@ -55,12 +56,13 @@ class RegistrationTest extends TestCase
             'password_confirmation' => 'password',
         ]);
 
-        $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard'));
+        $this->assertGuest();
+        $response->assertRedirect(route('auth.otp.verify'));
 
         $this->assertDatabaseHas('users', [
             'email' => 'default@example.com',
             'role' => 'vehicle_owner',
+            'email_verified_at' => null,
         ]);
     }
 
@@ -76,8 +78,8 @@ class RegistrationTest extends TestCase
             'password_confirmation' => 'password',
         ]);
 
-        $this->assertAuthenticated();
-        $response->assertRedirect(route('dashboard'));
+        $this->assertGuest();
+        $response->assertRedirect(route('auth.otp.verify'));
     }
 
     public function test_new_workshop_users_can_register(): void
@@ -90,19 +92,13 @@ class RegistrationTest extends TestCase
             'role' => 'workshop',
         ]);
 
-        $this->assertAuthenticated();
-
-        // Workshop users are redirected to register.workshop if route exists,
-        // otherwise fall back to dashboard.
-        if (Route::has('register.workshop')) {
-            $response->assertRedirect(route('register.workshop'));
-        } else {
-            $response->assertRedirect(route('dashboard'));
-        }
+        $this->assertGuest();
+        $response->assertRedirect(route('auth.otp.verify'));
 
         $this->assertDatabaseHas('users', [
             'email' => 'workshop@example.com',
             'role' => 'workshop',
+            'email_verified_at' => null,
         ]);
     }
 
