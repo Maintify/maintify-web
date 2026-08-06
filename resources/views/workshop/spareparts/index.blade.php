@@ -74,6 +74,7 @@
                             <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-400">Nama Sparepart</th>
                             <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-400">Kategori</th>
                             <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-400 text-right">Harga</th>
+                            <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-400 text-center">Stok</th>
                             <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-400 text-center">Status</th>
                             @if(Auth::user()->isWorkshop())
                                 <th class="px-6 py-4 text-xs font-semibold uppercase tracking-wider text-zinc-400 text-center">Aksi</th>
@@ -97,6 +98,21 @@
                                 </td>
                                 <td class="px-6 py-4 text-right font-medium text-zinc-200">
                                     {{ $part->formatted_price }}
+                                </td>
+                                <td class="px-6 py-4 text-center">
+                                    @if(($part->stock ?? 0) > 5)
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-emerald-950/40 border border-emerald-800/60 text-emerald-400">
+                                            {{ $part->stock }} unit
+                                        </span>
+                                    @elseif(($part->stock ?? 0) > 0)
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-amber-950/40 border border-amber-800/60 text-amber-400">
+                                            {{ $part->stock }} unit
+                                        </span>
+                                    @else
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-950/40 border border-rose-800/60 text-rose-400">
+                                            Habis (0)
+                                        </span>
+                                    @endif
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     @if($part->is_active)
@@ -141,7 +157,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="{{ Auth::user()->isWorkshop() ? 5 : 4 }}" class="px-6 py-12 text-center">
+                                <td colspan="{{ Auth::user()->isWorkshop() ? 6 : 5 }}" class="px-6 py-12 text-center">
                                     <svg class="w-12 h-12 text-zinc-700 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                                     </svg>

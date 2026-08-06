@@ -161,6 +161,16 @@ class ServiceRecordController extends Controller
                     'unit_price' => $part['unit_price'],
                     'part_category' => $part['part_category'] ?? null,
                 ]);
+
+                // Auto-deduct stock from workshop spareparts catalog if matching item exists
+                $catalogPart = $workshop->spareparts()
+                    ->whereRaw('LOWER(name) = ?', [mb_strtolower(trim($part['part_name']))])
+                    ->first();
+
+                if ($catalogPart) {
+                    $newStock = max(0, $catalogPart->stock - (int) $part['quantity']);
+                    $catalogPart->update(['stock' => $newStock]);
+                }
             }
         }
 
@@ -313,6 +323,16 @@ class ServiceRecordController extends Controller
                     'unit_price' => $part['unit_price'],
                     'part_category' => $part['part_category'] ?? null,
                 ]);
+
+                // Auto-deduct stock from workshop spareparts catalog if matching item exists
+                $catalogPart = $workshop->spareparts()
+                    ->whereRaw('LOWER(name) = ?', [mb_strtolower(trim($part['part_name']))])
+                    ->first();
+
+                if ($catalogPart) {
+                    $newStock = max(0, $catalogPart->stock - (int) $part['quantity']);
+                    $catalogPart->update(['stock' => $newStock]);
+                }
             }
         }
 

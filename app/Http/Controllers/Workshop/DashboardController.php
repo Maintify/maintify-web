@@ -140,6 +140,22 @@ class DashboardController extends Controller
             ->values()
             ->take(5);
 
+        $catalogStockMap = $workshop->spareparts()
+            ->get()
+            ->keyBy(fn($p) => mb_strtolower(trim($p->name)));
+
+        $fastMovingParts->each(function ($part) use ($catalogStockMap) {
+            $matching = $catalogStockMap->get(mb_strtolower(trim($part->part_name)));
+            $part->current_stock = $matching ? (int) $matching->stock : 0;
+            $part->unit_price = $matching ? (float) $matching->price : 0;
+        });
+
+        $slowMovingParts->each(function ($part) use ($catalogStockMap) {
+            $matching = $catalogStockMap->get(mb_strtolower(trim($part->part_name)));
+            $part->current_stock = $matching ? (int) $matching->stock : 0;
+            $part->unit_price = $matching ? (float) $matching->price : 0;
+        });
+
         // 4c. Dead Stock (based on periodDead)
         $deadStartDate = $getStartDate($periodDead);
         $deadQuery = DB::table('service_parts')

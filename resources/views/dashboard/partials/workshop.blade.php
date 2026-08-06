@@ -217,8 +217,9 @@
                                     type: 'fast',
                                     typeName: 'Fast Moving',
                                     qty: '{{ $part->total_quantity }} unit',
+                                    remainingStock: '{{ $part->current_stock }} unit',
                                     revenue: 'Rp {{ number_format((float) $part->total_revenue, 0, ',', '.') }}',
-                                    price: 'Terhitung dari transaksi',
+                                    price: '{{ $part->unit_price > 0 ? 'Rp ' . number_format($part->unit_price, 0, ',', '.') : 'Terhitung dari transaksi' }}',
                                     lastUsed: 'Dalam {{ $periodFast }} hari terakhir',
                                     recommendation: 'Stok bergerak sangat cepat! Rekomendasikan re-stock minimal 15-20 unit agar tidak kehabisan persediaan.'
                                  }; showModal = true"
@@ -297,8 +298,9 @@
                                     type: 'slow',
                                     typeName: 'Slow Moving',
                                     qty: '{{ $part->total_quantity }} unit',
+                                    remainingStock: '{{ $part->current_stock }} unit',
                                     revenue: 'Pergerakan Lambat',
-                                    price: 'Terhitung dari transaksi',
+                                    price: '{{ $part->unit_price > 0 ? 'Rp ' . number_format($part->unit_price, 0, ',', '.') : 'Terhitung dari transaksi' }}',
                                     lastUsed: '{{ $part->last_used_date ? \Carbon\Carbon::parse($part->last_used_date)->translatedFormat('d M Y') : '-' }}',
                                     recommendation: 'Pergerakan stok lambat. Batasi pembelian stok baru sampai persediaan saat ini mendekati habis.'
                                  }; showModal = true"
@@ -379,6 +381,7 @@
                                     type: 'dead',
                                     typeName: 'Dead Stock',
                                     qty: '0 unit',
+                                    remainingStock: '{{ $part->stock }} unit',
                                     revenue: 'Rp 0',
                                     price: '{{ $part->formatted_price }}',
                                     lastUsed: '0 Transaksi ({{ $periodDead }} Hari Terakhir)',
@@ -477,6 +480,16 @@
 
                 {{-- Stats Grid --}}
                 <div class="grid grid-cols-2 gap-3">
+                    <div class="p-3.5 bg-zinc-900/90 border border-emerald-900/50 rounded-xl col-span-2 flex items-center justify-between">
+                        <div>
+                            <p class="text-[11px] text-zinc-400 font-semibold uppercase tracking-wider">Stok Tersisa Saat Ini</p>
+                            <p class="text-lg font-black text-emerald-400 mt-0.5" x-text="activePart?.remainingStock"></p>
+                        </div>
+                        <span class="px-3 py-1 rounded-lg bg-emerald-950/80 border border-emerald-800/80 text-emerald-400 text-xs font-bold">
+                            Katalog Bengkel
+                        </span>
+                    </div>
+
                     <div class="p-3.5 bg-zinc-900/80 border border-zinc-800 rounded-xl">
                         <p class="text-[11px] text-zinc-500 font-medium">Total Terpakai</p>
                         <p class="text-sm font-extrabold text-zinc-100 mt-0.5" x-text="activePart?.qty"></p>

@@ -75,6 +75,24 @@
                     @enderror
                 </div>
 
+                {{-- Stock --}}
+                <div>
+                    <label for="stock" class="block text-sm font-medium text-zinc-300 mb-1.5">
+                        Stok Tersisa (Unit) <span class="text-red-500">*</span>
+                    </label>
+                    <input type="number"
+                           id="stock"
+                           name="stock"
+                           value="{{ old('stock', 0) }}"
+                           required
+                           min="0"
+                           placeholder="Contoh: 25"
+                           class="w-full bg-zinc-900 border border-zinc-700 text-zinc-100 placeholder-zinc-650 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500 transition-all">
+                    @error('stock')
+                        <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 {{-- Active Toggle --}}
                 <div class="flex items-center gap-3 py-2 border-t border-zinc-800">
                     <div class="flex items-center h-5">

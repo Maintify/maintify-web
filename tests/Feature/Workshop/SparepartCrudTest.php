@@ -99,6 +99,7 @@ class SparepartCrudTest extends TestCase
             'name' => 'Busi Iridium',
             'category' => 'Kelistrikan',
             'price' => 120000,
+            'stock' => 10,
             'is_active' => '1',
         ];
 
@@ -149,6 +150,7 @@ class SparepartCrudTest extends TestCase
             'name' => 'Oli Mahal',
             'category' => 'Oli Super',
             'price' => 150000,
+            'stock' => 15,
             'is_active' => '0',
         ];
 

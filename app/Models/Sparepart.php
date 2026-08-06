@@ -18,11 +18,13 @@ class Sparepart extends Model
         'name',
         'category',
         'price',
+        'stock',
         'is_active',
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
+        'stock' => 'integer',
         'is_active' => 'boolean',
     ];
 
