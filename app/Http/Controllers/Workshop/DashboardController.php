@@ -63,15 +63,106 @@ class DashboardController extends Controller
             $chartValues[] = (int) ($dailyCounts[$dateStr] ?? 0);
         }
 
-        // 4. Top spareparts summary (top 5 spareparts by total quantity)
-        $topSpareparts = ServicePart::query()
+        // 4. Inventory Analysis (Fast Moving, Slow Moving, Dead Stock) with independent period parameters
+        $periodFast = request('period_fast', request('period', '30'));
+        $periodSlow = request('period_slow', request('period', '30'));
+        $periodDead = request('period_dead', request('period', '30'));
+
+        $getStartDate = function (string $p) {
+            return match ($p) {
+                '30' => now()->subDays(30),
+                '90' => now()->subDays(90),
+                '180' => now()->subDays(180),
+                '365' => now()->subDays(365),
+                default => null,
+            };
+        };
+
+        // 4a. Fast Moving (based on periodFast)
+        $fastStartDate = $getStartDate($periodFast);
+        $fastQuery = DB::table('service_parts')
             ->join('service_records', 'service_parts.service_record_id', '=', 'service_records.id')
-            ->where('service_records.workshop_id', $workshop->id)
-            ->select('service_parts.part_name', DB::raw('SUM(service_parts.quantity) as total_quantity'))
-            ->groupBy('service_parts.part_name')
-            ->orderByDesc('total_quantity')
-            ->limit(5)
+            ->where('service_records.workshop_id', $workshop->id);
+
+        if ($fastStartDate !== null) {
+            $fastQuery->where('service_records.service_date', '>=', $fastStartDate);
+        }
+
+        $fastUsed = $fastQuery
+            ->select(
+                'service_parts.part_name',
+                'service_parts.part_category',
+                DB::raw('SUM(service_parts.quantity) as total_quantity'),
+                DB::raw('SUM(service_parts.quantity * service_parts.unit_price) as total_revenue')
+            )
+            ->groupBy('service_parts.part_name', 'service_parts.part_category')
             ->get();
+
+        $fastMovingParts = $fastUsed
+            ->where('total_quantity', '>=', 5)
+            ->sortByDesc('total_quantity')
+            ->values()
+            ->take(5);
+
+        if ($fastMovingParts->isEmpty()) {
+            $fastMovingParts = $fastUsed
+                ->where('total_quantity', '>', 0)
+                ->sortByDesc('total_quantity')
+                ->values()
+                ->take(5);
+        }
+
+        // 4b. Slow Moving (based on periodSlow)
+        $slowStartDate = $getStartDate($periodSlow);
+        $slowQuery = DB::table('service_parts')
+            ->join('service_records', 'service_parts.service_record_id', '=', 'service_records.id')
+            ->where('service_records.workshop_id', $workshop->id);
+
+        if ($slowStartDate !== null) {
+            $slowQuery->where('service_records.service_date', '>=', $slowStartDate);
+        }
+
+        $slowUsed = $slowQuery
+            ->select(
+                'service_parts.part_name',
+                'service_parts.part_category',
+                DB::raw('SUM(service_parts.quantity) as total_quantity'),
+                DB::raw('MAX(service_records.service_date) as last_used_date')
+            )
+            ->groupBy('service_parts.part_name', 'service_parts.part_category')
+            ->get();
+
+        $fastNamesForSlow = $fastMovingParts->pluck('part_name')->toArray();
+
+        $slowMovingParts = $slowUsed
+            ->reject(fn ($item) => in_array($item->part_name, $fastNamesForSlow, true))
+            ->sortBy('total_quantity')
+            ->values()
+            ->take(5);
+
+        // 4c. Dead Stock (based on periodDead)
+        $deadStartDate = $getStartDate($periodDead);
+        $deadQuery = DB::table('service_parts')
+            ->join('service_records', 'service_parts.service_record_id', '=', 'service_records.id')
+            ->where('service_records.workshop_id', $workshop->id);
+
+        if ($deadStartDate !== null) {
+            $deadQuery->where('service_records.service_date', '>=', $deadStartDate);
+        }
+
+        $usedDeadNames = $deadQuery->pluck('service_parts.part_name')
+            ->map(fn ($n) => mb_strtolower(trim($n)))
+            ->unique()
+            ->toArray();
+
+        $deadStockParts = $workshop->spareparts()
+            ->where('is_active', true)
+            ->get()
+            ->reject(function ($sparepart) use ($usedDeadNames) {
+                return in_array(mb_strtolower(trim($sparepart->name)), $usedDeadNames, true);
+            })
+            ->values()
+            ->take(5);
 
         // 5. Active Customers
         $activeCustomers = $workshop->serviceRecords()
@@ -95,7 +186,12 @@ class DashboardController extends Controller
             'activeStaffCount',
             'chartLabels',
             'chartValues',
-            'topSpareparts',
+            'periodFast',
+            'periodSlow',
+            'periodDead',
+            'fastMovingParts',
+            'slowMovingParts',
+            'deadStockParts',
             'activeCustomers',
             'recentServices'
         ));

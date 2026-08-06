@@ -158,15 +158,11 @@ class DashboardTest extends TestCase
         $response->assertViewHas('weeklyServices');
         $response->assertViewHas('monthlyServices');
         $response->assertViewHas('activeStaffCount');
-        $response->assertViewHas('topSpareparts');
+        $response->assertViewHas('fastMovingParts');
+        $response->assertViewHas('slowMovingParts');
+        $response->assertViewHas('deadStockParts');
         $response->assertViewHas('chartLabels');
         $response->assertViewHas('chartValues');
-
-        // Check top spareparts counts are correct
-        $topParts = $response->viewData('topSpareparts');
-        $this->assertCount(3, $topParts);
-        $this->assertEquals('Oli AHM SPX2', $topParts->first()->part_name);
-        $this->assertEquals(2, $topParts->first()->total_quantity);
     }
 
     /** @test */

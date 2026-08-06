@@ -78,11 +78,11 @@
      ============================================================ --}}
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-    {{-- Left Section (Charts & Service List) - Takes 2 cols --}}
+    {{-- Left Section (Charts) - Takes 2 cols --}}
     <div class="lg:col-span-2 flex flex-col gap-6">
 
         {{-- Trending Chart Card --}}
-        <div class="card">
+        <div class="card h-full">
             <div class="card-header">
                 <div>
                     <h3 class="card-title">Tren Kendaraan Dilayani</h3>
@@ -95,8 +95,13 @@
             </div>
         </div>
 
+    </div>
+
+    {{-- Right Section (Recent Services) - Takes 1 col --}}
+    <div class="flex flex-col gap-6">
+
         {{-- Recent Services Card --}}
-        <div class="card">
+        <div class="card h-full">
             <div class="section-title">
                 <h3>Sesi Service Terbaru</h3>
             </div>
@@ -105,7 +110,7 @@
                 <div class="empty-state" style="padding:40px 0;">
                     <div class="empty-state-icon">
                         <svg style="width:28px;height:28px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                         </svg>
                     </div>
                     <p class="empty-state-title">Belum ada aktivitas service</p>
@@ -113,14 +118,14 @@
             @else
                 <div style="display:flex;flex-direction:column;gap:0;">
                     @foreach($recentServices as $service)
-                        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;{{ !$loop->last ? 'border-bottom:1px solid var(--color-border);' : '' }}">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;{{ !$loop->last ? 'border-bottom:1px solid var(--color-border);' : '' }}">
 
                             {{-- Left: vehicle info + owner --}}
                             <div style="flex:1;min-width:0;">
-                                <p style="font-size:14px;font-weight:600;color:#F4F4F5;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                    {{ $service->vehicle->brand }} {{ $service->vehicle->model }} ({{ $service->vehicle->year }})
+                                <p style="font-size:13px;font-weight:600;color:#F4F4F5;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                                    {{ $service->vehicle->brand }} {{ $service->vehicle->model }}
                                 </p>
-                                <p style="font-size:12px;color:#71717A;margin:2px 0 0;">
+                                <p style="font-size:11px;color:#71717A;margin:2px 0 0;">
                                     {{ $service->vehicle->plate_number }}
                                     @if($service->vehicle->owner)
                                         · {{ $service->vehicle->owner->name }}
@@ -128,29 +133,14 @@
                                 </p>
                             </div>
 
-                            {{-- Middle: service type + date --}}
-                            <div style="flex-shrink:0;text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:2px;">
-                                <span style="font-size:12px;font-weight:500;color:#A1A1AA;">
-                                    {{ $service->serviceTypeLabelReadable }}
+                            {{-- Right: cost & date --}}
+                            <div style="flex-shrink:0;text-align:right;">
+                                <span style="font-size:12px;font-weight:600;color:#F4F4F5;display:block;">
+                                    {{ $service->formatted_cost ?: '—' }}
                                 </span>
-                                <span style="font-size:11px;color:#71717A;">
-                                    {{ $service->service_date->format('d M Y') }}
+                                <span style="font-size:10px;color:#71717A;">
+                                    {{ $service->service_date->format('d M') }}
                                 </span>
-                            </div>
-
-                            {{-- Right: cost --}}
-                            <div style="flex-shrink:0;text-align:right;min-width:100px;">
-                                @if($service->cost && $service->cost > 0)
-                                    <span style="font-size:13px;font-weight:600;color:#F4F4F5;">
-                                        {{ $service->formatted_cost }}
-                                    </span>
-                                @elseif($service->total_cost && $service->total_cost > 0)
-                                    <span style="font-size:13px;font-weight:600;color:#F4F4F5;">
-                                        {{ $service->formatted_cost }}
-                                    </span>
-                                @else
-                                    <span style="font-size:13px;color:#71717A;">—</span>
-                                @endif
                             </div>
 
                         </div>
@@ -161,80 +151,237 @@
 
     </div>
 
-    {{-- Right Section (Quick Actions & Top Parts) - Takes 1 col --}}
-    <div class="flex flex-col gap-6">
+</div>
 
-        {{-- Quick Access Card --}}
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title">Akses Cepat</h3>
+{{-- ============================================================
+     Inventory Analysis Section (Fast Moving, Slow Moving, Dead Stock)
+     ============================================================ --}}
+<div class="mt-8">
+    <div class="flex items-center justify-between mb-4">
+        <div>
+            <div class="flex items-center gap-2">
+                <h2 class="text-lg font-bold text-zinc-100">Analisis Inventaris Sparepart</h2>
+                <span class="px-2 py-0.5 text-[11px] font-semibold bg-zinc-800 text-zinc-300 rounded-full border border-zinc-700">Live Analytics</span>
             </div>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-                <a href="{{ route('workshop.scan') }}" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
-                    <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8H3a2 2 0 00-2 2v6a2 2 0 002 2h2m2-12V4a2 2 0 012-2h4a2 2 0 012 2v1"/>
-                    </svg>
-                    Scan QR Kendaraan
-                </a>
-                <a href="{{ route('workshop.reports.index') }}" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
-                    <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                    </svg>
-                    Laporan Operasional
-                </a>
-                <a href="{{ route('workshop.staff.index') }}" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
-                    <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                    Kelola Staf Bengkel
-                </a>
-                <a href="{{ route('workshop.spareparts.index') }}" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
-                    <svg style="width:16px;height:16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-                    </svg>
-                    Katalog Sparepart
-                </a>
-            </div>
+            <p class="text-xs text-zinc-500 mt-0.5">Klasifikasi performa pergerakan stok berdasarkan volume penggunaan servis.</p>
         </div>
+    </div>
 
-        {{-- Top Spareparts Summary --}}
-        <div class="card">
-            <div class="card-header">
-                <div>
-                    <h3 class="card-title">Top Sparepart</h3>
-                    <p class="card-subtitle">Suku cadang paling banyak digunakan</p>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        {{-- CARD 1: FAST MOVING (BEST SELLER) --}}
+        <div class="bg-[#181A1A] border border-emerald-900/40 rounded-2xl p-5 shadow-lg relative overflow-hidden flex flex-col justify-between">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-500 to-teal-400"></div>
+
+            <div>
+                {{-- Header with Individual Period Filter --}}
+                <div class="flex items-center justify-between gap-2 mb-4 pb-3 border-b border-zinc-800/80">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-emerald-950/60 border border-emerald-800/50 flex items-center justify-center text-emerald-400 flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-zinc-100">Fast Moving</h3>
+                            <p class="text-[11px] text-zinc-500">Best Seller</p>
+                        </div>
+                    </div>
+
+                    <form method="GET" action="{{ route('dashboard') }}" class="flex items-center">
+                        <input type="hidden" name="period_slow" value="{{ $periodSlow }}">
+                        <input type="hidden" name="period_dead" value="{{ $periodDead }}">
+                        <select name="period_fast" onchange="this.form.submit()"
+                                class="bg-[#121414] border border-[#2E3030] text-emerald-400 text-[11px] font-semibold rounded-lg px-6 py-1 focus:outline-none focus:border-emerald-500 cursor-pointer">
+                            <option value="30" {{ $periodFast === '30' ? 'selected' : '' }}>30 Hari</option>
+                            <option value="90" {{ $periodFast === '90' ? 'selected' : '' }}>90 Hari</option>
+                            <option value="180" {{ $periodFast === '180' ? 'selected' : '' }}>180 Hari</option>
+                            <option value="365" {{ $periodFast === '365' ? 'selected' : '' }}>1 Tahun</option>
+                            <option value="all" {{ $periodFast === 'all' ? 'selected' : '' }}>Semua</option>
+                        </select>
+                    </form>
                 </div>
-            </div>
 
-            @if($topSpareparts->isEmpty())
-                <div class="empty-state" style="padding:24px 0;">
-                    <div class="empty-state-icon" style="width:40px;height:40px;margin-bottom:12px;">
-                        <svg style="width:20px;height:20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                @if($fastMovingParts->isEmpty())
+                    <div class="py-8 text-center border border-dashed border-zinc-800 rounded-xl my-2">
+                        <svg class="w-8 h-8 text-zinc-700 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                         </svg>
+                        <p class="text-xs text-zinc-500 font-medium">Belum ada sparepart fast moving</p>
+                        <p class="text-[11px] text-zinc-650 mt-0.5">Belum ada item dengan volume transaksi tinggi di periode ini.</p>
                     </div>
-                    <p class="empty-state-title" style="font-size:13px;">Belum ada sparepart digunakan</p>
-                </div>
-            @else
-                <div style="display:flex;flex-direction:column;gap:12px;">
-                    @foreach($topSpareparts as $part)
-                        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
-                            <div style="flex:1;min-width:0;">
-                                <p style="font-size:13px;font-weight:600;color:#F4F4F5;margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
-                                    {{ $part->part_name }}
-                                </p>
+                @else
+                    <div class="space-y-3 my-2">
+                        @foreach($fastMovingParts as $part)
+                            <div class="p-3 bg-zinc-900/60 border border-zinc-800/80 rounded-xl hover:border-emerald-800/50 transition-all">
+                                <div class="flex items-start justify-between gap-2">
+                                    <div class="min-w-0">
+                                        <p class="text-xs font-bold text-zinc-200 truncate">{{ $part->part_name }}</p>
+                                        <p class="text-[11px] text-zinc-500 mt-0.5">{{ $part->part_category ?? 'Suku Cadang' }}</p>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded-lg bg-emerald-950/70 border border-emerald-900/50 text-emerald-400 text-xs font-extrabold flex-shrink-0">
+                                        {{ $part->total_quantity }} unit
+                                    </span>
+                                </div>
+                                <div class="mt-2 pt-2 border-t border-zinc-850/80 flex items-center justify-between text-[11px]">
+                                    <span class="text-zinc-500">Omset Perkiraan:</span>
+                                    <span class="font-semibold text-emerald-300">Rp {{ number_format((float) $part->total_revenue, 0, ',', '.') }}</span>
+                                </div>
                             </div>
-                            <span class="badge badge-primary" style="font-size:11px;font-weight:600;padding:2px 8px;">
-                                {{ $part->total_quantity }} unit
-                            </span>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+            <div class="mt-3 pt-3 border-t border-zinc-800/60 text-[11px] text-zinc-500 flex items-center justify-between">
+                <span>Rekomendasi:</span>
+                <span class="text-emerald-400 font-medium">Prioritaskan Re-stock Stok</span>
+            </div>
+        </div>
+
+        {{-- CARD 2: SLOW MOVING --}}
+        <div class="bg-[#181A1A] border border-amber-900/40 rounded-2xl p-5 shadow-lg relative overflow-hidden flex flex-col justify-between">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-orange-400"></div>
+
+            <div>
+                {{-- Header with Individual Period Filter --}}
+                <div class="flex items-center justify-between gap-2 mb-4 pb-3 border-b border-zinc-800/80">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-amber-950/60 border border-amber-800/50 flex items-center justify-center text-amber-400 flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/>
+                            </svg>
                         </div>
-                    @endforeach
+                        <div>
+                            <h3 class="text-sm font-bold text-zinc-100">Slow Moving</h3>
+                            <p class="text-[11px] text-zinc-500">Pergerakan Lambat</p>
+                        </div>
+                    </div>
+
+                    <form method="GET" action="{{ route('dashboard') }}" class="flex items-center">
+                        <input type="hidden" name="period_fast" value="{{ $periodFast }}">
+                        <input type="hidden" name="period_dead" value="{{ $periodDead }}">
+                        <select name="period_slow" onchange="this.form.submit()"
+                                class="bg-[#121414] border border-[#2E3030] text-amber-400 text-[11px] font-semibold rounded-lg px-6 py-1 focus:outline-none focus:border-amber-500 cursor-pointer">
+                            <option value="30" {{ $periodSlow === '30' ? 'selected' : '' }}>30 Hari</option>
+                            <option value="90" {{ $periodSlow === '90' ? 'selected' : '' }}>90 Hari</option>
+                            <option value="180" {{ $periodSlow === '180' ? 'selected' : '' }}>180 Hari</option>
+                            <option value="365" {{ $periodSlow === '365' ? 'selected' : '' }}>1 Tahun</option>
+                            <option value="all" {{ $periodSlow === 'all' ? 'selected' : '' }}>Semua</option>
+                        </select>
+                    </form>
                 </div>
-            @endif
+
+                @if($slowMovingParts->isEmpty())
+                    <div class="py-8 text-center border border-dashed border-zinc-800 rounded-xl my-2">
+                        <svg class="w-8 h-8 text-zinc-700 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                        <p class="text-xs text-zinc-500 font-medium">Tidak ada sparepart slow moving</p>
+                        <p class="text-[11px] text-zinc-650 mt-0.5">Semua item terpakai memiliki ritme penjualan yang stabil.</p>
+                    </div>
+                @else
+                    <div class="space-y-3 my-2">
+                        @foreach($slowMovingParts as $part)
+                            <div class="p-3 bg-zinc-900/60 border border-zinc-800/80 rounded-xl hover:border-amber-800/50 transition-all">
+                                <div class="flex items-start justify-between gap-2">
+                                    <div class="min-w-0">
+                                        <p class="text-xs font-bold text-zinc-200 truncate">{{ $part->part_name }}</p>
+                                        <p class="text-[11px] text-zinc-500 mt-0.5">{{ $part->part_category ?? 'Suku Cadang' }}</p>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded-lg bg-amber-950/70 border border-amber-900/50 text-amber-400 text-xs font-bold flex-shrink-0">
+                                        {{ $part->total_quantity }} unit
+                                    </span>
+                                </div>
+                                <div class="mt-2 pt-2 border-t border-zinc-850/80 flex items-center justify-between text-[11px]">
+                                    <span class="text-zinc-500">Terakhir Terpakai:</span>
+                                    <span class="font-medium text-amber-300">
+                                        {{ $part->last_used_date ? \Carbon\Carbon::parse($part->last_used_date)->translatedFormat('d M Y') : '-' }}
+                                    </span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+            <div class="mt-3 pt-3 border-t border-zinc-800/60 text-[11px] text-zinc-500 flex items-center justify-between">
+                <span>Rekomendasi:</span>
+                <span class="text-amber-400 font-medium">Batasi Pembelian Baru</span>
+            </div>
+        </div>
+
+        {{-- CARD 3: DEAD STOCK --}}
+        <div class="bg-[#181A1A] border border-rose-900/40 rounded-2xl p-5 shadow-lg relative overflow-hidden flex flex-col justify-between">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-rose-500 to-red-600"></div>
+
+            <div>
+                {{-- Header with Individual Period Filter --}}
+                <div class="flex items-center justify-between gap-2 mb-4 pb-3 border-b border-zinc-800/80">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-9 h-9 rounded-xl bg-rose-950/60 border border-rose-800/50 flex items-center justify-center text-rose-400 flex-shrink-0">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-bold text-zinc-100">Dead Stock</h3>
+                            <p class="text-[11px] text-zinc-500">0 Transaksi</p>
+                        </div>
+                    </div>
+
+                    <form method="GET" action="{{ route('dashboard') }}" class="flex items-center">
+                        <input type="hidden" name="period_fast" value="{{ $periodFast }}">
+                        <input type="hidden" name="period_slow" value="{{ $periodSlow }}">
+                        <select name="period_dead" onchange="this.form.submit()"
+                                class="bg-[#121414] border border-[#2E3030] text-rose-400 text-[11px] font-semibold rounded-lg px-6 py-1 focus:outline-none focus:border-rose-500 cursor-pointer">
+                            <option value="30" {{ $periodDead === '30' ? 'selected' : '' }}>30 Hari</option>
+                            <option value="90" {{ $periodDead === '90' ? 'selected' : '' }}>90 Hari</option>
+                            <option value="180" {{ $periodDead === '180' ? 'selected' : '' }}>180 Hari</option>
+                            <option value="365" {{ $periodDead === '365' ? 'selected' : '' }}>1 Tahun</option>
+                            <option value="all" {{ $periodDead === 'all' ? 'selected' : '' }}>Semua</option>
+                        </select>
+                    </form>
+                </div>
+
+                @if($deadStockParts->isEmpty())
+                    <div class="py-8 text-center border border-dashed border-zinc-800 rounded-xl my-2">
+                        <svg class="w-8 h-8 text-zinc-700 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <p class="text-xs text-zinc-500 font-medium">Bebas Dead Stock!</p>
+                        <p class="text-[11px] text-zinc-650 mt-0.5">Semua item katalog pernah digunakan dalam periode ini.</p>
+                    </div>
+                @else
+                    <div class="space-y-3 my-2">
+                        @foreach($deadStockParts as $part)
+                            <div class="p-3 bg-zinc-900/60 border border-zinc-800/80 rounded-xl hover:border-rose-800/50 transition-all">
+                                <div class="flex items-start justify-between gap-2">
+                                    <div class="min-w-0">
+                                        <p class="text-xs font-bold text-zinc-200 truncate">{{ $part->name }}</p>
+                                        <p class="text-[11px] text-zinc-500 mt-0.5">{{ $part->category ?? 'Katalog Bengkel' }}</p>
+                                    </div>
+                                    <span class="px-2 py-0.5 rounded-lg bg-rose-950/70 border border-rose-900/50 text-rose-400 text-xs font-bold flex-shrink-0">
+                                        0 unit
+                                    </span>
+                                </div>
+                                <div class="mt-2 pt-2 border-t border-zinc-850/80 flex items-center justify-between text-[11px]">
+                                    <span class="text-zinc-500">Harga Katalog:</span>
+                                    <span class="font-semibold text-rose-300">{{ $part->formatted_price }}</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+            <div class="mt-3 pt-3 border-t border-zinc-800/60 text-[11px] text-zinc-500 flex items-center justify-between">
+                <span>Rekomendasi:</span>
+                <span class="text-rose-400 font-medium">Buat Promo / Bundling Diskon</span>
+            </div>
         </div>
 
     </div>
-
 </div>
 
 {{-- ============================================================
