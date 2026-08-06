@@ -55,7 +55,7 @@ class ScanController extends Controller
         if (! $qrCode) {
             $cleanToken = strtoupper(str_replace(' ', '', $token));
             $vehicleByPlate = Vehicle::whereRaw("UPPER(REPLACE(plate_number, ' ', '')) = ?", [$cleanToken])
-                ->orWhere('vin', $token)
+                ->orWhere('chassis_number', $token)
                 ->first();
 
             if ($vehicleByPlate) {
