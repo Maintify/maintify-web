@@ -135,7 +135,7 @@ class DashboardController extends Controller
         $fastNamesForSlow = $fastMovingParts->pluck('part_name')->toArray();
 
         $slowMovingParts = $slowUsed
-            ->reject(fn ($item) => in_array($item->part_name, $fastNamesForSlow, true))
+            ->reject(fn($item) => in_array($item->part_name, $fastNamesForSlow, true))
             ->sortBy('total_quantity')
             ->values()
             ->take(5);
@@ -151,7 +151,7 @@ class DashboardController extends Controller
         }
 
         $usedDeadNames = $deadQuery->pluck('service_parts.part_name')
-            ->map(fn ($n) => mb_strtolower(trim($n)))
+            ->map(fn($n) => mb_strtolower(trim($n)))
             ->unique()
             ->toArray();
 

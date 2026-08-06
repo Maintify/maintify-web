@@ -99,6 +99,8 @@ class InventoryAnalysisDashboardTest extends TestCase
         $response->assertSee('Dead Stock');
         $response->assertSee('Oli Mesin Honda MPX2');
         $response->assertSee('Filter Udara Vario 160');
+        $response->assertSee('showModal = true');
+        $response->assertSee('activePart');
         $response->assertDontSee('Akses Cepat');
         $response->assertDontSee('Top Sparepart');
     }

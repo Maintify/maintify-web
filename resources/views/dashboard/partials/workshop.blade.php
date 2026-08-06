@@ -156,7 +156,7 @@
 {{-- ============================================================
      Inventory Analysis Section (Fast Moving, Slow Moving, Dead Stock)
      ============================================================ --}}
-<div class="mt-8">
+<div class="mt-8" x-data="{ showModal: false, activePart: null }">
     <div class="flex items-center justify-between mb-4">
         <div>
             <div class="flex items-center gap-2">
@@ -193,11 +193,9 @@
                         <input type="hidden" name="period_dead" value="{{ $periodDead }}">
                         <select name="period_fast" onchange="this.form.submit()"
                                 class="bg-[#121414] border border-[#2E3030] text-emerald-400 text-[11px] font-semibold rounded-lg px-6 py-1 focus:outline-none focus:border-emerald-500 cursor-pointer">
+                            <option value="7" {{ $periodFast === '7' ? 'selected' : '' }}>7 Hari</option>
                             <option value="30" {{ $periodFast === '30' ? 'selected' : '' }}>30 Hari</option>
-                            <option value="90" {{ $periodFast === '90' ? 'selected' : '' }}>90 Hari</option>
-                            <option value="180" {{ $periodFast === '180' ? 'selected' : '' }}>180 Hari</option>
                             <option value="365" {{ $periodFast === '365' ? 'selected' : '' }}>1 Tahun</option>
-                            <option value="all" {{ $periodFast === 'all' ? 'selected' : '' }}>Semua</option>
                         </select>
                     </form>
                 </div>
@@ -213,7 +211,19 @@
                 @else
                     <div class="space-y-3 my-2">
                         @foreach($fastMovingParts as $part)
-                            <div class="p-3 bg-zinc-900/60 border border-zinc-800/80 rounded-xl hover:border-emerald-800/50 transition-all">
+                            <div @click="activePart = {
+                                    name: '{{ addslashes($part->part_name) }}',
+                                    category: '{{ addslashes($part->part_category ?? 'Suku Cadang') }}',
+                                    type: 'fast',
+                                    typeName: 'Fast Moving',
+                                    qty: '{{ $part->total_quantity }} unit',
+                                    revenue: 'Rp {{ number_format((float) $part->total_revenue, 0, ',', '.') }}',
+                                    price: 'Terhitung dari transaksi',
+                                    lastUsed: 'Dalam {{ $periodFast }} hari terakhir',
+                                    recommendation: 'Stok bergerak sangat cepat! Rekomendasikan re-stock minimal 15-20 unit agar tidak kehabisan persediaan.'
+                                 }; showModal = true"
+                                 class="p-3 bg-zinc-900/60 border border-zinc-800/80 rounded-xl hover:border-emerald-700/60 hover:bg-zinc-850/80 hover:scale-[1.01] transition-all cursor-pointer"
+                                 title="Klik untuk melihat detail produk">
                                 <div class="flex items-start justify-between gap-2">
                                     <div class="min-w-0">
                                         <p class="text-xs font-bold text-zinc-200 truncate">{{ $part->part_name }}</p>
@@ -263,11 +273,9 @@
                         <input type="hidden" name="period_dead" value="{{ $periodDead }}">
                         <select name="period_slow" onchange="this.form.submit()"
                                 class="bg-[#121414] border border-[#2E3030] text-amber-400 text-[11px] font-semibold rounded-lg px-6 py-1 focus:outline-none focus:border-amber-500 cursor-pointer">
+                            <option value="7" {{ $periodSlow === '7' ? 'selected' : '' }}>7 Hari</option>
                             <option value="30" {{ $periodSlow === '30' ? 'selected' : '' }}>30 Hari</option>
-                            <option value="90" {{ $periodSlow === '90' ? 'selected' : '' }}>90 Hari</option>
-                            <option value="180" {{ $periodSlow === '180' ? 'selected' : '' }}>180 Hari</option>
                             <option value="365" {{ $periodSlow === '365' ? 'selected' : '' }}>1 Tahun</option>
-                            <option value="all" {{ $periodSlow === 'all' ? 'selected' : '' }}>Semua</option>
                         </select>
                     </form>
                 </div>
@@ -283,7 +291,19 @@
                 @else
                     <div class="space-y-3 my-2">
                         @foreach($slowMovingParts as $part)
-                            <div class="p-3 bg-zinc-900/60 border border-zinc-800/80 rounded-xl hover:border-amber-800/50 transition-all">
+                            <div @click="activePart = {
+                                    name: '{{ addslashes($part->part_name) }}',
+                                    category: '{{ addslashes($part->part_category ?? 'Suku Cadang') }}',
+                                    type: 'slow',
+                                    typeName: 'Slow Moving',
+                                    qty: '{{ $part->total_quantity }} unit',
+                                    revenue: 'Pergerakan Lambat',
+                                    price: 'Terhitung dari transaksi',
+                                    lastUsed: '{{ $part->last_used_date ? \Carbon\Carbon::parse($part->last_used_date)->translatedFormat('d M Y') : '-' }}',
+                                    recommendation: 'Pergerakan stok lambat. Batasi pembelian stok baru sampai persediaan saat ini mendekati habis.'
+                                 }; showModal = true"
+                                 class="p-3 bg-zinc-900/60 border border-zinc-800/80 rounded-xl hover:border-amber-700/60 hover:bg-zinc-850/80 hover:scale-[1.01] transition-all cursor-pointer"
+                                 title="Klik untuk melihat detail produk">
                                 <div class="flex items-start justify-between gap-2">
                                     <div class="min-w-0">
                                         <p class="text-xs font-bold text-zinc-200 truncate">{{ $part->part_name }}</p>
@@ -335,11 +355,9 @@
                         <input type="hidden" name="period_slow" value="{{ $periodSlow }}">
                         <select name="period_dead" onchange="this.form.submit()"
                                 class="bg-[#121414] border border-[#2E3030] text-rose-400 text-[11px] font-semibold rounded-lg px-6 py-1 focus:outline-none focus:border-rose-500 cursor-pointer">
+                            <option value="7" {{ $periodDead === '7' ? 'selected' : '' }}>7 Hari</option>
                             <option value="30" {{ $periodDead === '30' ? 'selected' : '' }}>30 Hari</option>
-                            <option value="90" {{ $periodDead === '90' ? 'selected' : '' }}>90 Hari</option>
-                            <option value="180" {{ $periodDead === '180' ? 'selected' : '' }}>180 Hari</option>
                             <option value="365" {{ $periodDead === '365' ? 'selected' : '' }}>1 Tahun</option>
-                            <option value="all" {{ $periodDead === 'all' ? 'selected' : '' }}>Semua</option>
                         </select>
                     </form>
                 </div>
@@ -355,7 +373,19 @@
                 @else
                     <div class="space-y-3 my-2">
                         @foreach($deadStockParts as $part)
-                            <div class="p-3 bg-zinc-900/60 border border-zinc-800/80 rounded-xl hover:border-rose-800/50 transition-all">
+                            <div @click="activePart = {
+                                    name: '{{ addslashes($part->name) }}',
+                                    category: '{{ addslashes($part->category ?? 'Katalog Bengkel') }}',
+                                    type: 'dead',
+                                    typeName: 'Dead Stock',
+                                    qty: '0 unit',
+                                    revenue: 'Rp 0',
+                                    price: '{{ $part->formatted_price }}',
+                                    lastUsed: '0 Transaksi ({{ $periodDead }} Hari Terakhir)',
+                                    recommendation: 'Barang tidak tersentuh transaksi dalam periode ini. Disarankan membuat promo diskon atau bundling dengan jasa servis.'
+                                 }; showModal = true"
+                                 class="p-3 bg-zinc-900/60 border border-zinc-800/80 rounded-xl hover:border-rose-700/60 hover:bg-zinc-850/80 hover:scale-[1.01] transition-all cursor-pointer"
+                                 title="Klik untuk melihat detail produk">
                                 <div class="flex items-start justify-between gap-2">
                                     <div class="min-w-0">
                                         <p class="text-xs font-bold text-zinc-200 truncate">{{ $part->name }}</p>
@@ -381,6 +411,110 @@
             </div>
         </div>
 
+    </div>
+
+    {{-- SPAREPART DETAIL MODAL POP-UP --}}
+    <div x-cloak
+         x-show="showModal"
+         @keydown.escape.window="showModal = false"
+         class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+         style="display: none;">
+
+        {{-- Backdrop Overlay --}}
+        <div x-show="showModal"
+             x-transition:enter="ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             @click="showModal = false"
+             class="fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity"></div>
+
+        {{-- Modal Content Card --}}
+        <div x-show="showModal"
+             x-transition:enter="ease-out duration-250"
+             x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+             x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+             x-transition:leave="ease-in duration-150"
+             x-transition:leave-start="opacity-100 scale-100 translate-y-0"
+             x-transition:leave-end="opacity-0 scale-95 translate-y-4"
+             class="relative w-full max-w-lg bg-[#181A1A] border border-[#2E3030] rounded-2xl shadow-2xl overflow-hidden z-10 flex flex-col max-h-[90vh]">
+
+            {{-- Modal Top Accent Bar --}}
+            <div class="h-1.5 w-full"
+                 :class="{
+                    'bg-gradient-to-r from-emerald-500 to-teal-400': activePart?.type === 'fast',
+                    'bg-gradient-to-r from-amber-500 to-orange-400': activePart?.type === 'slow',
+                    'bg-gradient-to-r from-rose-500 to-red-600': activePart?.type === 'dead'
+                 }"></div>
+
+            {{-- Modal Header --}}
+            <div class="p-5 border-b border-zinc-800/80 flex items-start justify-between gap-4">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider border"
+                              :class="{
+                                'bg-emerald-950/80 text-emerald-400 border-emerald-800/80': activePart?.type === 'fast',
+                                'bg-amber-950/80 text-amber-400 border-amber-800/80': activePart?.type === 'slow',
+                                'bg-rose-950/80 text-rose-400 border-rose-800/80': activePart?.type === 'dead'
+                              }"
+                              x-text="activePart?.typeName"></span>
+                        <span class="text-xs text-zinc-500 font-medium" x-text="activePart?.category"></span>
+                    </div>
+                    <h3 class="text-lg font-bold text-zinc-100 leading-tight" x-text="activePart?.name"></h3>
+                </div>
+
+                <button @click="showModal = false" class="text-zinc-400 hover:text-zinc-200 bg-zinc-850 hover:bg-zinc-800 p-2 rounded-xl border border-zinc-750 transition-colors flex-shrink-0">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            {{-- Modal Body --}}
+            <div class="p-5 space-y-4 overflow-y-auto">
+
+                {{-- Stats Grid --}}
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="p-3.5 bg-zinc-900/80 border border-zinc-800 rounded-xl">
+                        <p class="text-[11px] text-zinc-500 font-medium">Total Terpakai</p>
+                        <p class="text-sm font-extrabold text-zinc-100 mt-0.5" x-text="activePart?.qty"></p>
+                    </div>
+
+                    <div class="p-3.5 bg-zinc-900/80 border border-zinc-800 rounded-xl">
+                        <p class="text-[11px] text-zinc-500 font-medium" x-text="activePart?.type === 'dead' ? 'Harga Katalog' : 'Estimasi Omset'"></p>
+                        <p class="text-sm font-extrabold mt-0.5"
+                           :class="activePart?.type === 'dead' ? 'text-rose-300' : 'text-emerald-300'"
+                           x-text="activePart?.type === 'dead' ? activePart?.price : activePart?.revenue"></p>
+                    </div>
+
+                    <div class="p-3.5 bg-zinc-900/80 border border-zinc-800 rounded-xl">
+                        <p class="text-[11px] text-zinc-500 font-medium">Status Terakhir</p>
+                        <p class="text-xs font-semibold text-zinc-300 mt-0.5" x-text="activePart?.lastUsed"></p>
+                    </div>
+
+                    <div class="p-3.5 bg-zinc-900/80 border border-zinc-800 rounded-xl">
+                        <p class="text-[11px] text-zinc-500 font-medium">Harga / Satuan</p>
+                        <p class="text-xs font-semibold text-zinc-300 mt-0.5" x-text="activePart?.price"></p>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Modal Footer --}}
+            <div class="p-4 bg-zinc-900/60 border-t border-zinc-800/80 flex items-center justify-between gap-3">
+                <a href="{{ route('workshop.spareparts.index') }}" class="btn btn-secondary text-xs flex items-center gap-1.5 py-2">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                    </svg>
+                    Kelola di Katalog
+                </a>
+                <button @click="showModal = false" class="btn btn-primary text-xs px-4 py-2">
+                    Tutup
+                </button>
+            </div>
+
+        </div>
     </div>
 </div>
 
