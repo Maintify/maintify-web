@@ -22,9 +22,9 @@ class ReportExportService
      */
     public function downloadExcel(array $reportData, string $filename = 'laporan-operasional.xlsx')
     {
-        if (! str_ends_with($filename, '.xlsx')) {
+        if (!str_ends_with($filename, '.xlsx')) {
             $filename = str_replace('.csv', '.xlsx', $filename);
-            if (! str_ends_with($filename, '.xlsx')) {
+            if (!str_ends_with($filename, '.xlsx')) {
                 $filename .= '.xlsx';
             }
         }
@@ -143,7 +143,7 @@ class ReportExportService
         $sheet->getStyle("A{$row}")->getAlignment()->setHorizontal(Alignment::HORIZONTAL_LEFT);
         $row++;
 
-        $sheet->setCellValue("A{$row}", 'Periode Laporan: '.$reportData['period_label']);
+        $sheet->setCellValue("A{$row}", 'Periode Laporan: ' . $reportData['period_label']);
         $sheet->mergeCells("A{$row}:C{$row}");
         $sheet->getStyle("A{$row}")->getFont()->setItalic(true)->setColor(new Color('FF4B5563'));
         $row += 3; // 2 blank rows spacing
@@ -346,8 +346,12 @@ class ReportExportService
             $sheet->getColumnDimension($col)->setAutoSize(true);
         }
 
-        // Generate temporary file for reliable download across all web servers (PHP CLI dev server, Apache, Nginx, LiteSpeed)
-        $tempPath = tempnam(sys_get_temp_dir(), 'maintify_report_') . '.xlsx';
+        // Generate temporary file in storage_path for 100% cPanel open_basedir & web server compatibility
+        $tempDir = storage_path('app/temp');
+        if (!file_exists($tempDir)) {
+            mkdir($tempDir, 0755, true);
+        }
+        $tempPath = $tempDir . '/' . uniqid('maintify_report_', true) . '.xlsx';
         $writer = new Xlsx($spreadsheet);
         $writer->save($tempPath);
 
