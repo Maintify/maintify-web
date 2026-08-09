@@ -92,12 +92,12 @@ class ReportController extends Controller
                 DB::raw('SUM(total_cost) as revenue')
             )
             ->groupBy(DB::raw('DATE(service_date)'))
-            ->orderBy('date')
+            ->orderBy(DB::raw('DATE(service_date)'))
             ->get()
             ->map(function ($row) {
                 /** @var object{date: string, count: int|string, revenue: float|string|null} $row */
                 return [
-                    'date' => $row->date,
+                    'date' => (string) $row->date,
                     'count' => (int) $row->count,
                     'revenue' => (float) ($row->revenue ?? 0),
                     'revenue_formatted' => 'Rp '.number_format((float) ($row->revenue ?? 0), 0, ',', '.'),
@@ -114,7 +114,7 @@ class ReportController extends Controller
                 DB::raw('SUM(quantity * unit_price) as total_value')
             )
             ->groupBy('part_name')
-            ->orderByDesc('total_qty')
+            ->orderByDesc(DB::raw('SUM(quantity)'))
             ->limit(10)
             ->get();
 
