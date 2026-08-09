@@ -112,7 +112,7 @@ class ReportTest extends TestCase
     }
 
     /** @test */
-    public function approved_workshop_admin_can_export_report_to_csv()
+    public function approved_workshop_admin_can_export_report_to_excel()
     {
         [$admin, $workshop] = $this->createApprovedWorkshopAdmin();
 
@@ -132,9 +132,9 @@ class ReportTest extends TestCase
             ->get(route('workshop.reports.export'));
 
         $response->assertStatus(200);
-        $response->assertHeader('content-type', 'text/csv; charset=UTF-8');
+        $response->assertHeader('content-type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         $this->assertStringContainsString('attachment', $response->headers->get('content-disposition'));
-        $this->assertStringContainsString('.csv', $response->headers->get('content-disposition'));
+        $this->assertStringContainsString('.xlsx', $response->headers->get('content-disposition'));
     }
 
     /** @test */

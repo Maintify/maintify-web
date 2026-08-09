@@ -154,8 +154,8 @@ class ReportController extends Controller
         [$start, $end] = $this->parseDateRange($request);
         $report = $this->buildReportData($workshop, $start, $end);
 
-        $filename = 'laporan-'.str($workshop->name)->slug().'-'.$start->format('Ymd').'-'.$end->format('Ymd').'.csv';
+        $filename = 'laporan-'.str($workshop->name)->slug().'-'.$start->format('Ymd').'-'.$end->format('Ymd').'.xlsx';
 
-        return $this->exportService->downloadCsv($report, $filename);
+        return $this->exportService->downloadExcel($report, $filename);
     }
 }
